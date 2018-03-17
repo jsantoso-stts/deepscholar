@@ -120,7 +120,7 @@ export const Paper = withRouter(connect(mapStateToProps)(class Paper extends Com
 
   render() {
     const id = this.props.data._id;
-    const {year, abstract: rawAbstract, articleTitle: rawArticleTitle, journalTitle: rawJournalTitle, authors, pdf, xml, pdftxt} = this.props.data._source;
+    const {body,year, abstract: rawAbstract, articleTitle: rawArticleTitle, journalTitle: rawJournalTitle, authors, pdf, xml, pdftxt} = this.props.data._source;
     const highlight = this.props.data.highlight || {};
     const {abstract: highlightedAbstract, articleTitle: highlightedArticleTitle, journalTitle: highlightedJournalTitle} = highlight;
     const paperUrl = `/papers/${id}`;
@@ -134,10 +134,30 @@ export const Paper = withRouter(connect(mapStateToProps)(class Paper extends Com
     if (!this.props.asFull) {
       abstract = this.props.state.enabledFullTextPaperIds.has(id) ? abstract : abstract.substr(0, 400);
     }
-    const abstractHtml = {__html: abstract};
+    var i = 0
+    var abData = {}
+    abData.data = []
+    var results = {}
+    results.data = []
+    var abtext = ""
+    abData.data = body.split(" ")
+    for (i=0;i<abData.data.length;i++){
+        var textWord = abData.data.slice(i,i+1)
+        //console.log(textWord)
+        if(textWord == "a"){
+            var b2word = abData.data.slice(i-3,i-2)
+            var b1word = abData.data.slice(i-2,i-1)
+            var a1word = abData.data.slice(i+1,i+2)
+            var a2word = abData.data.slice(i+2,i+3)
+            console.log(b2word+' '+b1word+' '+textWord+' '+a1word+' '+a2word)
+            results.data.push({text:b2word+' '+b1word+' '+textWord+' '+a1word+' '+a2word})
+        }
+    }
+   var jresults = JSON.stringify(results.data)
+    const abstractHtml = {__html:jresults};
 
     return (
-      <article className={'paper ' + 'paper'+id}>
+      <article className={'paper' + 'paper'+id}>
         <div className="divider"></div>
         <CheckForFilter paperId={id} />
         <header>
@@ -169,6 +189,7 @@ export const Paper = withRouter(connect(mapStateToProps)(class Paper extends Com
   }
 }));
 
+
 export class Papers extends Component {
   render() {
     const papers = this.props.data.map((paper) =>
@@ -182,6 +203,8 @@ export class Papers extends Component {
     );
   }
 }
+
+
 
 class Figure extends Component {
   loadAlternativeImage(e) {
