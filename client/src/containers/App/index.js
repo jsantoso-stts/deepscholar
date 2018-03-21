@@ -8,6 +8,7 @@ import Index from '../Index/index.js';
 import Search from '../Search/index.js';
 import Detail from '../Detail/index.js';
 import Knowledge from '../Knowledge/index.js';
+import Profile from '../Profile/index.js';
 import {ScrollToTop} from '../../components/index.js';
 import {
   changeQuery,
@@ -212,7 +213,7 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
           <div className="nav-wrapper">
             <div className="row">
               <div className="col s4 l3">
-                <Link to="/" className="brand-logo"><img src="/images/deepscholar_logo.svg"/></Link>
+                <Link to="/" className="brand-logo"><img src="/images/deepscholar_logo_circle.svg"/></Link>
               </div>
               <div className="col s7 l6">
                 <div className="input-field input-field--search">
@@ -290,6 +291,7 @@ class App extends Component {
                 <Route exact path="/" component={props =>
                   <Index {...props}/>
                 }/>
+                <Route exact path="/profile" component={Profile}/>
                 <Route component={props =>
                   <ScrollToTop {...props}>
                     <Search {...props}/>
