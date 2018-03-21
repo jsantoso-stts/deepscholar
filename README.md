@@ -121,5 +121,6 @@ $ npm run es:dump:searchHistories > searchHistories.tsv
 | ------------------ | ---------------------------------------------- |
 | Kibana             | [http://localhost:5601](http://localhost:5601) |
 | elasticsearch-head | [http://localhost:9100](http://localhost:9100) |
+| mongo-express      | [http://localhost:8081](http://localhost:8081) |
 
 The ports are changed using environment variables.
