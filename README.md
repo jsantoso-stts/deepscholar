@@ -84,6 +84,14 @@ Index(papers) created.
 Index(search_histories) created.
 ```
 
+### Initialize Database (Only once)
+
+Create database using the following command
+```
+$ npm -s run db:initializeDatabase
+All collections have been created.
+```
+
 ### Import JSON data
 
 Import json files to ES
@@ -114,6 +122,25 @@ All databases have been deleted.
 ```
 $ npm run es:dump:searchHistories > searchHistories.tsv 
 ```
+
+### Add DeepScholar application administrator role to a user  
+
+1. Open [users collection](http://localhost:8081/db/deepscholar/users) on mongo-express.
+2. Click `Find` with the following query
+    - Key: profile.username
+    - Value: Github username which you want to change him to administrator.
+3. Click the matched row
+4. Add `isAdmin` boolean property with `true`
+    ```
+    {
+        "_id": ObjectID("XXXXXXXXXXXXXXXXXXXXXXXX"),
+        "isAdmin": true,
+        ...
+    }
+    ```
+5. Click `Save`
+ 
+**To remove this role, just set `isAdmin` to false, or remove the property**
 
 ### Development Tools
 
