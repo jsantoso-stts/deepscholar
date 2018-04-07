@@ -345,7 +345,7 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
 
   componentDidMount() {
     const self = this;
-    window.jQuery(this.refs.select).on('change', function(event) { // ref : https://goo.gl/ppDc1v
+    window.jQuery(this.refs.select).on('change', event => {
       self.handleChange(event);
     })
     .material_select();
@@ -353,7 +353,7 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
 
   switchEditMode(bool) {
     const node = ReactDOM.findDOMNode(this.refs.thisElem);
-    if( bool ) {
+    if (bool) {
       node.classList.add('edit');
     } else {
       node.classList.remove('edit');
@@ -392,14 +392,14 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
     const index = this.state.index;
     const value = knowledgeData.properties[category][index];
 
-    const options = knowledgeOptions[category].map(function(item) {
-              return <option value={item} key={item}>{item}</option>;
-            });
+    const options = knowledgeOptions[category].map(item => {
+      return <option value={item} key={item}>{item}</option>; 
+    });
 
     return (
       <div ref="thisElem" className="box-row">
 
-        <p>Value : {value}</p>  
+        <p>Value: {value}</p>  
 
         <div className="editBtns">
           <a className="icon edit" href="javascript:void(0)" onClick={this.handleClickEdit.bind(this)}><i className="material-icons">edit</i></a>
@@ -440,13 +440,13 @@ const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps exten
 
                           let prop;
                           if (propsArr.length > 0) {
-                            prop = propsArr.map(function(item, i) {
+                            prop = propsArr.map((item, i) => {
                                       return <EntityDetailProp category={key} value={item} index={i} key={i} />;
                                     });
                           } else {
                             prop = null;
                           }
-                          
+
                           // 追加の設定
                           return (
                             <div key={key}>
@@ -465,7 +465,7 @@ const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps exten
 });
 
 const EntityDetailDesc = connect(mapStateToProps)(class EntityDetailDesc extends Component {
-  
+
   constructor(props) {
     super(props);
     this.state = {
@@ -480,7 +480,11 @@ const EntityDetailDesc = connect(mapStateToProps)(class EntityDetailDesc extends
 
   switchEditMode(bool) {
     const node = ReactDOM.findDOMNode(this.refs.description);
-    bool ? node.classList.add('edit') : node.classList.remove('edit');
+    if (bool) {
+      node.classList.add('edit');
+    } else {
+      node.classList.remove('edit');
+    }
   }
 
   handleClickEdit() {
@@ -505,7 +509,7 @@ const EntityDetailDesc = connect(mapStateToProps)(class EntityDetailDesc extends
 
     const desc = this.state.desc;
 
-    return(
+    return (
       <div ref="description" className="description">
         <p>{desc}</p>
         <a className="icon edit" href="javascript:void(0)" onClick={this.handleClickEdit.bind(this)}><i className="material-icons">edit</i></a>
@@ -520,7 +524,7 @@ const EntityDetailDesc = connect(mapStateToProps)(class EntityDetailDesc extends
         </div>
 
       </div>
-    )
+    );
   }
 });
 
@@ -532,8 +536,8 @@ export const EntityDetail = withRouter(connect(mapStateToProps)(class EntityDeta
 
     const backBtn = this.props.backBtn;
 
-    const title = knowledgeData["title"];
-    const desc = knowledgeData["desc"];
+    const title = knowledgeData.title;
+    const desc = knowledgeData.desc;
 
     return (
 
@@ -583,14 +587,12 @@ export const Entity = withRouter(connect(mapStateToProps)(class Entity extends C
     ];
 
     return (
-
       <article className="paper paper1234">
         <div className="divider"></div>
         <header><h5><a href="javascript:void(0)" onClick={this.handleClick.bind(this)} >{title[id]}</a></h5></header>
         <div className="searchresult">{desc[id]}</div>
         <div className="edited">Last edited on 17:35, 28 March 2018</div>
       </article>
-
     );
   }
 }));
