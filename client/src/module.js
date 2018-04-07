@@ -50,12 +50,14 @@ const knowledgeData = {
   "title": "Deep Learning",
   "desc": "branch of machine learning",
   "props": {
-    "Property A": [ "Select Value A-1",
-                    "Select Value A-2",
-                    "Select Value A-3"
-                  ],
-    "Property B": [ "Select Value B-1",
-                  ],
+    "Property A": [
+      "Select Value A-1",
+      "Select Value A-2",
+      "Select Value A-3"
+    ],
+    "Property B": [
+      "Select Value B-1",
+    ],
     "Property C": []
   }
 };
@@ -76,9 +78,9 @@ const knowledgeOptions = {
     "Select Value C-2",
     "Select Value C-3",
     "Select Value C-4",
-    "Select Value C-5",
+    "Select Value C-5"
   ]
-}
+};
 
 export {favoriteKey}; // To use favoriteKey on another page.
 
@@ -306,24 +308,27 @@ export function reducers(state = initialState, action) {
       return Object.assign({}, state, {
         labelFilter: action.filterList
       });
-    case KNOWLEDGE_ADD:
-      const knowledgeDataForAdd = Object.assign({}, state.knowledgeData);
-            knowledgeDataForAdd["props"][action.category].push('');
+    case KNOWLEDGE_ADD: {
+      const knowledgeData = Object.assign({}, state.knowledgeData);
+            knowledgeData["props"][action.category].push('');
       return Object.assign({}, state, {
-        knowledgeData: knowledgeDataForAdd
+        knowledgeData: knowledgeData
       });
-    case KNOWLEDGE_UPDATE:
-      const knowledgeDataForUpdate = Object.assign({}, state.knowledgeData);
-            knowledgeDataForUpdate["props"][action.category][action.index] = action.value;
+    }
+    case KNOWLEDGE_UPDATE: {
+      const knowledgeData = Object.assign({}, state.knowledgeData);
+            knowledgeData["props"][action.category][action.index] = action.value;
       return Object.assign({}, state, {
-        knowledgeData: knowledgeDataForUpdate
+        knowledgeData: knowledgeData
       });
-    case KNOWLEDGE_REMOVE:
-      const knowledgeDataForRemove = Object.assign({}, state.knowledgeData);
-            knowledgeDataForRemove["props"][action.category].splice(action.index, 1);
+    }
+    case KNOWLEDGE_REMOVE: {
+      const knowledgeData = Object.assign({}, state.knowledgeData);
+            knowledgeData["props"][action.category].splice(action.index, 1);
       return Object.assign({}, state, {
-        knowledgeData: knowledgeDataForRemove
+        knowledgeData: knowledgeData
       });
+    }
     default:
       return state;
   }
