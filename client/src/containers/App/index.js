@@ -7,6 +7,7 @@ import {connect} from 'react-redux';
 import Index from '../Index/index.js';
 import Search from '../Search/index.js';
 import Detail from '../Detail/index.js';
+import Knowledge from '../Knowledge/index.js';
 import {ScrollToTop} from '../../components/index.js';
 import {
   changeQuery,
@@ -215,6 +216,7 @@ class App extends Component {
             <div>
               <Switch>
                 <Route exact path="/papers/:paperId" component={Detail}/>
+                <Route exact path="/knowledge/term" component={Knowledge}/>
                 <Route exact path="/" component={props =>
                   <Index {...props}/>
                 }/>

@@ -9,7 +9,7 @@ import toml from 'toml';
 import {connect} from 'react-redux';
 import {withRouter, Switch, Route} from 'react-router-dom';
 import {RangeSliderHistogram} from 'searchkit';
-import {Papers, Figures, Tables} from '../../components/index.js';
+import {Papers, Figures, Tables, Entities} from '../../components/index.js';
 import Api from '../../api';
 import {
   changeQuery,
@@ -1271,11 +1271,11 @@ class Search extends Component {
                                 maxValue={lte || max}/>;
     }
 
-
     const categories = [
       "texts",
       "figures",
       "tables",
+      "knowledge",
       "collocations"
     ];
 
@@ -1311,6 +1311,9 @@ class Search extends Component {
                         break;
                       case 'tables':
                         icon = 'grid_on';
+                        break;
+                      case 'knowledge':
+                        icon = 'language';
                         break;
                       case 'collocations':
                         icon = 'format_shapes';
@@ -1373,6 +1376,12 @@ class Search extends Component {
                   <div className="col s12">
                     <Tables data={tables}/>
                     <Paginator total={tablesTotal} size={tablesFetchSize} page={page}/>
+                  </div>
+                }/>
+                <Route path="/knowledge" component={() =>
+                  <div className="col s12">
+                    <Entities data={papers}/>
+                    <Paginator total={papersTotal} size={papersFetchSize} page={page}/>
                   </div>
                 }/>
                 <Route component={() =>

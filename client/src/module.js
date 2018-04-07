@@ -46,6 +46,40 @@ const defaultLabelList = {
   [favoriteKey]: []
 };
 
+const knowledgeData = {
+  "title": "Deep Learning",
+  "desc": "branch of machine learning",
+  "properties": {
+    "Property A": [
+      "Select Value A-1",
+      "Select Value A-2",
+      "Select Value A-3"
+    ],
+    "Property B": ["Select Value B-1"],
+    "Property C": []
+  }
+};
+
+const knowledgeOptions = {
+  "Property A": [
+    "Select Value A-1",
+    "Select Value A-2",
+    "Select Value A-3"
+  ],
+  "Property B": [
+    "Select Value B-1",
+    "Select Value B-2",
+    "Select Value B-3"
+  ],
+  "Property C": [
+    "Select Value C-1",
+    "Select Value C-2",
+    "Select Value C-3",
+    "Select Value C-4",
+    "Select Value C-5"
+  ]
+};
+
 export {favoriteKey}; // To use favoriteKey on another page.
 
 const initialState = {
@@ -79,7 +113,9 @@ const initialState = {
   },
   enabledAllAuthorsPaperIds: new Set(),
   enabledFullAbstractPaperIds: new Set(),
-  scrollYPositions: new Map()
+  scrollYPositions: new Map(),
+  knowledgeData: knowledgeData,
+  knowledgeOptions: knowledgeOptions
 };
 
 // //// ▼ Functions for Get/Set LabelList from/to DB ▼
@@ -270,6 +306,27 @@ export function reducers(state = initialState, action) {
       return Object.assign({}, state, {
         labelFilter: action.filterList
       });
+    case KNOWLEDGE_ADD: {
+      const knowledgeDataAdd = Object.assign({}, state.knowledgeData);
+            knowledgeDataAdd.properties[action.category].push('');
+      return Object.assign({}, state, {
+        knowledgeData: knowledgeDataAdd
+      });
+    }
+    case KNOWLEDGE_UPDATE: {
+      const knowledgeDataUpdate = Object.assign({}, state.knowledgeData);
+            knowledgeDataUpdate.properties[action.category][action.index] = action.value;
+      return Object.assign({}, state, {
+        knowledgeData: knowledgeDataUpdate
+      });
+    }
+    case KNOWLEDGE_REMOVE: {
+      const knowledgeDataRemove = Object.assign({}, state.knowledgeData);
+            knowledgeDataRemove.properties[action.category].splice(action.index, 1);
+      return Object.assign({}, state, {
+        knowledgeData: knowledgeDataRemove
+      });
+    }
     default:
       return state;
   }
@@ -472,3 +529,34 @@ export function updateLabelFilter(filterList) {
     filterList: filterList
   };
 }
+
+const KNOWLEDGE_ADD = "KNOWLEDGE_ADD";
+
+export function knowledgeAdd(category) {
+  return {
+    type: KNOWLEDGE_ADD,
+    category: category
+  };
+}
+
+const KNOWLEDGE_UPDATE = "KNOWLEDGE_UPDATE";
+
+export function knowledgeUpdate(category, index, value) {
+  return {
+    type: KNOWLEDGE_UPDATE,
+    category: category,
+    index: index,
+    value: value
+  };
+}
+
+const KNOWLEDGE_REMOVE = "KNOWLEDGE_REMOVE";
+
+export function knowledgeRemove(category, index) {
+  return {
+    type: KNOWLEDGE_REMOVE,
+    category: category,
+    index: index
+  };
+}
+

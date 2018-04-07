@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import './style.css';
-import {saveScrollY, toggleAllAuthors, toggleAbstract, updateLabelList, favoriteKey} from "../module";
+import {saveScrollY, toggleAllAuthors, toggleAbstract, updateLabelList, favoriteKey, knowledgeAdd, knowledgeUpdate, knowledgeRemove} from "../module";
 
 function mapStateToProps(state) {
   return {state};
@@ -329,6 +330,301 @@ export class Tables extends Component {
     );
   }
 }
+
+const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      category: this.props.category,
+      index: this.props.index,
+      value: this.props.value || "",
+      valueOld: this.props.value || ""
+    };
+  }
+
+  componentDidMount() {
+    const self = this;
+    window.jQuery(this.refs.select).on('change', event => {
+      self.handleChange(event);
+    })
+    .material_select();
+  }
+
+  switchEditMode(bool) {
+    const node = ReactDOM.findDOMNode(this.refs.thisElem);
+    if (bool) {
+      node.classList.add('edit');
+    } else {
+      node.classList.remove('edit');
+    }
+  }
+
+  handleClickEdit() {
+    this.switchEditMode(true);
+    this.setState({valueOld: this.state.value});
+  }
+
+  handleClickRemove() {
+    this.props.dispatch(knowledgeRemove(this.state.category, this.props.index));
+  }
+
+  handleClickFinish() {
+    this.switchEditMode(false);
+    this.props.dispatch(knowledgeUpdate(this.state.category, this.props.index, this.state.value));
+  }
+
+  handleClickCancel() {
+    this.switchEditMode(false);
+    this.setState({value: this.state.valueOld});
+    this.props.dispatch(knowledgeUpdate(this.state.category, this.props.index, this.state.valueOld));
+  }
+
+  handleChange(event) {
+    this.setState({value: event.target.value});
+  }
+
+  render() {
+
+    const {knowledgeData, knowledgeOptions} = this.props.state;
+
+    const category = this.state.category;
+    const index = this.state.index;
+    const value = knowledgeData.properties[category][index];
+
+    const options = knowledgeOptions[category].map(item => {
+      return <option value={item} key={item}>{item}</option>;
+    });
+
+    return (
+      <div ref="thisElem" className="box-row">
+
+        <p>Value: {value}</p>
+
+        <div className="editBtns">
+          <a className="icon edit" href="javascript:void(0)" onClick={this.handleClickEdit.bind(this)}><i className="material-icons">edit</i></a>
+          <a className="icon delete" href="javascript:void(0)" onClick={this.handleClickRemove.bind(this)}><i className="material-icons">delete_forever</i></a>
+        </div>
+
+        <div className="input-field input-field--alpha">
+          <select ref="select" value={value} onChange={this.handleChange.bind(this)} >
+            <option value="">Choose value</option>
+            {options}
+          </select>
+        </div>
+
+        <div className="btns">
+          <a className="btn btn--alpha" href="javascript:void(0)" onClick={this.handleClickFinish.bind(this)}><i className="material-icons">check</i> finish</a>
+          <a className="btn btn--alpha" href="javascript:void(0)" onClick={this.handleClickCancel.bind(this)}><i className="material-icons">close</i>cancel</a>
+        </div>
+
+      </div>
+    );
+  }
+});
+
+const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps extends Component {
+
+  handleClick(e) {
+    const category = e.currentTarget.getAttribute('data-category');
+    this.props.dispatch(knowledgeAdd(category));
+  }
+
+  render() {
+
+    const {knowledgeData} = this.props.state;
+
+    const props = Object.keys(knowledgeData.properties)
+                        .map((key) => {
+                          const propsArr = knowledgeData.properties[key];
+
+                          let prop;
+                          if (propsArr.length > 0) {
+                            prop = propsArr.map((item, i) => {
+                                      return <EntityDetailProp category={key} value={item} index={i} key={i} />;
+                                    });
+                          } else {
+                            prop = null;
+                          }
+
+                          // 追加の設定
+                          return (
+                            <div key={key}>
+                              <div className="box">
+                                <h6>{key}</h6>
+                                {prop}
+                                <a className="icon add" href="javascript:void(0)" onClick={this.handleClick.bind(this)} data-category={key}><i className="material-icons">add</i>add value</a>
+                              </div>
+                              <div className="divider"></div>
+                            </div>
+                          );
+                        });
+
+    return <div>{props}</div>;
+  }
+});
+
+const EntityDetailDesc = connect(mapStateToProps)(class EntityDetailDesc extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      desc: this.props.desc || "",
+      descOld: this.props.desc || ""
+    };
+  }
+
+  componentDidMount() {
+    window.jQuery('#textareaDesc').trigger('autoresize');
+  }
+
+  switchEditMode(bool) {
+    const node = ReactDOM.findDOMNode(this.refs.description);
+    if (bool) {
+      node.classList.add('edit');
+    } else {
+      node.classList.remove('edit');
+    }
+  }
+
+  handleClickEdit() {
+    this.switchEditMode(true);
+    this.setState({descOld: this.state.desc});
+  }
+
+  handleClickFinish() {
+    this.switchEditMode(false);
+  }
+
+  handleClickCancel() {
+    this.setState({desc: this.state.descOld});
+    this.switchEditMode(false);
+  }
+
+  handleChange(event) {
+    this.setState({desc: event.target.value});
+  }
+
+  render() {
+
+    const desc = this.state.desc;
+
+    return (
+      <div ref="description" className="description">
+        <p>{desc}</p>
+        <a className="icon edit" href="javascript:void(0)" onClick={this.handleClickEdit.bind(this)}><i className="material-icons">edit</i></a>
+
+        <div className="input-field">
+          <textarea id="textareaDesc" className="materialize-textarea" value={desc} onChange={this.handleChange.bind(this)} placeholder="Description..."></textarea>
+        </div>
+
+        <div className="btns">
+          <a className="btn btn--alpha" href="javascript:void(0)" onClick={this.handleClickFinish.bind(this)}><i className="material-icons">check</i> finish</a>
+          <a className="btn btn--alpha" href="javascript:void(0)" onClick={this.handleClickCancel.bind(this)}><i className="material-icons">close</i>cancel</a>
+        </div>
+
+      </div>
+    );
+  }
+});
+
+export const EntityDetail = withRouter(connect(mapStateToProps)(class EntityDetail extends Component {
+
+  render() {
+
+    const {knowledgeData} = this.props.state;
+
+    const backBtn = this.props.backBtn;
+
+    const title = knowledgeData.title;
+    const desc = knowledgeData.desc;
+
+    return (
+
+      <article className="knowledge-term knowledge1234">
+        <header><h5>{title}</h5></header>
+
+        <div className="divider title"></div>
+
+        <EntityDetailDesc desc={desc} />
+
+        <EntityDetailProps/>
+
+        <div className="edited">Last edited on 17:35, 28 March 2018</div>
+
+        {backBtn && <BackToResult/>}
+
+      </article>
+
+    );
+  }
+}));
+
+export const Entity = withRouter(connect(mapStateToProps)(class Entity extends Component {
+
+  handleClick() {
+    this.props.history.push('/knowledge/term');
+  }
+
+  render() {
+
+    const id = Number(this.props.id);
+
+    const title = [
+        "Deep Learning",
+        "Learning TensorFlow: A Guide to Building Deep learning Systems",
+        "Human-level control through deep reinforcement learning",
+        "IMS at EmoInt-2017: Emotion Intensity Prediction with Affective Norms, Automatically Extended Resources and Deep Learning",
+        "Unsupervised Deep Learning Applied to Breast Density Segmentation and Mammographic Risk Scoring"
+    ];
+
+    const desc = [
+        "branch of machine learning",
+        "Nature article by LeCun, Bengio and Hinton",
+        "scientific article",
+        "scientific article (publication date: May 2016)",
+        "Deep Learning Supercomputer System"
+    ];
+
+    return (
+      <article className="paper paper1234">
+        <div className="divider"></div>
+        <header><h5><a href="javascript:void(0)" onClick={this.handleClick.bind(this)} >{title[id]}</a></h5></header>
+        <div className="searchresult">{desc[id]}</div>
+        <div className="edited">Last edited on 17:35, 28 March 2018</div>
+      </article>
+    );
+  }
+}));
+
+export class Entities extends Component {
+
+  render() {
+
+    return (
+      <div>
+        <Entity id="0" />
+        <Entity id="1" />
+        <Entity id="2" />
+        <Entity id="3" />
+        <Entity id="4" />
+      </div>
+    );
+  }
+}
+
+export const BackToResult = withRouter(connect(mapStateToProps)(class BackToResult extends Component {
+
+  render() {
+
+    return (
+
+      <a className="back-to-results" href="javascript:void(0)" onClick={this.props.history.goBack}><i
+            className="material-icons">keyboard_arrow_left</i>Back to results</a>
+
+    );
+  }
+}));
 
 export class ScrollToTop extends Component {
   componentDidUpdate(prevProps) {
