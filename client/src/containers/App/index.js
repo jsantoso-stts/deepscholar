@@ -72,6 +72,9 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
 
   componentDidUpdate(prevProps) {
 
+
+    window.jQuery(".dropdown-trigger").dropdown();
+
     const {category: oldCategory, query: oldQuery, gte: oldGte, lte: oldLte, page: oldPage, labelFilter: oldlabelFilter} = prevProps.state;
     const {category: newCategory, query: newQuery, gte: newGte, lte: newLte, page: newPage, labelFilter: newlabelFilter} = this.props.state;
 
@@ -120,7 +123,6 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
     this.query = newQuery;
 
     this.refs.search.value = this.props.state.query !== null ? decodeURIComponent(this.props.state.query) : '';
-
   }
 
   handleSubmit(e) {
@@ -165,6 +167,7 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
   render() {
     const {user} = this.props.state;
     const isSignedIn = user !== null;
+    const isAdmin = user && user.isAdmin === true;
 
     const src = user ? user.profile.photos[0].value : null;
 
@@ -186,7 +189,15 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
                   </label>
                 </div>
               </div>
+              <ul id="navMenu" className="dropdown-content">
+                <li><a href="#!">Import Indexes</a></li>
+                <li className="divider"></li>
+                <li><a href="#!">Delete All Indexes</a></li>
+              </ul>
               <ul className="right">
+                {isSignedIn && isAdmin &&
+                <li><a className="dropdown-trigger" href="#!" data-beloworigin="true" data-activates="navMenu">Menu<i className="material-icons right">arrow_drop_down</i></a></li>
+                }
                 {!isSignedIn &&
                 <li><a href="#" onClick={this.handleClickSignIn.bind(this)}>Sign in</a></li>
                 }
