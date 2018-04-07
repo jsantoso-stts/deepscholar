@@ -332,14 +332,14 @@ export class Tables extends Component {
 }
 
 const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends Component {
-  
+
   constructor(props) {
     super(props);
-    this.state = {      
+    this.state = {
       category: this.props.category,
       index: this.props.index,
       value: this.props.value || "",
-      valueOld : this.props.value || "" 
+      valueOld: this.props.value || "" 
     };
   }
 
@@ -347,12 +347,13 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
     const self = this;
     window.jQuery(this.refs.select).on('change', function (event) { // ref : https://goo.gl/ppDc1v
       self.handleChange(event);
-    }).material_select();
+    })
+    .material_select();
   }
 
   switchEditMode(bool) {
     const node = ReactDOM.findDOMNode(this.refs.thisElem);
-    bool ? node.classList.add('edit') : node.classList.remove('edit');    
+    bool ? node.classList.add('edit') : node.classList.remove('edit');
   }
 
   handleClickEdit() {
@@ -360,7 +361,7 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
     this.setState({valueOld: this.state.value});
   }
 
-  handleClickRemove() {    
+  handleClickRemove() {
     this.props.dispatch(knowledgeRemove(this.state.category, this.props.index));
   }
 
@@ -372,12 +373,12 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
   handleClickCancel() {
     this.switchEditMode(false);
     this.setState({value: this.state.valueOld});
-    this.props.dispatch(knowledgeUpdate(this.state.category, this.props.index, this.state.valueOld));    
+    this.props.dispatch(knowledgeUpdate(this.state.category, this.props.index, this.state.valueOld));
   }
 
   handleChange(event) {
     this.setState({value: event.target.value});
-  }  
+  }
 
   render() {
 
@@ -388,9 +389,8 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
     const value = knowledgeData["props"][category][index];
 
     const options = knowledgeOptions[category].map(function(item, i) {
-              const val = knowledgeOptions[category][i];
-              return <option value={item} key={item}>{item}</option>
-            });      
+              return <option value={item} key={item}>{item}</option>;
+            });
 
     return(
       <div ref="thisElem" className="box-row">
@@ -400,7 +400,7 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
         <div className="editBtns">
           <a className="icon edit" href="javascript:void(0)" onClick={this.handleClickEdit.bind(this)}><i className="material-icons">edit</i></a>
           <a className="icon delete" href="javascript:void(0)" onClick={this.handleClickRemove.bind(this)}><i className="material-icons">delete_forever</i></a>
-        </div>                    
+        </div>
 
         <div className="input-field input-field--alpha">
           <select ref="select" value={value} onChange={this.handleChange.bind(this)} >
@@ -415,13 +415,13 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
         </div>
 
       </div>
-    )
+    );
   }
 });
 
 const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps extends Component {
 
-  handleClick(e) {    
+  handleClick(e) {
     const category = e.currentTarget.getAttribute('data-category');
     this.props.dispatch(knowledgeAdd(category));
   }
@@ -437,8 +437,8 @@ const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps exten
                           let prop;
                           if( propsArr.length > 0 ) {
                             prop = propsArr.map(function(item, i) {
-                                      return <EntityDetailProp category={key} value={item} index={i} key={i} />
-                                    });      
+                                      return <EntityDetailProp category={key} value={item} index={i} key={i} />;
+                                    });
                           } else {
                             prop = null;
                           }
@@ -447,8 +447,8 @@ const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps exten
                           return (
                             <div key={key}>
                               <div className="box">
-                                <h6>{key}</h6>                                
-                                {prop}                                                                                   
+                                <h6>{key}</h6>
+                                {prop}
                                 <a className="icon add" href="javascript:void(0)" onClick={this.handleClick.bind(this)} data-category={key}><i className="material-icons">add</i>add value</a>
                               </div>
                               <div className="divider"></div>
@@ -456,7 +456,7 @@ const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps exten
                           );
                         });
 
-    return <div>{props}</div>
+    return <div>{props}</div>;
   }
 });
 
@@ -466,7 +466,7 @@ const EntityDetailDesc = connect(mapStateToProps)(class EntityDetailDesc extends
     super(props);
     this.state = {
       desc: this.props.desc || "",
-      descOld : this.props.desc || "" 
+      descOld: this.props.desc || ""
     };
   }
 
@@ -476,7 +476,7 @@ const EntityDetailDesc = connect(mapStateToProps)(class EntityDetailDesc extends
 
   switchEditMode(bool) {
     const node = ReactDOM.findDOMNode(this.refs.description);
-    bool ? node.classList.add('edit') : node.classList.remove('edit');    
+    bool ? node.classList.add('edit') : node.classList.remove('edit');
   }
 
   handleClickEdit() {
@@ -533,7 +533,7 @@ export const EntityDetail = withRouter(connect(mapStateToProps)(class EntityDeta
 
     return (
 
-      <article className="knowledge-term knowledge1234">        
+      <article className="knowledge-term knowledge1234">
         <header><h5>{title}</h5></header>
 
         <div className="divider title"></div>
