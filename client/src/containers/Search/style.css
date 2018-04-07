@@ -20,6 +20,9 @@
 .search .tab.collocations a .txt {
     letter-spacing: 0.05em;
 }
+.search .tab.knowledge a .txt {
+    letter-spacing: 0.09em;
+}
 
 /****************
 **
@@ -468,9 +471,7 @@
 **
 ****************/
 
-.search .contents .paper {
-    position: relative;
-}
+/* Common */
 
 .contents .row {
     padding-top: 1.2em;
@@ -483,6 +484,12 @@
 
 .contents .table .divider {
     margin: 40px 0;
+}
+
+/* paper */
+
+.search .contents .paper {
+    position: relative;
 }
 
 .contents .paper .filterLabels > span {
@@ -552,6 +559,36 @@
         top: -8px;        
         margin: 0 0 8px;
     }
+
+
+/* knowledge */
+.search.tab-knowledge .toolBar {
+    display: none;
+}
+.search.tab-knowledge .subNavi:after {
+    display: none;
+}
+.search.tab-knowledge .contents .row {
+     padding-top: 0; 
+}
+.search.tab-knowledge .contents .paper {
+    padding-left: 0;
+}
+    .search.tab-knowledge .contents .paper h5{
+        margin: 16px 0 2px;
+    }
+    .search.tab-knowledge .contents .paper:first-child h5{
+        margin-top: 0;
+    }
+
+    .search.tab-knowledge .contents .paper .searchresult {
+        font-weight: 500;
+    }
+    .search.tab-knowledge .contents .paper .edited {
+        margin-bottom: 16px;
+        color: #5d5d5d;
+    }
+
 
 
 /* Pagination */

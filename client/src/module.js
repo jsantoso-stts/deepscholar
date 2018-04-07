@@ -46,6 +46,42 @@ const defaultLabelList = {
   [favoriteKey]: []
 };
 
+const knowledgeData = {
+  "title" : "Deep Learning",
+  "desc" : "branch of machine learning",
+  "props" : {
+    "Property A" : [
+      "Select Value A-1",
+      "Select Value A-2",
+      "Select Value A-3",
+    ],
+    "Property B" : [
+      "Select Value B-1",
+    ],
+    "Property C" : []
+  }
+}
+
+const knowledgeOptions = {
+  "Property A" : [
+    "Select Value A-1",
+    "Select Value A-2",
+    "Select Value A-3"
+  ],
+  "Property B" : [
+    "Select Value B-1",
+    "Select Value B-2",
+    "Select Value B-3"
+  ],
+  "Property C" : [
+    "Select Value C-1",
+    "Select Value C-2",
+    "Select Value C-3",
+    "Select Value C-4",
+    "Select Value C-5",
+  ],
+}
+
 export {favoriteKey}; // To use favoriteKey on another page.
 
 const initialState = {
@@ -79,7 +115,9 @@ const initialState = {
   },
   enabledAllAuthorsPaperIds: new Set(),
   enabledFullAbstractPaperIds: new Set(),
-  scrollYPositions: new Map()
+  scrollYPositions: new Map(),
+  knowledgeData: knowledgeData,
+  knowledgeOptions: knowledgeOptions
 };
 
 // //// ▼ Functions for Get/Set LabelList from/to DB ▼
@@ -269,6 +307,24 @@ export function reducers(state = initialState, action) {
     case UPDATE_LABEL_FILTER:
       return Object.assign({}, state, {
         labelFilter: action.filterList
+      });
+    case KNOWLEDGE_ADD:
+      let knowledgeDataForAdd = Object.assign({}, state.knowledgeData);
+          knowledgeDataForAdd["props"][action.category].push('');
+      return Object.assign({}, state, {
+        knowledgeData: knowledgeDataForAdd
+      });
+    case KNOWLEDGE_UPDATE:
+      let knowledgeDataForUpdate = Object.assign({}, state.knowledgeData);
+          knowledgeDataForUpdate["props"][action.category][action.index] = action.value;
+      return Object.assign({}, state, {
+        knowledgeData: knowledgeDataForUpdate
+      });
+    case KNOWLEDGE_REMOVE:
+      let knowledgeDataForRemove = Object.assign({}, state.knowledgeData);
+          knowledgeDataForRemove["props"][action.category].splice(action.index, 1);
+      return Object.assign({}, state, {
+        knowledgeData: knowledgeDataForRemove
       });
     default:
       return state;
@@ -472,3 +528,34 @@ export function updateLabelFilter(filterList) {
     filterList: filterList
   };
 }
+
+const KNOWLEDGE_ADD = "KNOWLEDGE_ADD";
+
+export function knowledgeAdd(category) {
+  return {
+    type: KNOWLEDGE_ADD,
+    category: category
+  };
+}
+
+const KNOWLEDGE_UPDATE = "KNOWLEDGE_UPDATE";
+
+export function knowledgeUpdate(category, index, value) {
+  return {
+    type: KNOWLEDGE_UPDATE,
+    category: category,
+    index: index,
+    value: value
+  };
+}
+
+const KNOWLEDGE_REMOVE = "KNOWLEDGE_REMOVE";
+
+export function knowledgeRemove(category, index) {
+  return {
+    type: KNOWLEDGE_REMOVE,
+    category: category,
+    index: index
+  };
+}
+
