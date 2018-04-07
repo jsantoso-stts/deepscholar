@@ -49,6 +49,13 @@ class Api {
   static verify(token) {
     return Api.fetchApi("/api/auth/verify", {}, token);
   }
+
+  static resetIndexes(token) {
+    return Api.fetchApi("/api/admin/indexes", {method: "DELETE"}, token)
+      .then(() => {
+        Api.fetchApi("/api/admin/indexes/init", {method: "POST"}, token);
+      });
+  }
 }
 
 export default Api;

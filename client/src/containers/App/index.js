@@ -71,8 +71,6 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
   }
 
   componentDidUpdate(prevProps) {
-
-
     window.jQuery(".dropdown-trigger").dropdown();
 
     const {category: oldCategory, query: oldQuery, gte: oldGte, lte: oldLte, page: oldPage, labelFilter: oldlabelFilter} = prevProps.state;
@@ -164,6 +162,20 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
     this.props.dispatch(signedOut());
   }
 
+  handleClickResetIndexes() {
+    if(!window.confirm("Are you sure to reset indexes?")) {
+      return;
+    }
+
+    const {user} = this.props.state;
+    const token = user ? user.token : null;
+
+    Api.resetIndexes(token)
+      .then((res) => {
+        window.location.reload();
+      });
+  }
+
   render() {
     const {user} = this.props.state;
     const isSignedIn = user !== null;
@@ -192,7 +204,7 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
               <ul id="navMenu" className="dropdown-content">
                 <li><a href="#!">Import Indexes</a></li>
                 <li className="divider"></li>
-                <li><a href="#!">Delete All Indexes</a></li>
+                <li><a href="#!" onClick={this.handleClickResetIndexes.bind(this)}>Reset Indexes</a></li>
               </ul>
               <ul className="right">
                 {isSignedIn && isAdmin &&

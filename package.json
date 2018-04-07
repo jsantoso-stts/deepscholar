@@ -24,7 +24,10 @@
     "fast-xml2js": "^1.0.7",
     "memory-streams": "^0.1.2",
     "mongodb": "^3.0.2",
-    "properties": "^1.2.1",
-    "request": "^2.83.0"
+    "properties": "^1.2.1"
+  },
+  "dependencies": {
+    "request": "^2.85.0",
+    "request-promise": "^4.2.2"
   }
 }

@@ -15,6 +15,7 @@
     "passport": "^0.4.0",
     "passport-github": "^1.1.0",
     "passport-jwt": "^3.0.1",
+    "request-promise": "^4.2.2",
     "searchkit-express": "^0.2.1"
   },
   "devDependencies": {
