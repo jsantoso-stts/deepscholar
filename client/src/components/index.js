@@ -339,13 +339,13 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
       category: this.props.category,
       index: this.props.index,
       value: this.props.value || "",
-      valueOld: this.props.value || "" 
+      valueOld: this.props.value || ""
     };
   }
 
   componentDidMount() {
     const self = this;
-    window.jQuery(this.refs.select).on('change', function (event) { // ref : https://goo.gl/ppDc1v
+    window.jQuery(this.refs.select).on('change', const triggerChange = function(event) { // ref : https://goo.gl/ppDc1v
       self.handleChange(event);
     })
     .material_select();
@@ -353,7 +353,11 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
 
   switchEditMode(bool) {
     const node = ReactDOM.findDOMNode(this.refs.thisElem);
-    bool ? node.classList.add('edit') : node.classList.remove('edit');
+    if( bool ) {
+      node.classList.add('edit');
+    } else {
+      node.classList.remove('edit');
+    }
   }
 
   handleClickEdit() {
@@ -388,11 +392,11 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
     const index = this.state.index;
     const value = knowledgeData["props"][category][index];
 
-    const options = knowledgeOptions[category].map(function(item, i) {
+    const options = knowledgeOptions[category].map(const makeOption = function(item) {
               return <option value={item} key={item}>{item}</option>;
             });
 
-    return(
+    return (
       <div ref="thisElem" className="box-row">
 
         <p>Value : {value}</p>  
@@ -431,11 +435,11 @@ const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps exten
     const {knowledgeData} = this.props.state;
 
     const props = Object.keys(knowledgeData["props"])
-                        .map( key => {
+                        .map((key) => {
                           const propsArr = knowledgeData["props"][key];
 
                           let prop;
-                          if( propsArr.length > 0 ) {
+                          if (propsArr.length > 0) {
                             prop = propsArr.map(function(item, i) {
                                       return <EntityDetailProp category={key} value={item} index={i} key={i} />;
                                     });
