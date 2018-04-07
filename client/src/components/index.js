@@ -345,7 +345,7 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
 
   componentDidMount() {
     const self = this;
-    window.jQuery(this.refs.select).on('change', const triggerChange = function(event) { // ref : https://goo.gl/ppDc1v
+    window.jQuery(this.refs.select).on('change', function(event) { // ref : https://goo.gl/ppDc1v
       self.handleChange(event);
     })
     .material_select();
@@ -392,7 +392,7 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
     const index = this.state.index;
     const value = knowledgeData["props"][category][index];
 
-    const options = knowledgeOptions[category].map(const makeOption = function(item) {
+    const options = knowledgeOptions[category].map(function(item) {
               return <option value={item} key={item}>{item}</option>;
             });
 

@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import {EntityDetail, BackToResult} from '../../components/index.js';
+import {EntityDetail} from '../../components/index.js';
 import {connect} from 'react-redux';
-import Api from '../../api';
 import './style.css';
 
 class Knowledge extends Component {
@@ -14,20 +13,16 @@ class Knowledge extends Component {
     document.body.classList.remove("knowledge-detail");
   }
 
-  componentDidMount() {
-    
-  }
-
   render() {
 
-    const backBtn = this.props.history.length > 2 ? true : false;
+    const backBtn = this.props.history.length > 2;
 
     return (
       <div className="row">
         <div className="col s12">
-          
+
           <EntityDetail backBtn={backBtn}/>
-                    
+
         </div>
       </div>
     );

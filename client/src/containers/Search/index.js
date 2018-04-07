@@ -1274,7 +1274,7 @@ class Search extends Component {
     const categories = [
       "texts",
       "figures",
-      "tables",      
+      "tables",
       "knowledge",
       "collocations"
     ];
@@ -1317,7 +1317,7 @@ class Search extends Component {
                         break;
                       case 'collocations':
                         icon = 'format_shapes';
-                        break;                      
+                        break;
                       default:
                         icon = '';
                     }
