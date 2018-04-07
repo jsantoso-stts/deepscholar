@@ -49,7 +49,7 @@ const defaultLabelList = {
 const knowledgeData = {
   "title": "Deep Learning",
   "desc": "branch of machine learning",
-  "props": {
+  "properties": {
     "Property A": [
       "Select Value A-1",
       "Select Value A-2",
@@ -310,21 +310,21 @@ export function reducers(state = initialState, action) {
       });
     case KNOWLEDGE_ADD: {
       const knowledgeData = Object.assign({}, state.knowledgeData);
-            knowledgeData["props"][action.category].push('');
+            knowledgeData["properties"][action.category].push('');
       return Object.assign({}, state, {
         knowledgeData: knowledgeData
       });
     }
     case KNOWLEDGE_UPDATE: {
       const knowledgeData = Object.assign({}, state.knowledgeData);
-            knowledgeData["props"][action.category][action.index] = action.value;
+            knowledgeData["properties"][action.category][action.index] = action.value;
       return Object.assign({}, state, {
         knowledgeData: knowledgeData
       });
     }
     case KNOWLEDGE_REMOVE: {
       const knowledgeData = Object.assign({}, state.knowledgeData);
-            knowledgeData["props"][action.category].splice(action.index, 1);
+            knowledgeData["properties"][action.category].splice(action.index, 1);
       return Object.assign({}, state, {
         knowledgeData: knowledgeData
       });

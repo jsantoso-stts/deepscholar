@@ -390,7 +390,7 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
 
     const category = this.state.category;
     const index = this.state.index;
-    const value = knowledgeData["props"][category][index];
+    const value = knowledgeData["properties"][category][index];
 
     const options = knowledgeOptions[category].map(function(item) {
               return <option value={item} key={item}>{item}</option>;
@@ -434,9 +434,9 @@ const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps exten
 
     const {knowledgeData} = this.props.state;
 
-    const props = Object.keys(knowledgeData["props"])
+    const props = Object.keys(knowledgeData["properties"])
                         .map((key) => {
-                          const propsArr = knowledgeData["props"][key];
+                          const propsArr = knowledgeData["properties"][key];
 
                           let prop;
                           if (propsArr.length > 0) {
