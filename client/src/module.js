@@ -55,9 +55,7 @@ const knowledgeData = {
       "Select Value A-2",
       "Select Value A-3"
     ],
-    "Property B": [
-      "Select Value B-1",
-    ],
+    "Property B": ["Select Value B-1"],
     "Property C": []
   }
 };
@@ -309,24 +307,24 @@ export function reducers(state = initialState, action) {
         labelFilter: action.filterList
       });
     case KNOWLEDGE_ADD: {
-      const knowledgeData = Object.assign({}, state.knowledgeData);
-            knowledgeData.properties[action.category].push('');
+      const knowledgeDataAdd = Object.assign({}, state.knowledgeData);
+            knowledgeDataAdd.properties[action.category].push('');
       return Object.assign({}, state, {
-        knowledgeData: knowledgeData
+        knowledgeData: knowledgeDataAdd
       });
     }
     case KNOWLEDGE_UPDATE: {
-      const knowledgeData = Object.assign({}, state.knowledgeData);
-            knowledgeData.properties[action.category][action.index] = action.value;
+      const knowledgeDataUpdate = Object.assign({}, state.knowledgeData);
+            knowledgeDataUpdate.properties[action.category][action.index] = action.value;
       return Object.assign({}, state, {
-        knowledgeData: knowledgeData
+        knowledgeData: knowledgeDataUpdate
       });
     }
     case KNOWLEDGE_REMOVE: {
-      const knowledgeData = Object.assign({}, state.knowledgeData);
-            knowledgeData.properties[action.category].splice(action.index, 1);
+      const knowledgeDataRemove = Object.assign({}, state.knowledgeData);
+            knowledgeDataRemove.properties[action.category].splice(action.index, 1);
       return Object.assign({}, state, {
-        knowledgeData: knowledgeData
+        knowledgeData: knowledgeDataRemove
       });
     }
     default:
