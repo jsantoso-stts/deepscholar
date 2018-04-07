@@ -393,13 +393,13 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
     const value = knowledgeData.properties[category][index];
 
     const options = knowledgeOptions[category].map(item => {
-      return <option value={item} key={item}>{item}</option>; 
+      return <option value={item} key={item}>{item}</option>;
     });
 
     return (
       <div ref="thisElem" className="box-row">
 
-        <p>Value: {value}</p>  
+        <p>Value: {value}</p>
 
         <div className="editBtns">
           <a className="icon edit" href="javascript:void(0)" onClick={this.handleClickEdit.bind(this)}><i className="material-icons">edit</i></a>
@@ -597,7 +597,7 @@ export const Entity = withRouter(connect(mapStateToProps)(class Entity extends C
   }
 }));
 
-export class Entities extends Component {  
+export class Entities extends Component {
 
   render() {
 
