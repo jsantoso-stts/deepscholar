@@ -590,8 +590,8 @@ export const Entity = withRouter(connect(mapStateToProps)(class Entity extends C
       <article className="paper paper1234">
         <div className="divider"></div>
 
-        <CheckForFilter paperId= '1'/>
-        <Favorite paperId='1'/>
+        <CheckForFilter paperId="1" />
+        <Favorite paperId="1" />
 
         <header><h5><a href="javascript:void(0)" onClick={this.handleClick.bind(this)} >{title[id]}</a></h5></header>
         <div className="searchresult">{desc[id]}</div>
