@@ -2,7 +2,7 @@ const express = require("express");
 const ElasticsearchTools = require("./common/elasticsearch_tools");
 
 module.exports = class Admin {
-  static router(app) {
+  static router() {
     const router = new express.Router();
 
     router.delete(`/indexes`, (req, res) => {
