@@ -16,7 +16,7 @@ import {
   signedOut,
   getLabelList,
   updateLabelList,
-  favoriteKey, requestPaper, requestImportIndexes, receiveImportIndexes
+  favoriteKey, requestImportIndexes, receiveImportIndexes
 } from '../../module';
 import './materializeTheme.css';
 import './style.css';
@@ -169,7 +169,7 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
   }
 
   handleClickResetIndexes() {
-    if (!window.confirm("Are you sure to reset indexes?")) {
+    if (!window.confirm("Are you sure to reset indexes? Your browser will be reloaded.")) {
       return;
     }
 
@@ -193,7 +193,10 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
     const target = e.target;
     const file = target.files.item(0);
     Api.importIndexes(token, file)
-      .then(() => this.props.dispatch(receiveImportIndexes()));
+      .then(() => {
+        window.Materialize.toast('The file had been uploaded. Now indexes have been creating.', 5000);
+        this.props.dispatch(receiveImportIndexes());
+      });
   }
 
   render() {
@@ -249,7 +252,10 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
                   className="material-icons right">arrow_drop_down</i></a></li>
                 }
                 {!isUploading && isSignedIn && isAdmin &&
-                <input type="file" onChange={this.handleChangeFile.bind(this)} ref={input => this.fileElement = input}/>
+                <input type="file" onChange={this.handleChangeFile.bind(this)} ref={input => {
+                  this.fileElement = input;
+                  return input;
+                }}/>
                 }
                 {!isSignedIn &&
                 <li><a href="#" onClick={this.handleClickSignIn.bind(this)}>Sign in</a></li>
