@@ -41,7 +41,17 @@ defineSearchkitRouter("tables");
 defineSearchkitRouter("figs");
 
 app.use("/api/auth", Auth.router(app));
-app.use("/api/admin", Admin.router(app));
+app.use("/api/admin", (req, res, next) => {
+  return Auth.isAdminByHeader(req.headers)
+    .then(isAdmin => {
+      if (isAdmin) {
+        next();
+      } else {
+        res.status(403)
+          .end();
+      }
+    });
+}, Admin.router(app));
 app.use("/api/label", require("./label.js")(app));
 
 app.listen(app.get("port"), () => {

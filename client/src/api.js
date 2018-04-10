@@ -1,7 +1,8 @@
 class Api {
   static fetchApi(path, options, token) {
-    const headers = new Headers();
-    headers.append("Content-Type", "application/json");
+    const defaultHeaders = new Headers();
+    defaultHeaders.append("Content-Type", "application/json");
+    const headers = options.headers || defaultHeaders;
 
     if (token) {
       headers.append("authorization", `bearer ${token}`);

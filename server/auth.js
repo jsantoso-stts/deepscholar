@@ -83,6 +83,19 @@ module.exports = class Auth {
     });
   }
 
+  static isAdminByHeader(headers) {
+    return Auth.getVerifiedUserId(headers)
+      .then(userId => {
+        return User.findByObjectId(userId)
+          .then(user => {
+            return user.isAdmin || false;
+          });
+      })
+      .catch(() => {
+        return false;
+      });
+  }
+
   static router(app) {
     app.use(passport.initialize());
 
