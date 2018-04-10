@@ -65,9 +65,6 @@ class Api {
     const headers = new Headers();
 
     return Api.fetchApi("/api/admin/indexes/import", {method: "POST", body, headers}, token)
-      .then(() => {
-        console.log("uploaded");
-      })
       .catch((e) => {
         console.log(e);
       });
