@@ -16,7 +16,7 @@ import {
   signedOut,
   getLabelList,
   updateLabelList,
-  favoriteKey
+  favoriteKey, requestPaper, requestImportIndexes, receiveImportIndexes
 } from '../../module';
 import './materializeTheme.css';
 import './style.css';
@@ -33,6 +33,7 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
     super(props);
     this.searchTimer = null;
     this.query = null;
+    this.fileElement = null;
   }
 
   componentDidMount() {
@@ -163,6 +164,10 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
     this.props.dispatch(signedOut());
   }
 
+  handleClickImportIndexes() {
+    this.fileElement.click();
+  }
+
   handleClickResetIndexes() {
     if (!window.confirm("Are you sure to reset indexes?")) {
       return;
@@ -172,11 +177,27 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
     const token = user ? user.token : null;
 
     Api.resetIndexes(token)
-      .then(window.location.reload());
+      .then(() => window.location.reload());
+  }
+
+  handleChangeFile(e) {
+    if (!window.confirm("Are you sure to import indexes?")) {
+      return;
+    }
+
+    this.props.dispatch(requestImportIndexes());
+
+    const {user} = this.props.state;
+    const token = user ? user.token : null;
+
+    const target = e.target;
+    const file = target.files.item(0);
+    Api.importIndexes(token, file)
+      .then(() => this.props.dispatch(receiveImportIndexes()));
   }
 
   render() {
-    const {user} = this.props.state;
+    const {user, isUploading} = this.props.state;
     const isSignedIn = user !== null;
     const isAdmin = user && user.isAdmin === true;
 
@@ -201,14 +222,34 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
                 </div>
               </div>
               <ul id="navMenu" className="dropdown-content">
-                <li><a href="#!">Import Indexes</a></li>
+                <li><a href="#!" onClick={this.handleClickImportIndexes.bind(this)}>Import Indexes</a></li>
                 <li className="divider"></li>
                 <li><a href="#!" onClick={this.handleClickResetIndexes.bind(this)}>Reset Indexes</a></li>
               </ul>
               <ul className="right">
-                {isSignedIn && isAdmin &&
+                {isUploading &&
+                <li className="valign-wrapper preloader-container">
+                  <div className="preloader-wrapper small active">
+                    <div className="spinner-layer spinner-blue-only">
+                      <div className="circle-clipper left">
+                        <div className="circle"></div>
+                      </div>
+                      <div className="gap-patch">
+                        <div className="circle"></div>
+                      </div>
+                      <div className="circle-clipper right">
+                        <div className="circle"></div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                }
+                {!isUploading && isSignedIn && isAdmin &&
                 <li><a className="dropdown-trigger" href="#!" data-beloworigin="true" data-activates="navMenu">Menu<i
                   className="material-icons right">arrow_drop_down</i></a></li>
+                }
+                {!isUploading && isSignedIn && isAdmin &&
+                <input type="file" onChange={this.handleChangeFile.bind(this)} ref={input => this.fileElement = input}/>
                 }
                 {!isSignedIn &&
                 <li><a href="#" onClick={this.handleClickSignIn.bind(this)}>Sign in</a></li>

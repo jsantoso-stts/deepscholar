@@ -115,7 +115,8 @@ const initialState = {
   enabledFullAbstractPaperIds: new Set(),
   scrollYPositions: new Map(),
   knowledgeData: knowledgeData,
-  knowledgeOptions: knowledgeOptions
+  knowledgeOptions: knowledgeOptions,
+  isUploading: false
 };
 
 // //// ▼ Functions for Get/Set LabelList from/to DB ▼
@@ -255,6 +256,11 @@ export function reducers(state = initialState, action) {
       return Object.assign({}, state, {
         tables: action.tables,
         tablesTotal: action.tablesTotal
+      });
+    case REQUEST_IMPORT_INDEXES:
+    case RECEIVE_IMPORT_INDEXES:
+      return Object.assign({}, state, {
+        isUploading: action.isUploading
       });
     case TOGGLE_ALL_AUTHORS:
       if (state.enabledAllAuthorsPaperIds.has(action.id)) {
@@ -456,6 +462,24 @@ export function receiveTables(json) {
     type: RECEIVE_TABLES,
     tables: json.hits.hits,
     tablesTotal: json.hits.total
+  };
+}
+
+const REQUEST_IMPORT_INDEXES = "REQUEST_IMPORT_INDEXES";
+
+export function requestImportIndexes() {
+  return {
+    type: REQUEST_IMPORT_INDEXES,
+    isUploading: true
+  };
+}
+
+const RECEIVE_IMPORT_INDEXES = "RECEIVE_IMPORT_INDEXES";
+
+export function receiveImportIndexes() {
+  return {
+    type: RECEIVE_IMPORT_INDEXES,
+    isUploading: false
   };
 }
 

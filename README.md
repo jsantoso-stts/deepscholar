@@ -96,7 +96,8 @@ All collections have been created.
 
 Import json files to ES
 ```
-$ npm -s run es:insertIndexes ~/sample.json
+$ npm -s run es:importIndexes ~/sample.json
+Now indexes have been creating.
 Inserted 482 papers.
 Inserted 475 papers.
 Inserted 514 papers.

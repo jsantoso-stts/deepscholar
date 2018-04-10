@@ -56,6 +56,21 @@ class Api {
         Api.fetchApi("/api/admin/indexes/init", {method: "POST"}, token);
       });
   }
+
+  static importIndexes(token, file) {
+    const body = new FormData();
+    body.append("indexes", file);
+
+    const headers = new Headers();
+
+    return Api.fetchApi("/api/admin/indexes/import", {method: "POST", body, headers}, token)
+      .then(() => {
+        console.log("uploaded");
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
 }
 
 export default Api;

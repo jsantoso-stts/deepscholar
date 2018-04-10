@@ -25,6 +25,10 @@
     min-height: 64px;
 }
 
+input[type=file] {
+    display: none;
+}
+
 /****************
 **  Logo
 ****************/
@@ -61,6 +65,10 @@
 
 #navMenu {
     width: 200px !important;
+}
+
+.preloader-container {
+    height: 64px;
 }
 
 /****************
