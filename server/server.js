@@ -45,11 +45,11 @@ app.use("/api/admin", (req, res, next) => {
   return Auth.isAdminByHeader(req.headers)
     .then(isAdmin => {
       if (isAdmin) {
-        next();
-      } else {
-        res.status(403)
-          .end();
+        return next();
       }
+
+      res.status(403)
+        .end();
     });
 }, Admin.router(app));
 app.use("/api/label", require("./label.js")(app));
