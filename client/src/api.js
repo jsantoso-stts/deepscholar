@@ -1,7 +1,8 @@
 class Api {
   static fetchApi(path, options, token) {
-    const headers = new Headers();
-    headers.append("Content-Type", "application/json");
+    const defaultHeaders = new Headers();
+    defaultHeaders.append("Content-Type", "application/json");
+    const headers = options.headers || defaultHeaders;
 
     if (token) {
       headers.append("authorization", `bearer ${token}`);
@@ -48,6 +49,25 @@ class Api {
 
   static verify(token) {
     return Api.fetchApi("/api/auth/verify", {}, token);
+  }
+
+  static resetIndexes(token) {
+    return Api.fetchApi("/api/admin/indexes", {method: "DELETE"}, token)
+      .then(() => {
+        Api.fetchApi("/api/admin/indexes/init", {method: "POST"}, token);
+      });
+  }
+
+  static importIndexes(token, file) {
+    const body = new FormData();
+    body.append("indexes", file);
+
+    const headers = new Headers();
+
+    return Api.fetchApi("/api/admin/indexes/import", {method: "POST", body, headers}, token)
+      .catch((e) => {
+        console.log(e);
+      });
   }
 }
 

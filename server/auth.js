@@ -56,6 +56,7 @@ function generateUserToken(req, res) {
   const accessToken = generateAccessToken(req.user._id);
   res.render('authenticated.html', {
     token: accessToken,
+    isAdmin: req.user.isAdmin || false,
     profile: JSON.stringify(req.user.profile)
   });
 }
@@ -82,6 +83,19 @@ module.exports = class Auth {
     });
   }
 
+  static isAdminByHeader(headers) {
+    return Auth.getVerifiedUserId(headers)
+      .then(userId => {
+        return User.findByObjectId(userId)
+          .then(user => {
+            return user.isAdmin || false;
+          });
+      })
+      .catch(() => {
+        return false;
+      });
+  }
+
   static router(app) {
     app.use(passport.initialize());
 
@@ -92,7 +106,8 @@ module.exports = class Auth {
         return User.findByObjectId(userId).then(user => {
           const token = generateAccessToken(userId);
           const {profile} = user;
-          res.send(JSON.stringify({token, profile}));
+          const isAdmin = user.isAdmin || false;
+          res.send(JSON.stringify({token, isAdmin, profile}));
         });
       })
 .catch(() => {

@@ -1,28 +1,15 @@
-const fs = require('fs');
-const path = require('path');
-const request = require("request");
 const common = require("./common.js");
+const ElasticsearchTools = require("../server/common/elasticsearch_tools");
 
 (async () => {
   const config = await common.loadDeepScholarConfig();
 
-  const indexSchemeDir = path.join(__dirname, "../", "index_schemes");
-  [
-    "papers",
-    "search_histories"
-  ].forEach((indexSchemeName) => {
-    fs.createReadStream(path.join(indexSchemeDir, `${indexSchemeName}.json`))
-      .pipe(request.put({
-        url: `http://localhost:${config.DS_ES_PORT}/${indexSchemeName}`
-      }, (error, response) => {
-        if (response.statusCode === 200) {
-          console.log(`Index(${indexSchemeName}) created.`);
-          return;
-        }
-
-        console.error(`Index(${indexSchemeName}) have not been created.`);
-        console.log(`StatusCode: ${response.statusCode}`);
-        console.log(response);
-      }));
-  });
+  ElasticsearchTools.initializeIndexes("localhost", config.DS_ES_PORT)
+    .then(() => {
+      console.log(`All Indexes have been created.`);
+    })
+    .catch(reason => {
+      console.error(`Indexes have not been created.`);
+      console.log(`StatusCode: ${reason.statusCode}`);
+    });
 })();

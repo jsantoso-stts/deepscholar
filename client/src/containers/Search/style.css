@@ -6,7 +6,7 @@
 
 .search .navbar-fixed {
     margin-bottom: 58px;
-    z-index: 2;
+    z-index: 100;
 }
 
 .search .header-navi {
@@ -542,7 +542,7 @@
     .search .contents .paper h6 {
         margin-top: 0;
         margin-bottom: 0;
-    }    
+    }
 
     .search .paper > footer {
         margin-top: 2px;
@@ -551,12 +551,12 @@
         .search .paper > footer ul.meta {
             margin: 0;
             position: relative;
-            left: -1px;            
+            left: -1px;
         }
 
     .search .contents .paper > .abstract {
         position: relative;
-        top: -8px;        
+        top: -8px;
         margin: 0 0 8px;
     }
 
