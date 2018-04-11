@@ -23,7 +23,7 @@ const defaultLabelList = {
     {
       "paper": [],
       "entity": []
-    }    
+    }
   ],
   "label2": [
     "label2",
@@ -195,18 +195,18 @@ const _validateLabelList = (labelList) => {
   }
   for (key in labelList) {
     if (key !== favoriteKey) {
-      if (typeof key !== 'string' 
-        || typeof labelList[key][0] !== 'string' 
-        || labelColor.indexOf(labelList[key][1]) === -1 
-        || typeof labelList[key][2] !== 'object'
-        || !Array.isArray(labelList[key][2]['paper'])
-        || !Array.isArray(labelList[key][2]['entity']) ) {
+      if (typeof key !== 'string' ||
+       typeof labelList[key][0] !== 'string' ||
+       labelColor.indexOf(labelList[key][1]) === -1 ||
+       typeof labelList[key][2] !== 'object' ||
+       !Array.isArray(labelList[key][2].paper) ||
+       !Array.isArray(labelList[key][2].entity) ) {
         isLabelList = false;
       }
     } else {
       if (typeof labelList[key] !== 'object'
-        || !Array.isArray(labelList[key]['paper'])
-        || !Array.isArray(labelList[key]['entity']) ) {
+        || !Array.isArray(labelList[key].paper)
+        || !Array.isArray(labelList[key].entity)) {
         isLabelList = false;
       }
     }

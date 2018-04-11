@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import XLSX from 'xlsx';
 import JSZip from 'jszip';
@@ -747,8 +746,8 @@ const FilterNormal = connect(mapStateToProps)(class FilterNormal extends Compone
 const FilterChoose = connect(mapStateToProps)(class FilterChoose extends Component {
 
   getCheckedList() {
-    const targetKey = (this.props.state.category === 'knowledge') ? 'entity' : 'paper';
-    const target = document.querySelectorAll('.' + targetKey + ' input:checked');
+    const targetKey = this.props.state.category === 'knowledge' ? 'entity' : 'paper';
+    const target = document.querySelectorAll(`.${targetKey} input:checked`);
     const list = [];
     Reflect.apply([].forEach, target, [
         e => {
@@ -760,7 +759,7 @@ const FilterChoose = connect(mapStateToProps)(class FilterChoose extends Compone
   }
 
   addLabel(target) {
-    const targetKey = (this.props.state.category === 'knowledge') ? 'entity' : 'paper';
+    const targetKey = this.props.state.category === 'knowledge' ? 'entity' : 'paper';
     const labelName = target.dataset.name;
     const checkedList = this.getCheckedList();
     const labelList = Object.assign({}, this.props.state.labelList);
@@ -772,7 +771,7 @@ const FilterChoose = connect(mapStateToProps)(class FilterChoose extends Compone
   }
 
   removeLabel(target) {
-    const targetKey = (this.props.state.category === 'knowledge') ? 'entity' : 'paper';
+    const targetKey = this.props.state.category === 'knowledge' ? 'entity' : 'paper';
     const labelName = target.dataset.name;
     const checkedList = this.getCheckedList();
     const labelList = Object.assign({}, this.props.state.labelList);
@@ -806,7 +805,7 @@ const FilterChoose = connect(mapStateToProps)(class FilterChoose extends Compone
   handleClickBtn() {
     const list = this.getCheckedList();
 
-    const targetKey = (this.props.state.category === 'knowledge') ? 'entity' : 'paper';
+    const targetKey = this.props.state.category === 'knowledge' ? 'entity' : 'paper';
     const labelList = Object.assign({}, this.props.state.labelList);
     Object.keys(labelList)
       .forEach(key => {
@@ -844,7 +843,7 @@ const FilterChoose = connect(mapStateToProps)(class FilterChoose extends Compone
 
   render() {
 
-    const targetKey = (this.props.state.category === 'knowledge') ? 'entity' : 'paper';
+    const targetKey = this.props.state.category === 'knowledge' ? 'entity' : 'paper';
     const {labelList} = this.props.state;
     let style = '';
 
@@ -1031,6 +1030,7 @@ class Search extends Component {
   }
 
   searchPapers() {
+    const targetKey = 'paper';
     const {query, page, gte, lte, labelList, labelFilter} = this.props.state;
     this.props.dispatch(requestPapers(query, page));
     const from = page * this.props.state.papersFetchSize;
@@ -1074,21 +1074,21 @@ class Search extends Component {
     // only Label Filter
     if (labelFilter.indexOf(favoriteKey) === -1 && labelFilter.length > 0) {
       labelFilter.forEach((e) => {
-        filterdList = _.union(filterdList, labelList[e][2]["paper"]);
+        filterdList = _.union(filterdList, labelList[e][2][targetKey]);
       });
 
       // only Favorite
     } else if (labelFilter.indexOf(favoriteKey) !== -1 && labelFilter.length === 1) {
-      filterdList = labelList[favoriteKey]["paper"];
+      filterdList = labelList[favoriteKey][targetKey];
 
       // both Label Filter & Favorite
     } else if (labelFilter.indexOf(favoriteKey) !== -1 && labelFilter.length > 1) {
       labelFilter.forEach((e) => {
         if (e !== favoriteKey) {
-          filterdList = _.union(filterdList, labelList[e][2]["paper"]);
+          filterdList = _.union(filterdList, labelList[e][2][targetKey]);
         }
       });
-      filterdList = _.intersection(filterdList, labelList[favoriteKey]["paper"]);
+      filterdList = _.intersection(filterdList, labelList[favoriteKey][targetKey]);
     }
 
     // for empty filter
@@ -1300,8 +1300,8 @@ class Search extends Component {
       {
         _id: "1",
         _source: {
-          title: "Deep Learning", 
-          desc: "branch of machine learning", 
+          title: "Deep Learning",
+          desc: "branch of machine learning",
           properties: {
             "Property A": [
               "Select Value A-1",
@@ -1317,8 +1317,8 @@ class Search extends Component {
       {
         _id: "2",
         _source: {
-          title: "Learning TensorFlow: A Guide to Building Deep learning Systems", 
-          desc: "Nature article by LeCun, Bengio and Hinton", 
+          title: "Learning TensorFlow: A Guide to Building Deep learning Systems",
+          desc: "Nature article by LeCun, Bengio and Hinton",
           "properties": {
             "Property A": [
               "Select Value A-1",
@@ -1334,8 +1334,8 @@ class Search extends Component {
       {
         _id: "3",
         _source: {
-          title: "Human-level control through deep reinforcement learning", 
-          desc: "scientific article", 
+          title: "Human-level control through deep reinforcement learning",
+          desc: "scientific article",
           "properties": {
             "Property A": [
               "Select Value A-1",
@@ -1351,8 +1351,8 @@ class Search extends Component {
       {
         _id: "4",
         _source: {
-          title: "IMS at EmoInt-2017: Emotion Intensity Prediction with Affective Norms, Automatically Extended Resources and Deep Learning", 
-          desc: "scientific article (publication date: May 2016)", 
+          title: "IMS at EmoInt-2017: Emotion Intensity Prediction with Affective Norms, Automatically Extended Resources and Deep Learning",
+          desc: "scientific article (publication date: May 2016)",
           "properties": {
             "Property A": [
               "Select Value A-1",
@@ -1368,8 +1368,8 @@ class Search extends Component {
       {
         _id: "5",
         _source: {
-          title: "Unsupervised Deep Learning Applied to Breast Density Segmentation and Mammographic Risk Scoring", 
-          desc: "Deep Learning Supercomputer System", 
+          title: "Unsupervised Deep Learning Applied to Breast Density Segmentation and Mammographic Risk Scoring",
+          desc: "Deep Learning Supercomputer System",
           "properties": {
             "Property A": [
               "Select Value A-1",
@@ -1381,7 +1381,7 @@ class Search extends Component {
           },
           update: "17:35, 28 March 2018"
         }
-      },
+      }
     ];
 
     return (

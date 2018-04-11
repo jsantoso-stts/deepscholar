@@ -99,7 +99,7 @@ const Favorite = connect(mapStateToProps)(class CheckBoxForFilter extends Compon
   handleClick(e) {
 
     const labelList = Object.assign({}, this.props.state.labelList);
-    const targetKey = (this.props.state.category === 'knowledge') ? 'entity' : 'paper';
+    const targetKey = this.props.state.category === 'knowledge' ? 'entity' : 'paper';
 
     const favList = labelList[favoriteKey][targetKey];
     const id = e.currentTarget.dataset.id;
@@ -584,10 +584,10 @@ export const Entity = withRouter(connect(mapStateToProps)(class Entity extends C
         <header>
           <h5>
             <a href="javascript:void(0)" onClick={this.handleClick.bind(this)} >{title}</a>
-            <FilterLabels />  
+            <FilterLabels />
           </h5>
         </header>
-        
+
         <div className="searchresult">{desc}</div>
         <div className="edited">{update}</div>
       </article>
