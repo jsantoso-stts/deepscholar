@@ -200,13 +200,13 @@ const _validateLabelList = (labelList) => {
        labelColor.indexOf(labelList[key][1]) === -1 ||
        typeof labelList[key][2] !== 'object' ||
        !Array.isArray(labelList[key][2].paper) ||
-       !Array.isArray(labelList[key][2].entity) ) {
+       !Array.isArray(labelList[key][2].entity)) {
         isLabelList = false;
       }
-    } else {
-      if (typeof labelList[key] !== 'object'
-        || !Array.isArray(labelList[key].paper)
-        || !Array.isArray(labelList[key].entity)) {
+    } else if (key === favoriteKey){
+      if (typeof labelList[key] !== 'object' ||
+         !Array.isArray(labelList[key].paper) ||
+         !Array.isArray(labelList[key].entity)) {
         isLabelList = false;
       }
     }
