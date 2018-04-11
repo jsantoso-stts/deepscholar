@@ -8,7 +8,7 @@
     "client": "node start-client.js",
     "lint": "eslint 'client/src/**/*.js' 'server/**/*.js' 'script/**/*.js'",
     "es:initializeIndexes": "node script/initializeIndexes.js",
-    "es:insertIndexes": "node script/insertIndexes.js",
+    "es:importIndexes": "node script/importIndexes.js",
     "es:deleteIndexes": "node script/deleteIndexes.js",
     "es:dump:searchHistories": "elasticdump --input=http://localhost:9200/search_histories --output=$ --type=data | node script/convert.js",
     "db:dropDatabase": "node script/dropDatabase.js"
@@ -24,7 +24,10 @@
     "fast-xml2js": "^1.0.7",
     "memory-streams": "^0.1.2",
     "mongodb": "^3.0.2",
-    "properties": "^1.2.1",
-    "request": "^2.83.0"
+    "properties": "^1.2.1"
+  },
+  "dependencies": {
+    "request": "^2.85.0",
+    "request-promise": "^4.2.2"
   }
 }
