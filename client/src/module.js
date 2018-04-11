@@ -16,34 +16,52 @@ const labelColor = [
   "purple"
 ];
 const defaultLabelList = {
-  // labelName : [name, color, paperList]
+  // labelName : [name, color, {paper: paperList, entity: entityList}]
   "label1": [
     "label1",
     labelColor[0],
-    []
+    {
+      "paper": [],
+      "entity": []
+    }    
   ],
   "label2": [
     "label2",
     labelColor[1],
-    []
+    {
+      "paper": [],
+      "entity": []
+    }
   ],
   "label3": [
     "label3",
     labelColor[2],
-    []
+    {
+      "paper": [],
+      "entity": []
+    }
   ],
   "label4": [
     "label4",
     labelColor[3],
-    []
+    {
+      "paper": [],
+      "entity": []
+    }
   ],
   "label5": [
     "label5",
     labelColor[4],
-    []
+    {
+      "paper": [],
+      "entity": []
+    }
   ],
   // Only for favorite func
-  [favoriteKey]: []
+  [favoriteKey]: {
+      "paper": [],
+      "entity": []
+    }
 };
 
 const knowledgeData = {
@@ -176,7 +194,18 @@ const _validateLabelList = (labelList) => {
   }
   for (key in labelList) {
     if (key !== favoriteKey) {
-      if (typeof key !== 'string' || typeof labelList[key][0] !== 'string' || labelColor.indexOf(labelList[key][1]) === -1 || !Array.isArray(labelList[key][2])) {
+      if (typeof key !== 'string' 
+        || typeof labelList[key][0] !== 'string' 
+        || labelColor.indexOf(labelList[key][1]) === -1 
+        || typeof labelList[key][2] !== 'object'
+        || !Array.isArray(labelList[key][2]['paper'])
+        || !Array.isArray(labelList[key][2]['entity']) ) {
+        isLabelList = false;
+      }
+    } else {
+      if (typeof labelList[key] !== 'object'
+        || !Array.isArray(labelList[key]['paper'])
+        || !Array.isArray(labelList[key]['entity']) ) {
         isLabelList = false;
       }
     }

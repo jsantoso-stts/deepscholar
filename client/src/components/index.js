@@ -84,11 +84,11 @@ const CheckForFilter = connect(mapStateToProps)(class CheckBoxForFilter extends 
   }
 
   render() {
-    const paperId = this.props.paperId;
+    const id = this.props.id;
     return (
       <div className="checkbox">
-        <input type="checkbox" id={paperId} className="filled-in" onChange={this.handleChange.bind(this)}/>
-        <label htmlFor={paperId}></label>
+        <input type="checkbox" id={id} className="filled-in" onChange={this.handleChange.bind(this)}/>
+        <label htmlFor={id}></label>
       </div>
     );
   }
@@ -97,10 +97,13 @@ const CheckForFilter = connect(mapStateToProps)(class CheckBoxForFilter extends 
 const Favorite = connect(mapStateToProps)(class CheckBoxForFilter extends Component {
 
   handleClick(e) {
+
     const labelList = Object.assign({}, this.props.state.labelList);
-    const favList = labelList[favoriteKey];
+    const targetKey = (this.props.state.category === 'knowledge') ? 'entity' : 'paper';
+
+    const favList = labelList[favoriteKey][targetKey];
     const id = e.currentTarget.dataset.id;
-    const index = labelList[favoriteKey].indexOf(id);
+    const index = labelList[favoriteKey][targetKey].indexOf(id);
     // exist ? remove : add;
     if (index !== -1) {
       favList.splice(index, 1);
@@ -111,9 +114,9 @@ const Favorite = connect(mapStateToProps)(class CheckBoxForFilter extends Compon
   }
 
   render() {
-    const paperId = this.props.paperId;
+    const id = this.props.id;
     return (
-      <div className="favorite" data-id={paperId} onClick={this.handleClick.bind(this)}>
+      <div className="favorite" data-id={id} onClick={this.handleClick.bind(this)}>
         <i className="material-icons on">star</i>
         <i className="material-icons off">star_border</i>
       </div>
@@ -175,14 +178,14 @@ export const Paper = withRouter(connect(mapStateToProps)(class Paper extends Com
     return (
       <article className={`paper paper${id}`}>
         <div className="divider"></div>
-        <CheckForFilter paperId={id}/>
-        <Favorite paperId={id}/>
+        <CheckForFilter id={id}/>
+        <Favorite id={id}/>
 
         <header>
           <h5>
             <a href="javascript:void(0)" onClick={this.handleClick.bind(this, paperUrl)}
                dangerouslySetInnerHTML={articleTitle}></a>
-            <FilterLabels paperId={id}/>
+            <FilterLabels />
           </h5>
           {authorComponents}
           <h6 dangerouslySetInnerHTML={journalTitle}></h6>
@@ -568,34 +571,25 @@ export const Entity = withRouter(connect(mapStateToProps)(class Entity extends C
 
   render() {
 
-    const id = Number(this.props.id);
-
-    const title = [
-        "Deep Learning",
-        "Learning TensorFlow: A Guide to Building Deep learning Systems",
-        "Human-level control through deep reinforcement learning",
-        "IMS at EmoInt-2017: Emotion Intensity Prediction with Affective Norms, Automatically Extended Resources and Deep Learning",
-        "Unsupervised Deep Learning Applied to Breast Density Segmentation and Mammographic Risk Scoring"
-    ];
-
-    const desc = [
-        "branch of machine learning",
-        "Nature article by LeCun, Bengio and Hinton",
-        "scientific article",
-        "scientific article (publication date: May 2016)",
-        "Deep Learning Supercomputer System"
-    ];
+    const id = this.props.data._id;
+    const {title, desc, update} = this.props.data._source;
 
     return (
-      <article className="paper paper1234">
+      <article className={`paper entity entity${id}`}>
         <div className="divider"></div>
 
-        <CheckForFilter paperId="1" />
-        <Favorite paperId="1" />
+        <CheckForFilter id={id} />
+        <Favorite id={id} />
 
-        <header><h5><a href="javascript:void(0)" onClick={this.handleClick.bind(this)} >{title[id]}</a></h5></header>
-        <div className="searchresult">{desc[id]}</div>
-        <div className="edited">Last edited on 17:35, 28 March 2018</div>
+        <header>
+          <h5>
+            <a href="javascript:void(0)" onClick={this.handleClick.bind(this)} >{title}</a>
+            <FilterLabels />  
+          </h5>
+        </header>
+        
+        <div className="searchresult">{desc}</div>
+        <div className="edited">{update}</div>
       </article>
     );
   }
@@ -605,13 +599,13 @@ export class Entities extends Component {
 
   render() {
 
+    const entities = this.props.data.map((entity) =>
+      <Entity data={entity} key={entity._id} />
+    );
+
     return (
       <div>
-        <Entity id="0" />
-        <Entity id="1" />
-        <Entity id="2" />
-        <Entity id="3" />
-        <Entity id="4" />
+        {entities}
       </div>
     );
   }

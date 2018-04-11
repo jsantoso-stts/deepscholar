@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import XLSX from 'xlsx';
 import JSZip from 'jszip';
@@ -510,7 +511,10 @@ const FilterEditModal = connect(mapStateToProps)(class FilterEditModal extends C
     labelList[`label${no}`] = [
       'New label',
       labelColor[length % 8],
-      []
+      {
+        "paper": [],
+        "entity": []
+      }
     ];
     this.props.dispatch(updateLabelList(labelList));
   }
@@ -743,7 +747,8 @@ const FilterNormal = connect(mapStateToProps)(class FilterNormal extends Compone
 const FilterChoose = connect(mapStateToProps)(class FilterChoose extends Component {
 
   getCheckedList() {
-    const target = document.querySelectorAll('.paper input:checked');
+    const targetKey = (this.props.state.category === 'knowledge') ? 'entity' : 'paper';
+    const target = document.querySelectorAll('.' + targetKey + ' input:checked');
     const list = [];
     Reflect.apply([].forEach, target, [
         e => {
@@ -755,10 +760,11 @@ const FilterChoose = connect(mapStateToProps)(class FilterChoose extends Compone
   }
 
   addLabel(target) {
+    const targetKey = (this.props.state.category === 'knowledge') ? 'entity' : 'paper';
     const labelName = target.dataset.name;
     const checkedList = this.getCheckedList();
     const labelList = Object.assign({}, this.props.state.labelList);
-    labelList[labelName][2] = labelList[labelName][2].concat(checkedList) // Marge
+    labelList[labelName][2][targetKey] = labelList[labelName][2][targetKey].concat(checkedList) // Marge
       .filter((x, i, self) => {
         return self.indexOf(x) === i;
       }); // Remove overlap
@@ -766,10 +772,11 @@ const FilterChoose = connect(mapStateToProps)(class FilterChoose extends Compone
   }
 
   removeLabel(target) {
+    const targetKey = (this.props.state.category === 'knowledge') ? 'entity' : 'paper';
     const labelName = target.dataset.name;
     const checkedList = this.getCheckedList();
     const labelList = Object.assign({}, this.props.state.labelList);
-    const oldList = this.props.state.labelList[labelName][2].slice();
+    const oldList = this.props.state.labelList[labelName][2][targetKey].slice();
     const newList = [];
     oldList.forEach((val) => {
       const index = checkedList.indexOf(val);
@@ -777,7 +784,7 @@ const FilterChoose = connect(mapStateToProps)(class FilterChoose extends Compone
         newList.push(val);
       }
     });
-    labelList[labelName][2] = newList;
+    labelList[labelName][2][targetKey] = newList;
     this.props.dispatch(updateLabelList(labelList));
   }
 
@@ -798,7 +805,9 @@ const FilterChoose = connect(mapStateToProps)(class FilterChoose extends Compone
 
   handleClickBtn() {
     const list = this.getCheckedList();
-    const {labelList} = this.props.state;
+
+    const targetKey = (this.props.state.category === 'knowledge') ? 'entity' : 'paper';
+    const labelList = Object.assign({}, this.props.state.labelList);
     Object.keys(labelList)
       .forEach(key => {
 
@@ -808,7 +817,7 @@ const FilterChoose = connect(mapStateToProps)(class FilterChoose extends Compone
           let result = 0;
           let c = 0;
           list.forEach((val, i) => {
-            if (labelList[labelKey][2].includes(list[i])) {
+            if (labelList[labelKey][2][targetKey].includes(list[i])) {
               result = 1;
               c += 1;
             }
@@ -834,6 +843,8 @@ const FilterChoose = connect(mapStateToProps)(class FilterChoose extends Compone
   }
 
   render() {
+
+    const targetKey = (this.props.state.category === 'knowledge') ? 'entity' : 'paper';
     const {labelList} = this.props.state;
     let style = '';
 
@@ -842,18 +853,22 @@ const FilterChoose = connect(mapStateToProps)(class FilterChoose extends Compone
         const labelKey = key;
         if (labelKey !== favoriteKey) {
           const labelName = labelList[labelKey][0];
-          const list = labelList[labelKey][2];
+          const list = labelList[labelKey][2][targetKey];
           list.forEach((val) => {
-            const valDotEscaped = val.replace(/\./i, '\\.'); // class name may include dot
-            style += `.paper${valDotEscaped} h5 .${labelKey} { margin: 0 4px; }`;
-            style += `.paper${valDotEscaped} h5 .${labelKey}:after { content: "${labelName}"; }`;
+            if (val !== "") {
+              const valDotEscaped = val.replace(/\./i, '\\.'); // class name may include dot
+              style += `.${targetKey}${valDotEscaped} h5 .${labelKey} { margin: 0 4px; }`;
+              style += `.${targetKey}${valDotEscaped} h5 .${labelKey}:after { content: "${labelName}"; }`;
+            }
           });
         } else {
-          const list = labelList[favoriteKey];
+          const list = labelList[favoriteKey][targetKey];
           list.forEach((val) => {
-            const valDotEscaped = val.replace(/\./i, '\\.'); // class name may include dot
-            style += `.paper${valDotEscaped} .favorite i.on { opacity: 1; }`;
-            style += `.paper${valDotEscaped} .favorite i.off { color: #1f4fa2; }`;
+            if (val !== "") {
+              const valDotEscaped = val.replace(/\./i, '\\.'); // class name may include dot
+              style += `.${targetKey}${valDotEscaped} .favorite i.on { opacity: 1; }`;
+              style += `.${targetKey}${valDotEscaped} .favorite i.off { color: #1f4fa2; }`;
+            }
           });
         }
       });
@@ -931,7 +946,7 @@ const CheckAll = connect(mapStateToProps)(class CheckAll extends Component {
   render() {
     return (
       <div className="checkAll">
-        <input type="checkbox" id="checkAll" className="filled-in" onChange={this.handleChange.bind(this)}/>
+        <input type="checkbox" id="checkAll" className="filled-in" onChange={this.handleChange.bind(this)} ref="checkAll" />
         <label htmlFor="checkAll"></label>
       </div>
     );
@@ -1059,21 +1074,21 @@ class Search extends Component {
     // only Label Filter
     if (labelFilter.indexOf(favoriteKey) === -1 && labelFilter.length > 0) {
       labelFilter.forEach((e) => {
-        filterdList = _.union(filterdList, labelList[e][2]);
+        filterdList = _.union(filterdList, labelList[e][2]["paper"]);
       });
 
       // only Favorite
     } else if (labelFilter.indexOf(favoriteKey) !== -1 && labelFilter.length === 1) {
-      filterdList = labelList[favoriteKey];
+      filterdList = labelList[favoriteKey]["paper"];
 
       // both Label Filter & Favorite
     } else if (labelFilter.indexOf(favoriteKey) !== -1 && labelFilter.length > 1) {
       labelFilter.forEach((e) => {
         if (e !== favoriteKey) {
-          filterdList = _.union(filterdList, labelList[e][2]);
+          filterdList = _.union(filterdList, labelList[e][2]["paper"]);
         }
       });
-      filterdList = _.intersection(filterdList, labelList[favoriteKey]);
+      filterdList = _.intersection(filterdList, labelList[favoriteKey]["paper"]);
     }
 
     // for empty filter
@@ -1242,6 +1257,8 @@ class Search extends Component {
   }
 
   handleClickTab(category) {
+    const checkAll = document.querySelector('#checkAll');
+          checkAll.checked = false;
     this.addTabClassToBody(category);
     this.changeQuery(category, this.props.state.query);
   }
@@ -1277,6 +1294,94 @@ class Search extends Component {
       "tables",
       "knowledge",
       "collocations"
+    ];
+
+    const sampleKnowledgeData = [
+      {
+        _id: "1",
+        _source: {
+          title: "Deep Learning", 
+          desc: "branch of machine learning", 
+          properties: {
+            "Property A": [
+              "Select Value A-1",
+              "Select Value A-2",
+              "Select Value A-3"
+            ],
+            "Property B": ["Select Value B-1"],
+            "Property C": []
+          },
+          update: "17:35, 28 March 2018"
+        }
+      },
+      {
+        _id: "2",
+        _source: {
+          title: "Learning TensorFlow: A Guide to Building Deep learning Systems", 
+          desc: "Nature article by LeCun, Bengio and Hinton", 
+          "properties": {
+            "Property A": [
+              "Select Value A-1",
+              "Select Value A-2",
+              "Select Value A-3"
+            ],
+            "Property B": ["Select Value B-1"],
+            "Property C": []
+          },
+          update: "17:35, 28 March 2018"
+        }
+      },
+      {
+        _id: "3",
+        _source: {
+          title: "Human-level control through deep reinforcement learning", 
+          desc: "scientific article", 
+          "properties": {
+            "Property A": [
+              "Select Value A-1",
+              "Select Value A-2",
+              "Select Value A-3"
+            ],
+            "Property B": ["Select Value B-1"],
+            "Property C": []
+          },
+          update: "17:35, 28 March 2018"
+        }
+      },
+      {
+        _id: "4",
+        _source: {
+          title: "IMS at EmoInt-2017: Emotion Intensity Prediction with Affective Norms, Automatically Extended Resources and Deep Learning", 
+          desc: "scientific article (publication date: May 2016)", 
+          "properties": {
+            "Property A": [
+              "Select Value A-1",
+              "Select Value A-2",
+              "Select Value A-3"
+            ],
+            "Property B": ["Select Value B-1"],
+            "Property C": []
+          },
+          update: "17:35, 28 March 2018"
+        }
+      },
+      {
+        _id: "5",
+        _source: {
+          title: "Unsupervised Deep Learning Applied to Breast Density Segmentation and Mammographic Risk Scoring", 
+          desc: "Deep Learning Supercomputer System", 
+          "properties": {
+            "Property A": [
+              "Select Value A-1",
+              "Select Value A-2",
+              "Select Value A-3"
+            ],
+            "Property B": ["Select Value B-1"],
+            "Property C": []
+          },
+          update: "17:35, 28 March 2018"
+        }
+      },
     ];
 
     return (
@@ -1380,7 +1485,7 @@ class Search extends Component {
                 }/>
                 <Route path="/knowledge" component={() =>
                   <div className="col s12">
-                    <Entities data={papers}/>
+                    <Entities data={sampleKnowledgeData}/>
                     <Paginator total={papersTotal} size={papersFetchSize} page={page}/>
                   </div>
                 }/>
