@@ -10,8 +10,7 @@
     "es:initializeIndexes": "node script/initializeIndexes.js",
     "es:importIndexes": "node script/importIndexes.js",
     "es:deleteIndexes": "node script/deleteIndexes.js",
-    "es:dump:searchHistories": "elasticdump --input=http://localhost:9200/search_histories --output=$ --type=data | node script/convert.js",
-    "db:dropDatabase": "node script/dropDatabase.js"
+    "es:dump:searchHistories": "elasticdump --input=http://localhost:9200/search_histories --output=$ --type=data | node script/convert.js"
   },
   "devDependencies": {
     "ajv": "^6.2.1",
