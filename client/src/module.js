@@ -203,7 +203,7 @@ const _validateLabelList = (labelList) => {
        !Array.isArray(labelList[key][2].entity)) {
         isLabelList = false;
       }
-    } else if (key === favoriteKey){
+    } else if (key === favoriteKey) {
       if (typeof labelList[key] !== 'object' ||
          !Array.isArray(labelList[key].paper) ||
          !Array.isArray(labelList[key].entity)) {
