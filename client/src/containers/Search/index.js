@@ -884,6 +884,16 @@ const FilterChoose = connect(mapStateToProps)(class FilterChoose extends Compone
 
 const FilterFav = connect(mapStateToProps)(class CheckAll extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      categoryOld: this.props.state.category,
+      queryOld: this.props.state.query,
+      labelFilterOld: this.props.state.labelFilter.slice(),
+      pageOld: this.props.state.page
+    };
+  }
+
   addFilter(labelName) {
     const labelFilter = this.props.state.labelFilter.slice();
     const newFilter = labelFilter
@@ -904,11 +914,22 @@ const FilterFav = connect(mapStateToProps)(class CheckAll extends Component {
 
   handleClick(e) {
     const tgt = e.currentTarget;
-    this.props.dispatch(changePage(0));
+
     tgt.classList.toggle('active');
     if (tgt.classList.contains('active')) {
+      // memorize conditions before fav
+      this.setState({categoryOld: this.props.state.category, queryOld: this.props.state.query, labelFilterOld: this.props.state.labelFilter.slice(), pageOld: this.props.state.page});
+      this.props.dispatch(changePage(0));
+
       this.addFilter(favoriteKey);
     } else {
+      // if conditions are same as before fav, move to same page
+      const {category, query, labelFilter} = this.props.state;
+      const {categoryOld, queryOld, labelFilterOld, pageOld} = this.state;
+      const labelFilterDiff = _.difference(labelFilter, labelFilterOld);
+      const page = categoryOld === category && queryOld === query && labelFilterDiff.length === 1 && labelFilterDiff[0] === favoriteKey ? pageOld : 0;
+      this.props.dispatch(changePage(page));
+
       this.removeFilter(favoriteKey);
     }
   }
