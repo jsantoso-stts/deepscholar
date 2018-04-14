@@ -71,7 +71,11 @@ const knowledgeData = {
     "Property A": [
       "Select Value A-1",
       "Select Value A-2",
-      "Select Value A-3"
+      "Select Value A-3",
+      "Select Value A-4",
+      "Select Value A-5",
+      "Select Value A-6",
+      "Select Value A-7"
     ],
     "Property B": ["Select Value B-1"],
     "Property C": []

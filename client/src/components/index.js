@@ -428,9 +428,20 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
 
 const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      asFull: this.props.asFull
+    }    
+  }
+
   handleClick(e) {
     const category = e.currentTarget.getAttribute('data-category');
     this.props.dispatch(knowledgeAdd(category));
+  }
+
+  handleClickViewAll(e) {
+    this.setState({asFull: !this.state.asFull});
   }
 
   render() {
@@ -441,13 +452,24 @@ const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps exten
                         .map((key) => {
                           const propsArr = knowledgeData.properties[key];
 
-                          let prop;
+                          let prop = null;
                           if (propsArr.length > 0) {
                             prop = propsArr.map((item, i) => {
-                                      return <EntityDetailProp category={key} value={item} index={i} key={i} />;
+                                      if ( i < 4 || this.state.asFull ) {
+                                        return <EntityDetailProp category={key} value={item} index={i} key={i} />;  
+                                      }                                      
                                     });
-                          } else {
-                            prop = null;
+                          }
+
+                          let addValue = null;
+                          if( propsArr.length < 5 || this.state.asFull ) {
+                            addValue = <a className="icon add" href="javascript:void(0)" onClick={this.handleClick.bind(this)} data-category={key}><i className="material-icons">add</i>add value</a>;
+                          }
+
+                          let viewAll = null;
+                          if( propsArr.length >= 5 ) {
+                            const text = this.state.asFull ? 'close' : 'view all';
+                            viewAll = <a className={`icon add viewAll viewAll${this.state.asFull}`} href="javascript:void(0)" onClick={this.handleClickViewAll.bind(this)} ><span>▼</span> {text}</a>;
                           }
 
                           // 追加の設定
@@ -456,7 +478,8 @@ const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps exten
                               <div className="box">
                                 <h6>{key}</h6>
                                 {prop}
-                                <a className="icon add" href="javascript:void(0)" onClick={this.handleClick.bind(this)} data-category={key}><i className="material-icons">add</i>add value</a>
+                                {addValue}
+                                {viewAll}
                               </div>
                               <div className="divider"></div>
                             </div>
@@ -551,7 +574,7 @@ export const EntityDetail = withRouter(connect(mapStateToProps)(class EntityDeta
 
         <EntityDetailDesc desc={desc} />
 
-        <EntityDetailProps/>
+        <EntityDetailProps asFull={false}/>
 
         <div className="edited">Last edited on 17:35, 28 March 2018</div>
 

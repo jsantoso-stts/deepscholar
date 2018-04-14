@@ -332,6 +332,17 @@
             font-size: 19px;
         }
 
+    .knowledge-term .icon.add.viewAll.viewAlltrue {
+        bottom: -56px;
+    }
+        .knowledge-term .icon.add.viewAll span {
+            display: inline-block;
+            font-size: 80%;
+        }
+        .knowledge-term .icon.add.viewAll.viewAlltrue span {
+            transform: rotate(180deg);
+        }
+
     .knowledge-term .editBtns{
         display: block;
         position: absolute;
