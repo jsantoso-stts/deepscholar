@@ -88,15 +88,15 @@ Index(search_histories) created.
 
 Create database using the following command
 ```
-$ npm -s run db:initializeDatabase
-All collections have been created.
+$ docker-compose exec deepscholar.server npm -s run es:initializeIndexes
+  All Indexes have been created.
 ```
 
 ### Import JSON data
 
 Import json files to ES
 ```
-$ npm -s run es:importIndexes ~/sample.json
+$ cat ~/sample.json | docker-compose exec -T deepscholar.server npm -s run es:importIndexes
 Now indexes have been creating.
 Inserted 482 papers.
 Inserted 475 papers.
@@ -109,7 +109,7 @@ Please define limit bytes to import Elasticsearch's Bulk API using `DS_BULK_LIMI
 
 ### Delete indexes
 ```
-$ npm -s run es:deleteIndexes
+$ docker-compose exec deepscholar.server npm -s run es:deleteIndexes
 All Indexes have been deleted.
 ```
 
@@ -119,7 +119,7 @@ All Indexes have been deleted.
 
 ### Export search histories to tsv
 ```
-$ npm run es:dump:searchHistories > searchHistories.tsv 
+$ docker-compose exec deepscholar.server npm -s run es:dump:searchHistories > searchHistories.tsv 
 ```
 
 ### Add DeepScholar application administrator role to a user  
