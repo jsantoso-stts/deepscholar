@@ -8,7 +8,7 @@ module.exports = class Admin {
     const router = new express.Router();
 
     router.delete(`/indexes`, (req, res) => {
-      ElasticsearchTools.deleteIndexes("deepscholar.elasticsearch", 9200)
+      ElasticsearchTools.deleteIndexes()
         .then(res.send(JSON.stringify({})))
         .catch(reason => {
           res.status(reason.statusCode)
@@ -17,7 +17,7 @@ module.exports = class Admin {
     });
 
     router.post(`/indexes/init`, (req, res) => {
-      ElasticsearchTools.initializeIndexes("deepscholar.elasticsearch", 9200)
+      ElasticsearchTools.initializeIndexes()
         .then(res.send(JSON.stringify({})))
         .catch(reason => {
           res.status(reason.statusCode)
@@ -26,7 +26,7 @@ module.exports = class Admin {
     });
 
     router.post(`/indexes/import`, upload.single('indexes'), (req, res) => {
-      ElasticsearchTools.importIndexes("deepscholar.elasticsearch", 9200, process.env.DS_BULK_LIMIT_BYTE_PER_REQUEST, req.file.path);
+      ElasticsearchTools.importIndexes(process.env.DS_BULK_LIMIT_BYTE_PER_REQUEST, req.file.path);
       res.send(JSON.stringify({}));
     });
 
