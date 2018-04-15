@@ -114,10 +114,8 @@ All Indexes have been deleted.
 ```
 
 ### Delete database
-```
-$ npm -s run db:dropDatabase
-All databases have been deleted.
-```
+1. Open [mongo-express](http://localhost:8081)
+2. Click `Del` button on `deepscholar` database. 
 
 ### Export search histories to tsv
 ```
