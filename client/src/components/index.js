@@ -592,10 +592,23 @@ export const Entity = withRouter(connect(mapStateToProps)(class Entity extends C
     this.props.history.push('/knowledge/term');
   }
 
+  formatTime(timestamp) {
+    const targetDate = new Date(timestamp * 1000);
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const year = targetDate.getFullYear();
+    const month = months[targetDate.getMonth()];
+    const date = targetDate.getDate();
+    const hour = targetDate.getHours();
+    const min = targetDate.getMinutes();
+    const time = hour + ':' + min + ', ' + date + ' ' + month + ' ' + year;
+    return time;
+  }
+
   render() {
 
-    const id = this.props.data._id;
-    const {title, desc, update} = this.props.data._source;
+    const {id, title, desc, update} = this.props.data;
+
+    const updateTime = this.formatTime(update);
 
     return (
       <article className={`paper entity entity${id}`}>
@@ -612,7 +625,7 @@ export const Entity = withRouter(connect(mapStateToProps)(class Entity extends C
         </header>
 
         <div className="searchresult">{desc}</div>
-        <div className="edited">{update}</div>
+        <div className="edited">{updateTime}</div>
       </article>
     );
   }
@@ -623,7 +636,7 @@ export class Entities extends Component {
   render() {
 
     const entities = this.props.data.map((entity) =>
-      <Entity data={entity} key={entity._id} />
+      <Entity data={entity} key={entity.id} />
     );
 
     return (

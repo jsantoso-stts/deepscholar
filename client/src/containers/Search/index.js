@@ -1261,6 +1261,19 @@ class Search extends Component {
       });
   }
 
+  searchEntities() {
+    const targetKey = 'entity';
+    const {query, page, gte, lte, labelList, labelFilter} = this.props.state;
+    this.props.dispatch(requestPapers(query, page));
+    
+    // conditions for entity search : this part is going to be written after DB implemented.
+
+    Api.searchText({body}, token)
+      .then((json) => {
+        this.props.dispatch(receivePapers(json));
+      });
+  }
+
   changeQuery(category, query) {
     if (this.searchTimer !== null) {
       clearTimeout(this.searchTimer);
@@ -1319,89 +1332,82 @@ class Search extends Component {
 
     const sampleKnowledgeData = [
       {
-        _id: "1",
-        _source: {
-          title: "Deep Learning",
-          desc: "branch of machine learning",
-          properties: {
-            "Property A": [
-              "Select Value A-1",
-              "Select Value A-2",
-              "Select Value A-3"
-            ],
-            "Property B": ["Select Value B-1"],
-            "Property C": []
-          },
-          update: "17:35, 28 March 2018"
-        }
+        id: "1",
+        title: "Deep Learning",
+        desc: "branch of machine learning",
+        properties: {
+          "Property A": [
+            "Select Value A-1",
+            "Select Value A-2",
+            "Select Value A-3",
+            "Select Value A-4",
+            "Select Value A-5",
+            "Select Value A-6"
+          ],
+          "Property B": ["Select Value B-1"],
+          "Property C": []
+        },
+        update: 1523709809
       },
       {
-        _id: "2",
-        _source: {
-          title: "Learning TensorFlow: A Guide to Building Deep learning Systems",
-          desc: "Nature article by LeCun, Bengio and Hinton",
-          "properties": {
-            "Property A": [
-              "Select Value A-1",
-              "Select Value A-2",
-              "Select Value A-3"
-            ],
-            "Property B": ["Select Value B-1"],
-            "Property C": []
-          },
-          update: "17:35, 28 March 2018"
-        }
+        id: "2",
+        title: "Learning TensorFlow: A Guide to Building Deep learning Systems",
+        desc: "Nature article by LeCun, Bengio and Hinton",
+        properties: {
+          "Property A": [
+            "Select Value A-1",
+            "Select Value A-2",
+            "Select Value A-3"
+          ],
+          "Property B": ["Select Value B-1"],
+          "Property C": []
+        },
+        update: 1523709809
       },
       {
-        _id: "3",
-        _source: {
-          title: "Human-level control through deep reinforcement learning",
-          desc: "scientific article",
-          "properties": {
-            "Property A": [
-              "Select Value A-1",
-              "Select Value A-2",
-              "Select Value A-3"
-            ],
-            "Property B": ["Select Value B-1"],
-            "Property C": []
-          },
-          update: "17:35, 28 March 2018"
-        }
+        id: "3",
+        title: "Human-level control through deep reinforcement learning",
+        desc: "scientific article",
+        properties: {
+          "Property A": [
+            "Select Value A-1",
+            "Select Value A-2",
+            "Select Value A-3"
+          ],
+          "Property B": ["Select Value B-1"],
+          "Property C": []
+        },
+        update: 1523709809
       },
       {
-        _id: "4",
-        _source: {
-          title: "IMS at EmoInt-2017: Emotion Intensity Prediction with Affective Norms, Automatically Extended Resources and Deep Learning",
-          desc: "scientific article (publication date: May 2016)",
-          "properties": {
-            "Property A": [
-              "Select Value A-1",
-              "Select Value A-2",
-              "Select Value A-3"
-            ],
-            "Property B": ["Select Value B-1"],
-            "Property C": []
-          },
-          update: "17:35, 28 March 2018"
-        }
+        id: "4",
+        title: "IMS at EmoInt-2017: Emotion Intensity Prediction with Affective Norms, Automatically Extended Resources and Deep Learning",
+        desc: "scientific article (publication date: May 2016)",
+        properties: {
+          "Property A": [
+            "Select Value A-1",
+            "Select Value A-2",
+            "Select Value A-3"
+          ],
+          "Property B": ["Select Value B-1"],
+          "Property C": []
+        },
+        update: 1523709809
       },
       {
-        _id: "5",
-        _source: {
-          title: "Unsupervised Deep Learning Applied to Breast Density Segmentation and Mammographic Risk Scoring",
-          desc: "Deep Learning Supercomputer System",
-          "properties": {
-            "Property A": [
-              "Select Value A-1",
-              "Select Value A-2",
-              "Select Value A-3"
-            ],
-            "Property B": ["Select Value B-1"],
-            "Property C": []
-          },
-          update: "17:35, 28 March 2018"
-        }
+        id: "5",
+        title: "Unsupervised Deep Learning Applied to Breast Density Segmentation and Mammographic Risk Scoring",
+        desc: "Deep Learning Supercomputer System",
+        properties: {
+          "Property A": [
+            "Select Value A-1",
+            "Select Value A-2",
+            "Select Value A-3"
+          ],
+          "Property B": ["Select Value B-1"],
+          "Property C": []
+        },
+        update: 1523709809
       }
     ];
 

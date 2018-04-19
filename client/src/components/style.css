@@ -327,7 +327,7 @@
         .knowledge-term .icon.add i {        
             position: absolute;
             left: -20px;
-            top: calc(50% + 2px);
+            top: calc(50% + 1px);
             transform: translateY(-50%);        
             font-size: 19px;
         }
