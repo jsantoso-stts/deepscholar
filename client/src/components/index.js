@@ -389,15 +389,11 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
 
   render() {
 
-    const {knowledgeData, knowledgeOptions} = this.props.state;
+    const {knowledgeData} = this.props.state;
 
     const category = this.state.category;
     const index = this.state.index;
-    const value = knowledgeData.properties[category][index];
-
-    const options = knowledgeOptions[category].map(item => {
-      return <option value={item} key={item}>{item}</option>;
-    });
+    const value = this.state.value;
 
     return (
       <div ref="thisElem" className="box-row">
@@ -410,10 +406,7 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
         </div>
 
         <div className="input-field input-field--alpha">
-          <select ref="select" value={value} onChange={this.handleChange.bind(this)} >
-            <option value="">Choose value</option>
-            {options}
-          </select>
+          <input type="text" value={value} onChange={this.handleChange.bind(this)}/>
         </div>
 
         <div className="btns">

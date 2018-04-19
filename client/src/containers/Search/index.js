@@ -1264,14 +1264,14 @@ class Search extends Component {
   searchEntities() {
     const targetKey = 'entity';
     const {query, page, gte, lte, labelList, labelFilter} = this.props.state;
-    this.props.dispatch(requestPapers(query, page));
+    // this.props.dispatch(requestPapers(query, page));
     
     // conditions for entity search : this part is going to be written after DB implemented.
 
-    Api.searchText({body}, token)
-      .then((json) => {
-        this.props.dispatch(receivePapers(json));
-      });
+    // Api.searchText({body}, token)
+    //   .then((json) => {
+    //     this.props.dispatch(receivePapers(json));
+    //   });
   }
 
   changeQuery(category, query) {

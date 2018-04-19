@@ -82,26 +82,6 @@ const knowledgeData = {
   }
 };
 
-const knowledgeOptions = {
-  "Property A": [
-    "Select Value A-1",
-    "Select Value A-2",
-    "Select Value A-3"
-  ],
-  "Property B": [
-    "Select Value B-1",
-    "Select Value B-2",
-    "Select Value B-3"
-  ],
-  "Property C": [
-    "Select Value C-1",
-    "Select Value C-2",
-    "Select Value C-3",
-    "Select Value C-4",
-    "Select Value C-5"
-  ]
-};
-
 export {favoriteKey}; // To use favoriteKey on another page.
 
 const initialState = {
@@ -137,7 +117,6 @@ const initialState = {
   enabledFullAbstractPaperIds: new Set(),
   scrollYPositions: new Map(),
   knowledgeData: knowledgeData,
-  knowledgeOptions: knowledgeOptions,
   isUploading: false
 };
 
