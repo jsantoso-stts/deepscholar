@@ -2,7 +2,11 @@
   "name": "server",
   "private": true,
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "es:initializeIndexes": "node scripts/initializeIndexes.js",
+    "es:importIndexes": "node scripts/importIndexes.js",
+    "es:deleteIndexes": "node scripts/deleteIndexes.js",
+    "es:dump:searchHistories": "elasticdump --input=http://deepscholar.elasticsearch:9200/search_histories --output=$ --type=data | node scripts/convert.js"
   },
   "dependencies": {
     "ajv": "^6.4.0",
@@ -22,6 +26,8 @@
     "searchkit-express": "^0.2.1"
   },
   "devDependencies": {
-    "nodemon": "^1.14.10"
+    "elasticdump": "^3.3.11",
+    "nodemon": "^1.14.10",
+    "properties": "^1.2.1"
   }
 }

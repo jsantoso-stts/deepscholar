@@ -8,14 +8,17 @@ const {ReadableStream} = require('memory-streams');
 const Ajv = require('ajv');
 
 module.exports = class ElasticsearchTools {
-  static deleteIndexes(host, port) {
+  static get AUTHORITY() {
+    return "deepscholar.elasticsearch:9200";
+  }
+  static deleteIndexes() {
     return rp({
       method: "DELETE",
-      url: `http://${host}:${port}/*`
+      url: `http://${ElasticsearchTools.AUTHORITY}/*`
     });
   }
 
-  static initializeIndexes(host, port) {
+  static initializeIndexes() {
     const mappingsDir = path.join(__dirname, "mappings");
     return Promise.all([
       "papers",
@@ -25,20 +28,20 @@ module.exports = class ElasticsearchTools {
         .then(json => {
           return rp({
             method: "PUT",
-            url: `http://${host}:${port}/${fileName}`,
+            url: `http://${ElasticsearchTools.AUTHORITY}/${fileName}`,
             body: json
           });
         });
     }));
   }
 
-  static async importIndexes(host, port, bytePerRequest, filePath) {
+  static async importIndexes(bytePerRequest, filePathOrStream) {
     function createRequest() {
       const stream = new ReadableStream("");
 
       stream.pipe(rp({
         method: "POST",
-        url: `http://${host}:${port}/_bulk`
+        url: `http://${ElasticsearchTools.AUTHORITY}/_bulk`
       }));
 
       return stream;
@@ -63,7 +66,14 @@ module.exports = class ElasticsearchTools {
     let processedByte = 0;
     let processedPapers = 0;
     let stream = null;
-    readline.createInterface(fs.createReadStream(filePath), {})
+    let inputStream = null;
+    if (typeof filePathOrStream === "string") {
+      inputStream = fs.createReadStream(filePathOrStream);
+    } else {
+      inputStream = filePathOrStream;
+    }
+
+    readline.createInterface(inputStream, {})
       .on("line", line => {
         if (processedByte > bytePerRequest) {
           if (stream) {

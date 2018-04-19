@@ -6,28 +6,12 @@
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "node start-server.js",
     "client": "node start-client.js",
-    "lint": "eslint 'client/src/**/*.js' 'server/**/*.js' 'script/**/*.js'",
-    "es:initializeIndexes": "node script/initializeIndexes.js",
-    "es:importIndexes": "node script/importIndexes.js",
-    "es:deleteIndexes": "node script/deleteIndexes.js",
-    "es:dump:searchHistories": "elasticdump --input=http://localhost:9200/search_histories --output=$ --type=data | node script/convert.js",
-    "db:dropDatabase": "node script/dropDatabase.js"
+    "lint": "eslint 'client/src/**/*.js' 'server/**/*.js' 'script/**/*.js'"
   },
   "devDependencies": {
-    "ajv": "^6.2.1",
     "babel-eslint": "^8.2.2",
-    "camelcase": "^4.1.0",
     "concurrently": "^3.5.0",
-    "elasticdump": "^3.3.4",
     "eslint": "^4.18.2",
-    "eslint-plugin-react": "^7.1.0",
-    "fast-xml2js": "^1.0.7",
-    "memory-streams": "^0.1.2",
-    "mongodb": "^3.0.2",
-    "properties": "^1.2.1"
-  },
-  "dependencies": {
-    "request": "^2.85.0",
-    "request-promise": "^4.2.2"
+    "eslint-plugin-react": "^7.1.0"
   }
 }
