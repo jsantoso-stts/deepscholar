@@ -388,8 +388,6 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
   }
 
   render() {
-    const category = this.state.category;
-    const index = this.state.index;
     const value = this.state.value;
 
     return (
@@ -427,6 +425,7 @@ const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps exten
     Object.keys(properties)
           .map((key) => {
             this.state.asFull[key] = false;
+            return false;
           });
   }
 
@@ -442,7 +441,7 @@ const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps exten
   handleClickViewAll(e) {
     const category = e.currentTarget.getAttribute('data-category');
     const asFull = Object.assign({}, this.state.asFull);
-          asFull[category] = !asFull[category];          
+          asFull[category] = !asFull[category];
     this.setState({asFull: asFull});
   }
 
@@ -458,19 +457,19 @@ const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps exten
                           let prop = null;
                           if (propsArr.length > 0) {
                             prop = propsArr.map((item, i) => {
-                                      if ( i < 4 || asFull ) {
-                                        return <EntityDetailProp category={key} value={item} index={i} key={i} />;  
-                                      }                                      
+                                      if (i < 4 || asFull) {
+                                        return <EntityDetailProp category={key} value={item} index={i} key={i} />;
+                                      }
                                     });
                           }
 
                           let addValue = null;
-                          if( propsArr.length < 5 || asFull ) {
+                          if (propsArr.length < 5 || asFull) {
                             addValue = <a className="icon add" href="javascript:void(0)" onClick={this.handleClick.bind(this)} data-category={key}><i className="material-icons">add</i>add value</a>;
                           }
 
                           let viewAll = null;
-                          if( propsArr.length >= 5 ) {
+                          if (propsArr.length >= 5) {
                             const text = asFull ? 'close' : 'view all';
                             viewAll = <a className="icon add viewAll" href="javascript:void(0)" onClick={this.handleClickViewAll.bind(this)} data-category={key}><span>▼</span> {text}</a>;
                           }
@@ -561,7 +560,20 @@ export const EntityDetail = withRouter(connect(mapStateToProps)(class EntityDeta
 
   formatTime(timestamp) {
     const targetDate = new Date(timestamp * 1000);
-    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const months = [
+                      'January',
+                      'February',
+                      'March',
+                      'April',
+                      'May',
+                      'June',
+                      'July',
+                      'August',
+                      'September',
+                      'October',
+                      'November',
+                      'December'
+                    ];
     const year = targetDate.getFullYear();
     const month = months[targetDate.getMonth()];
     const date = targetDate.getDate();
@@ -611,7 +623,20 @@ export const Entity = withRouter(connect(mapStateToProps)(class Entity extends C
 
   formatTime(timestamp) {
     const targetDate = new Date(timestamp * 1000);
-    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const months = [
+                      'January',
+                      'February',
+                      'March',
+                      'April',
+                      'May',
+                      'June',
+                      'July',
+                      'August',
+                      'September',
+                      'October',
+                      'November',
+                      'December'
+                    ];
     const year = targetDate.getFullYear();
     const month = months[targetDate.getMonth()];
     const date = targetDate.getDate();

@@ -1269,7 +1269,7 @@ class Search extends Component {
     // const targetKey = 'entity';
     // const {query, page, gte, lte, labelList, labelFilter} = this.props.state;
     // this.props.dispatch(requestPapers(query, page)); // query, page を state に set
-    
+
     // conditions for entity search : this part is going to be written after DB implemented.
 
     // sample data
@@ -1422,8 +1422,6 @@ class Search extends Component {
       "knowledge",
       "collocations"
     ];
-
-    
 
     return (
       <div>

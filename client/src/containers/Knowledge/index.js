@@ -122,12 +122,10 @@ class Knowledge extends Component {
 
     const json = {
       hits: {
-        hits: [
-          sampleJson.hits.hits[index]
-        ],
+        hits: [sampleJson.hits.hits[index]],
         total: 1
       }
-    }
+    };
     //   Api.searchText({body})
     //     .then((json) => {
     //       this.props.dispatch(receivePaper(json));

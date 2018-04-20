@@ -318,28 +318,28 @@ export function reducers(state = initialState, action) {
       return Object.assign({}, state, {
         labelFilter: action.filterList
       });
-    case  ENTITY_ADD: {
-      const entityAdd = Object.assign({}, state.entity);
-            entityAdd.properties[action.category].push('');
+    case ENTITY_ADD: {
+      const entitiesAdd = Object.assign({}, state.entity);
+            entitiesAdd.properties[action.category].push('');
             // don't save, because this value has not been filled yet
       return Object.assign({}, state, {
-        entity: entityAdd
+        entity: entitiesAdd
       });
     }
-    case  ENTITY_UPDATE: {
-      const entityUpdate = Object.assign({}, state.entity);
-            entityUpdate.properties[action.category][action.index] = action.value;
+    case ENTITY_UPDATE: {
+      const entitiesUpdate = Object.assign({}, state.entity);
+            entitiesUpdate.properties[action.category][action.index] = action.value;
             // do save
       return Object.assign({}, state, {
-        entity: entityUpdate
+        entity: entitiesUpdate
       });
     }
-    case  ENTITY_REMOVE: {
-      const entityRemove = Object.assign({}, state.entity);
-            entityRemove.properties[action.category].splice(action.index, 1);
+    case ENTITY_REMOVE: {
+      const entitiesRemove = Object.assign({}, state.entity);
+            entitiesRemove.properties[action.category].splice(action.index, 1);
             // do save
       return Object.assign({}, state, {
-        entity: entityRemove
+        entity: entitiesRemove
       });
     }
     default:
