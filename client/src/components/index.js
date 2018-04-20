@@ -459,8 +459,6 @@ const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps exten
                             prop = propsArr.map((item, i) => {
                                       if (i < 4 || asFull) {
                                         return <EntityDetailProp category={key} value={item} index={i} key={i} />;
-                                      } else {
-                                        return null;
                                       }
                                     });
                           }
@@ -620,7 +618,8 @@ export const EntityDetail = withRouter(connect(mapStateToProps)(class EntityDeta
 export const Entity = withRouter(connect(mapStateToProps)(class Entity extends Component {
 
   handleClick() {
-    this.props.history.push('/knowledge/' + this.props.data.id);
+    const id = this.props.data.id;
+    this.props.history.push(`/knowledge/${id}`);
   }
 
   formatTime(timestamp) {
