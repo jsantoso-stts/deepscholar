@@ -327,9 +327,24 @@
         .knowledge-term .icon.add i {        
             position: absolute;
             left: -20px;
-            top: calc(50% + 2px);
+            top: calc(50% + 1px);
             transform: translateY(-50%);        
             font-size: 19px;
+        }
+
+    .knowledge-term .box-cover:last-child.viewAlltrue {
+        padding-bottom: 24px;
+    }
+
+    .knowledge-term .viewAlltrue .icon.add.viewAll {
+        bottom: -56px;
+    }
+        .knowledge-term .icon.add.viewAll span {
+            display: inline-block;
+            font-size: 80%;
+        }
+        .knowledge-term .viewAlltrue .icon.add.viewAll span {
+            transform: rotate(180deg);
         }
 
     .knowledge-term .editBtns{

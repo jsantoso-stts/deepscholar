@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import './style.css';
-import {saveScrollY, toggleAllAuthors, toggleAbstract, updateLabelList, favoriteKey, knowledgeAdd, knowledgeUpdate, knowledgeRemove} from "../module";
+import {saveScrollY, toggleAllAuthors, toggleAbstract, updateLabelList, favoriteKey, entityAdd, entityUpdate, entityRemove} from "../module";
 
 function mapStateToProps(state) {
   return {state};
@@ -369,18 +369,18 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
   }
 
   handleClickRemove() {
-    this.props.dispatch(knowledgeRemove(this.state.category, this.props.index));
+    this.props.dispatch(entityRemove(this.state.category, this.props.index));
   }
 
   handleClickFinish() {
     this.switchEditMode(false);
-    this.props.dispatch(knowledgeUpdate(this.state.category, this.props.index, this.state.value));
+    this.props.dispatch(entityUpdate(this.state.category, this.props.index, this.state.value));
   }
 
   handleClickCancel() {
     this.switchEditMode(false);
     this.setState({value: this.state.valueOld});
-    this.props.dispatch(knowledgeUpdate(this.state.category, this.props.index, this.state.valueOld));
+    this.props.dispatch(entityUpdate(this.state.category, this.props.index, this.state.valueOld));
   }
 
   handleChange(event) {
@@ -388,16 +388,7 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
   }
 
   render() {
-
-    const {knowledgeData, knowledgeOptions} = this.props.state;
-
-    const category = this.state.category;
-    const index = this.state.index;
-    const value = knowledgeData.properties[category][index];
-
-    const options = knowledgeOptions[category].map(item => {
-      return <option value={item} key={item}>{item}</option>;
-    });
+    const value = this.state.value;
 
     return (
       <div ref="thisElem" className="box-row">
@@ -410,10 +401,7 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
         </div>
 
         <div className="input-field input-field--alpha">
-          <select ref="select" value={value} onChange={this.handleChange.bind(this)} >
-            <option value="">Choose value</option>
-            {options}
-          </select>
+          <input type="text" value={value} onChange={this.handleChange.bind(this)}/>
         </div>
 
         <div className="btns">
@@ -428,35 +416,73 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
 
 const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      asFull: {}
+    };
+    const properties = this.props.properties;
+    Object.keys(properties)
+          .map((key) => {
+            this.state.asFull[key] = false;
+            return false;
+          });
+  }
+
   handleClick(e) {
     const category = e.currentTarget.getAttribute('data-category');
-    this.props.dispatch(knowledgeAdd(category));
+    const properties = this.props.properties;
+    if (properties[category].length >= 4) {
+      this.state.asFull[category] = true;
+    }
+    this.props.dispatch(entityAdd(category));
+  }
+
+  handleClickViewAll(e) {
+    const category = e.currentTarget.getAttribute('data-category');
+    const asFull = Object.assign({}, this.state.asFull);
+          asFull[category] = !asFull[category];
+    this.setState({asFull: asFull});
   }
 
   render() {
 
-    const {knowledgeData} = this.props.state;
+    const properties = this.props.properties;
 
-    const props = Object.keys(knowledgeData.properties)
+    const props = Object.keys(properties)
                         .map((key) => {
-                          const propsArr = knowledgeData.properties[key];
+                          const propsArr = properties[key];
+                          const asFull = this.state.asFull[key];
 
-                          let prop;
+                          let prop = null;
                           if (propsArr.length > 0) {
                             prop = propsArr.map((item, i) => {
-                                      return <EntityDetailProp category={key} value={item} index={i} key={i} />;
+                                      if (i < 4 || asFull) {
+                                        return <EntityDetailProp category={key} value={item} index={i} key={i} />;
+                                      }
+                                      return false;
                                     });
-                          } else {
-                            prop = null;
+                          }
+
+                          let addValue = null;
+                          if (propsArr.length < 5 || asFull) {
+                            addValue = <a className="icon add" href="javascript:void(0)" onClick={this.handleClick.bind(this)} data-category={key}><i className="material-icons">add</i>add value</a>;
+                          }
+
+                          let viewAll = null;
+                          if (propsArr.length >= 5) {
+                            const text = asFull ? 'close' : 'view all';
+                            viewAll = <a className="icon add viewAll" href="javascript:void(0)" onClick={this.handleClickViewAll.bind(this)} data-category={key}><span>▼</span> {text}</a>;
                           }
 
                           // 追加の設定
                           return (
-                            <div key={key}>
+                            <div key={key} className={`box-cover viewAll${asFull}`}>
                               <div className="box">
                                 <h6>{key}</h6>
                                 {prop}
-                                <a className="icon add" href="javascript:void(0)" onClick={this.handleClick.bind(this)} data-category={key}><i className="material-icons">add</i>add value</a>
+                                {addValue}
+                                {viewAll}
                               </div>
                               <div className="divider"></div>
                             </div>
@@ -533,14 +559,41 @@ const EntityDetailDesc = connect(mapStateToProps)(class EntityDetailDesc extends
 
 export const EntityDetail = withRouter(connect(mapStateToProps)(class EntityDetail extends Component {
 
+  formatTime(timestamp) {
+    const targetDate = new Date(timestamp * 1000);
+    const months = [
+                      'January',
+                      'February',
+                      'March',
+                      'April',
+                      'May',
+                      'June',
+                      'July',
+                      'August',
+                      'September',
+                      'October',
+                      'November',
+                      'December'
+                    ];
+    const year = targetDate.getFullYear();
+    const month = months[targetDate.getMonth()];
+    const date = targetDate.getDate();
+    const hour = targetDate.getHours();
+    const min = targetDate.getMinutes();
+    const time = `${hour}:${min}, ${date} ${month} ${year}`;
+    return time;
+  }
+
   render() {
 
-    const {knowledgeData} = this.props.state;
+    if (this.props.data === null) {
+      return null;
+    }
 
     const backBtn = this.props.backBtn;
 
-    const title = knowledgeData.title;
-    const desc = knowledgeData.desc;
+    const {title, desc, properties, update: timestamp} = this.props.data;
+    const update = this.formatTime(timestamp);
 
     return (
 
@@ -551,9 +604,9 @@ export const EntityDetail = withRouter(connect(mapStateToProps)(class EntityDeta
 
         <EntityDetailDesc desc={desc} />
 
-        <EntityDetailProps/>
+        <EntityDetailProps properties={properties} />
 
-        <div className="edited">Last edited on 17:35, 28 March 2018</div>
+        <div className="edited">Last edited on {update}</div>
 
         {backBtn && <BackToResult/>}
 
@@ -566,13 +619,40 @@ export const EntityDetail = withRouter(connect(mapStateToProps)(class EntityDeta
 export const Entity = withRouter(connect(mapStateToProps)(class Entity extends Component {
 
   handleClick() {
-    this.props.history.push('/knowledge/term');
+    const id = this.props.data.id;
+    this.props.history.push(`/knowledge/${id}`);
+  }
+
+  formatTime(timestamp) {
+    const targetDate = new Date(timestamp * 1000);
+    const months = [
+                      'January',
+                      'February',
+                      'March',
+                      'April',
+                      'May',
+                      'June',
+                      'July',
+                      'August',
+                      'September',
+                      'October',
+                      'November',
+                      'December'
+                    ];
+    const year = targetDate.getFullYear();
+    const month = months[targetDate.getMonth()];
+    const date = targetDate.getDate();
+    const hour = targetDate.getHours();
+    const min = targetDate.getMinutes();
+    const time = `${hour}:${min}, ${date} ${month} ${year}`;
+    return time;
   }
 
   render() {
 
-    const id = this.props.data._id;
-    const {title, desc, update} = this.props.data._source;
+    const {id, title, desc, update} = this.props.data;
+
+    const updateTime = this.formatTime(update);
 
     return (
       <article className={`paper entity entity${id}`}>
@@ -589,7 +669,7 @@ export const Entity = withRouter(connect(mapStateToProps)(class Entity extends C
         </header>
 
         <div className="searchresult">{desc}</div>
-        <div className="edited">{update}</div>
+        <div className="edited">{updateTime}</div>
       </article>
     );
   }
@@ -598,9 +678,8 @@ export const Entity = withRouter(connect(mapStateToProps)(class Entity extends C
 export class Entities extends Component {
 
   render() {
-
     const entities = this.props.data.map((entity) =>
-      <Entity data={entity} key={entity._id} />
+      <Entity data={entity} key={entity.id} />
     );
 
     return (
