@@ -459,6 +459,8 @@ const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps exten
                             prop = propsArr.map((item, i) => {
                                       if (i < 4 || asFull) {
                                         return <EntityDetailProp category={key} value={item} index={i} key={i} />;
+                                      } else {
+                                        return null;
                                       }
                                     });
                           }
@@ -579,7 +581,7 @@ export const EntityDetail = withRouter(connect(mapStateToProps)(class EntityDeta
     const date = targetDate.getDate();
     const hour = targetDate.getHours();
     const min = targetDate.getMinutes();
-    const time = hour + ':' + min + ', ' + date + ' ' + month + ' ' + year;
+    const time = `${hour}:${min}, ${date} ${month} ${year}`;
     return time;
   }
 
@@ -642,7 +644,7 @@ export const Entity = withRouter(connect(mapStateToProps)(class Entity extends C
     const date = targetDate.getDate();
     const hour = targetDate.getHours();
     const min = targetDate.getMinutes();
-    const time = hour + ':' + min + ', ' + date + ' ' + month + ' ' + year;
+    const time = `${hour}:${min}, ${date} ${month} ${year}`;
     return time;
   }
 

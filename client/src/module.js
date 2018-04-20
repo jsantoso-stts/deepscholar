@@ -261,7 +261,7 @@ export function reducers(state = initialState, action) {
     case RECEIVE_ENTITIES:
       return Object.assign({}, state, {
         entities: action.entities,
-        entitiesTotal: action.entitiesTotal,
+        entitiesTotal: action.entitiesTotal
       });
     case REQUEST_IMPORT_INDEXES:
     case RECEIVE_IMPORT_INDEXES:
@@ -479,7 +479,7 @@ const RECEIVE_ENTITY = "RECEIVE_ENTITY";
 export function receiveEntity(json) {
   return {
     type: RECEIVE_ENTITY,
-    entity: json.hits.hits[0],
+    entity: json.hits.hits[0]
   };
 }
 
