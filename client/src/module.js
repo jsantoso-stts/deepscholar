@@ -64,24 +64,6 @@ const defaultLabelList = {
     }
 };
 
-const knowledgeData = {
-  "title": "Deep Learning",
-  "desc": "branch of machine learning",
-  "properties": {
-    "Property A": [
-      "Select Value A-1",
-      "Select Value A-2",
-      "Select Value A-3",
-      "Select Value A-4",
-      "Select Value A-5",
-      "Select Value A-6",
-      "Select Value A-7"
-    ],
-    "Property B": ["Select Value B-1"],
-    "Property C": []
-  }
-};
-
 export {favoriteKey}; // To use favoriteKey on another page.
 
 const initialState = {
@@ -105,6 +87,10 @@ const initialState = {
   tables: [],
   tablesTotal: 0,
   tablesFetchSize: 20,
+  entity: null,
+  entities: [],
+  entitiesTotal: 0,
+  entitiesFetchSize: 20,
   aggregations: {
     year: {
       buckets: []
@@ -116,7 +102,6 @@ const initialState = {
   enabledAllAuthorsPaperIds: new Set(),
   enabledFullAbstractPaperIds: new Set(),
   scrollYPositions: new Map(),
-  knowledgeData: knowledgeData,
   isUploading: false
 };
 
@@ -269,6 +254,15 @@ export function reducers(state = initialState, action) {
         tables: action.tables,
         tablesTotal: action.tablesTotal
       });
+    case RECEIVE_ENTITY:
+      return Object.assign({}, state, {
+        entity: action.entity
+      });
+    case RECEIVE_ENTITIES:
+      return Object.assign({}, state, {
+        entities: action.entities,
+        entitiesTotal: action.entitiesTotal,
+      });
     case REQUEST_IMPORT_INDEXES:
     case RECEIVE_IMPORT_INDEXES:
       return Object.assign({}, state, {
@@ -324,25 +318,28 @@ export function reducers(state = initialState, action) {
       return Object.assign({}, state, {
         labelFilter: action.filterList
       });
-    case KNOWLEDGE_ADD: {
-      const knowledgeDataAdd = Object.assign({}, state.knowledgeData);
-            knowledgeDataAdd.properties[action.category].push('');
+    case  ENTITY_ADD: {
+      const entityAdd = Object.assign({}, state.entity);
+            entityAdd.properties[action.category].push('');
+            // don't save, because this value has not been filled yet
       return Object.assign({}, state, {
-        knowledgeData: knowledgeDataAdd
+        entity: entityAdd
       });
     }
-    case KNOWLEDGE_UPDATE: {
-      const knowledgeDataUpdate = Object.assign({}, state.knowledgeData);
-            knowledgeDataUpdate.properties[action.category][action.index] = action.value;
+    case  ENTITY_UPDATE: {
+      const entityUpdate = Object.assign({}, state.entity);
+            entityUpdate.properties[action.category][action.index] = action.value;
+            // do save
       return Object.assign({}, state, {
-        knowledgeData: knowledgeDataUpdate
+        entity: entityUpdate
       });
     }
-    case KNOWLEDGE_REMOVE: {
-      const knowledgeDataRemove = Object.assign({}, state.knowledgeData);
-            knowledgeDataRemove.properties[action.category].splice(action.index, 1);
+    case  ENTITY_REMOVE: {
+      const entityRemove = Object.assign({}, state.entity);
+            entityRemove.properties[action.category].splice(action.index, 1);
+            // do save
       return Object.assign({}, state, {
-        knowledgeData: knowledgeDataRemove
+        entity: entityRemove
       });
     }
     default:
@@ -477,6 +474,25 @@ export function receiveTables(json) {
   };
 }
 
+const RECEIVE_ENTITY = "RECEIVE_ENTITY";
+
+export function receiveEntity(json) {
+  return {
+    type: RECEIVE_ENTITY,
+    entity: json.hits.hits[0],
+  };
+}
+
+const RECEIVE_ENTITIES = "RECEIVE_ENTITIES";
+
+export function receiveEntities(json) {
+  return {
+    type: RECEIVE_ENTITIES,
+    entities: json.hits.hits,
+    entitiesTotal: json.hits.total
+  };
+}
+
 const REQUEST_IMPORT_INDEXES = "REQUEST_IMPORT_INDEXES";
 
 export function requestImportIndexes() {
@@ -566,31 +582,31 @@ export function updateLabelFilter(filterList) {
   };
 }
 
-const KNOWLEDGE_ADD = "KNOWLEDGE_ADD";
+const ENTITY_ADD = "ENTITY_ADD";
 
-export function knowledgeAdd(category) {
+export function entityAdd(category) {
   return {
-    type: KNOWLEDGE_ADD,
+    type: ENTITY_ADD,
     category: category
   };
 }
 
-const KNOWLEDGE_UPDATE = "KNOWLEDGE_UPDATE";
+const ENTITY_UPDATE = "ENTITY_UPDATE";
 
-export function knowledgeUpdate(category, index, value) {
+export function entityUpdate(category, index, value) {
   return {
-    type: KNOWLEDGE_UPDATE,
+    type: ENTITY_UPDATE,
     category: category,
     index: index,
     value: value
   };
 }
 
-const KNOWLEDGE_REMOVE = "KNOWLEDGE_REMOVE";
+const ENTITY_REMOVE = "ENTITY_REMOVE";
 
-export function knowledgeRemove(category, index) {
+export function entityRemove(category, index) {
   return {
-    type: KNOWLEDGE_REMOVE,
+    type: ENTITY_REMOVE,
     category: category,
     index: index
   };

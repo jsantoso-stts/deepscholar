@@ -20,6 +20,7 @@ import {
   receiveFigures,
   requestTables,
   receiveTables,
+  receiveEntities,
   deleteScrollY,
   changeYears,
   updateLabelList,
@@ -1044,6 +1045,9 @@ class Search extends Component {
       case "tables":
         this.searchTables();
         break;
+      case "knowledge":
+        this.searchEntities();
+        break;
       default:
         this.searchPapers();
         break;
@@ -1262,16 +1266,105 @@ class Search extends Component {
   }
 
   searchEntities() {
-    const targetKey = 'entity';
-    const {query, page, gte, lte, labelList, labelFilter} = this.props.state;
-    // this.props.dispatch(requestPapers(query, page));
+    // const targetKey = 'entity';
+    // const {query, page, gte, lte, labelList, labelFilter} = this.props.state;
+    // this.props.dispatch(requestPapers(query, page)); // query, page を state に set
     
     // conditions for entity search : this part is going to be written after DB implemented.
 
+    // sample data
+    const sampleJson = {
+      hits: {
+        hits: [
+          {
+            id: "1",
+            title: "Deep Learning",
+            desc: "branch of machine learning",
+            properties: {
+              "Property A": [
+                "Select Value A-1",
+                "Select Value A-2",
+                "Select Value A-3",
+                "Select Value A-4",
+                "Select Value A-5",
+                "Select Value A-6"
+              ],
+              "Property B": ["Select Value B-1"],
+              "Property C": []
+            },
+            update: 1523709809
+          },
+          {
+            id: "2",
+            title: "Learning TensorFlow: A Guide to Building Deep learning Systems",
+            desc: "Nature article by LeCun, Bengio and Hinton",
+            properties: {
+              "Property A": [
+                "Select Value A-1",
+                "Select Value A-2",
+                "Select Value A-3"
+              ],
+              "Property B": ["Select Value B-1"],
+              "Property C": []
+            },
+            update: 1523709809
+          },
+          {
+            id: "3",
+            title: "Human-level control through deep reinforcement learning",
+            desc: "scientific article",
+            properties: {
+              "Property A": [
+                "Select Value A-1",
+                "Select Value A-2",
+                "Select Value A-3"
+              ],
+              "Property B": ["Select Value B-1"],
+              "Property C": []
+            },
+            update: 1523709809
+          },
+          {
+            id: "4",
+            title: "IMS at EmoInt-2017: Emotion Intensity Prediction with Affective Norms, Automatically Extended Resources and Deep Learning",
+            desc: "scientific article (publication date: May 2016)",
+            properties: {
+              "Property A": [
+                "Select Value A-1",
+                "Select Value A-2",
+                "Select Value A-3"
+              ],
+              "Property B": ["Select Value B-1"],
+              "Property C": []
+            },
+            update: 1523709809
+          },
+          {
+            id: "5",
+            title: "Unsupervised Deep Learning Applied to Breast Density Segmentation and Mammographic Risk Scoring",
+            desc: "Deep Learning Supercomputer System",
+            properties: {
+              "Property A": [
+                "Select Value A-1",
+                "Select Value A-2",
+                "Select Value A-3"
+              ],
+              "Property B": ["Select Value B-1"],
+              "Property C": []
+            },
+            update: 1523709809
+          }
+        ],
+        total: 5
+      }
+    };
+
     // Api.searchText({body}, token)
-    //   .then((json) => {
-    //     this.props.dispatch(receivePapers(json));
+    //   .then((json) => { // papers は papers = [] に格納される
+    //     this.props.dispatch(receivePapers(json)); // papers, papersTotal, aggregations を state に set
     //   });
+    this.props.dispatch(receiveEntities(sampleJson));
+
   }
 
   changeQuery(category, query) {
@@ -1308,7 +1401,7 @@ class Search extends Component {
   }
 
   render() {
-    const {page, papers, papersTotal, papersFetchSize, aggregations, figures, figuresTotal, tables, tablesTotal, tablesFetchSize, figuresFetchSize} = this.props.state;
+    const {page, papers, papersTotal, papersFetchSize, aggregations, figures, figuresTotal, figuresFetchSize, tables, tablesTotal, tablesFetchSize, entities, entitiesTotal, entitiesFetchSize} = this.props.state;
 
     let year;
     if (aggregations.year.buckets.length > 1) {
@@ -1330,86 +1423,7 @@ class Search extends Component {
       "collocations"
     ];
 
-    const sampleKnowledgeData = [
-      {
-        id: "1",
-        title: "Deep Learning",
-        desc: "branch of machine learning",
-        properties: {
-          "Property A": [
-            "Select Value A-1",
-            "Select Value A-2",
-            "Select Value A-3",
-            "Select Value A-4",
-            "Select Value A-5",
-            "Select Value A-6"
-          ],
-          "Property B": ["Select Value B-1"],
-          "Property C": []
-        },
-        update: 1523709809
-      },
-      {
-        id: "2",
-        title: "Learning TensorFlow: A Guide to Building Deep learning Systems",
-        desc: "Nature article by LeCun, Bengio and Hinton",
-        properties: {
-          "Property A": [
-            "Select Value A-1",
-            "Select Value A-2",
-            "Select Value A-3"
-          ],
-          "Property B": ["Select Value B-1"],
-          "Property C": []
-        },
-        update: 1523709809
-      },
-      {
-        id: "3",
-        title: "Human-level control through deep reinforcement learning",
-        desc: "scientific article",
-        properties: {
-          "Property A": [
-            "Select Value A-1",
-            "Select Value A-2",
-            "Select Value A-3"
-          ],
-          "Property B": ["Select Value B-1"],
-          "Property C": []
-        },
-        update: 1523709809
-      },
-      {
-        id: "4",
-        title: "IMS at EmoInt-2017: Emotion Intensity Prediction with Affective Norms, Automatically Extended Resources and Deep Learning",
-        desc: "scientific article (publication date: May 2016)",
-        properties: {
-          "Property A": [
-            "Select Value A-1",
-            "Select Value A-2",
-            "Select Value A-3"
-          ],
-          "Property B": ["Select Value B-1"],
-          "Property C": []
-        },
-        update: 1523709809
-      },
-      {
-        id: "5",
-        title: "Unsupervised Deep Learning Applied to Breast Density Segmentation and Mammographic Risk Scoring",
-        desc: "Deep Learning Supercomputer System",
-        properties: {
-          "Property A": [
-            "Select Value A-1",
-            "Select Value A-2",
-            "Select Value A-3"
-          ],
-          "Property B": ["Select Value B-1"],
-          "Property C": []
-        },
-        update: 1523709809
-      }
-    ];
+    
 
     return (
       <div>
@@ -1423,6 +1437,9 @@ class Search extends Component {
                   }/>
                   <Route path="/tables" component={() =>
                     <p><span className="num">{tablesTotal || 0}</span> results</p>
+                  }/>
+                  <Route path="/knowledge" component={() =>
+                    <p><span className="num">{entitiesTotal || 0}</span> results</p>
                   }/>
                   <Route component={() =>
                     <p><span className="num">{papersTotal || 0}</span> results</p>
@@ -1512,8 +1529,8 @@ class Search extends Component {
                 }/>
                 <Route path="/knowledge" component={() =>
                   <div className="col s12">
-                    <Entities data={sampleKnowledgeData}/>
-                    <Paginator total={papersTotal} size={papersFetchSize} page={page}/>
+                    <Entities data={entities}/>
+                    <Paginator total={entitiesTotal} size={entitiesFetchSize} page={page}/>
                   </div>
                 }/>
                 <Route component={() =>

@@ -332,14 +332,18 @@
             font-size: 19px;
         }
 
-    .knowledge-term .icon.add.viewAll.viewAlltrue {
+    .knowledge-term .box-cover:last-child.viewAlltrue {
+        padding-bottom: 24px;
+    }
+
+    .knowledge-term .viewAlltrue .icon.add.viewAll {
         bottom: -56px;
     }
         .knowledge-term .icon.add.viewAll span {
             display: inline-block;
             font-size: 80%;
         }
-        .knowledge-term .icon.add.viewAll.viewAlltrue span {
+        .knowledge-term .viewAlltrue .icon.add.viewAll span {
             transform: rotate(180deg);
         }
 

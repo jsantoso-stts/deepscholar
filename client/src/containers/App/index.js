@@ -286,7 +286,7 @@ class App extends Component {
             <div>
               <Switch>
                 <Route exact path="/papers/:paperId" component={Detail}/>
-                <Route exact path="/knowledge/term" component={Knowledge}/>
+                <Route exact path="/knowledge/:entityId" component={Knowledge}/>
                 <Route exact path="/" component={props =>
                   <Index {...props}/>
                 }/>
