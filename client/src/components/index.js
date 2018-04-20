@@ -459,6 +459,8 @@ const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps exten
                             prop = propsArr.map((item, i) => {
                                       if (i < 4 || asFull) {
                                         return <EntityDetailProp category={key} value={item} index={i} key={i} />;
+                                      } else {
+                                        return false;
                                       }
                                     });
                           }
