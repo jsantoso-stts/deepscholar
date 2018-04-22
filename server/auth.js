@@ -55,6 +55,7 @@ function generateAccessToken(id) {
 function generateUserToken(req, res) {
   const accessToken = generateAccessToken(req.user._id);
   res.render('authenticated.html', {
+    id: req.user._id,
     token: accessToken,
     isAdmin: req.user.isAdmin || false,
     profile: JSON.stringify(req.user.profile)
@@ -102,12 +103,12 @@ module.exports = class Auth {
     const router = new express.Router();
 
     router.get(`/verify`, (req, res) => {
-      return Auth.getVerifiedUserId(req.headers).then(userId => {
-        return User.findByObjectId(userId).then(user => {
-          const token = generateAccessToken(userId);
+      return Auth.getVerifiedUserId(req.headers).then(id => {
+        return User.findByObjectId(id).then(user => {
+          const token = generateAccessToken(id);
           const {profile} = user;
           const isAdmin = user.isAdmin || false;
-          res.send(JSON.stringify({token, isAdmin, profile}));
+          res.send(JSON.stringify({id, token, isAdmin, profile}));
         });
       })
 .catch(() => {
