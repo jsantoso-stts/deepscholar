@@ -173,7 +173,7 @@ export const Paper = withRouter(connect(mapStateToProps)(class Paper extends Com
     const pdfannoQueryParams = Object.entries(pdfannoParams).map(value => {
       return `${value[0]}=${value[1]}`;
     }).join("&");
-    const pdfannoUrl = `https://paperai.github.io/pdfanno/latest/?${pdfannoQueryParams}`;
+    const pdfannoUrl = `${process.env.REACT_APP_PDFANNO_URL}?${pdfannoQueryParams}`;
 
     const articleTitle = {__html: highlightedArticleTitle || rawArticleTitle};
     const journalTitle = {__html: `${highlightedJournalTitle || rawJournalTitle}, ${year}`};
