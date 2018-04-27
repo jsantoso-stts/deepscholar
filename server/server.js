@@ -4,8 +4,9 @@ const express = require("express");
 const app = express();
 const engines = require('consolidate');
 const searchHistory = require("./models/search_history");
-const Auth = require("./auth.js");
-const Admin = require("./admin.js");
+const Auth = require("./auth");
+const Admin = require("./admin");
+const Papers = require("./papers");
 
 app.set('views', `${__dirname}/views`);
 app.engine('html', engines.mustache);
@@ -40,6 +41,7 @@ defineSearchkitRouter("text");
 defineSearchkitRouter("tables");
 defineSearchkitRouter("figs");
 
+app.use("/api/papers", Papers.router(app));
 app.use("/api/auth", Auth.router(app));
 app.use("/api/admin", (req, res, next) => {
   return Auth.isAdminByHeader(req.headers)
