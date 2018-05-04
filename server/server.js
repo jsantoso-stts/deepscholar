@@ -53,6 +53,7 @@ app.use("/api/admin", (req, res, next) => {
     });
 }, Admin.router(app));
 app.use("/api/label", require("./label.js")(app));
+app.use("/api/entity", require("./entity.js")(app));
 
 app.listen(app.get("port"), () => {
   console.log(`Find the server at: http://localhost:${app.get("port")}/`);
