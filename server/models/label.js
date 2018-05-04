@@ -3,7 +3,7 @@ const DB = require("../db");
 module.exports = class Label {
   static collection() {
     return DB.connection()
-      .collection("users");
+      .collection("labels");
   }
 
   static findByProfileId(id) {
