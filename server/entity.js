@@ -22,9 +22,9 @@ function setEntity(req, res) {
   // console.log('entityId : ' + profileId);
   Entity.insertOrCreate(entityId, req.body).then((entity) => {
     if (entity) {
-      res.send( entityId + ' : done');
+      res.send(`${entityId} : done`);
     } else {
-      res.send( entityId + ' : error');
+      res.send(`${entityId} : error`);
     }
   });
 }
@@ -48,7 +48,7 @@ module.exports = (app) => {
     extended: true
   }));
 
-  // router.use('/get/', (req, res) => {    
+  // router.use('/get/', (req, res) => {
     // getLabel(req, res);
   // });
 
