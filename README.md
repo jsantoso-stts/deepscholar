@@ -92,9 +92,9 @@ $ docker-compose exec deepscholar.server npm -s run es:initializeIndexes
   All Indexes have been created.
 ```
 
-### Import JSON data
+### Import Papers
 
-Import json files to ES
+Import paper files (JSON) to ES
 ```
 $ cat ~/sample.json | docker-compose exec -T deepscholar.server npm -s run es:importIndexes
 Now indexes have been creating.
@@ -106,11 +106,20 @@ Inserted 514 papers.
     
 Please define limit bytes to import Elasticsearch's Bulk API using `DS_BULK_LIMIT_BYTE_PER_REQUEST` in .env file.
 
+### Import Entities
+```
+cat <entity-schema.json> <entities.json> | docker-compose exec -T deepscholar.server npm -s run　es:importEntities
+```
 
 ### Delete indexes
 ```
 $ docker-compose exec deepscholar.server npm -s run es:deleteIndexes
 All Indexes have been deleted.
+```
+
+### Delete Entities
+```
+docker-compose exec -T deepscholar.server npm -s run es:deleteEntities
 ```
 
 ### Delete database
