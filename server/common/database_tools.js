@@ -15,17 +15,17 @@ module.exports = class DatabaseTools {
     }
 
     function saveEntityToDB(json) {
-      const headers = {'Content-Type':'application/json'};
+      const headers = {'Content-Type': 'application/json'};
       const port = config.DS_SERVER_PORT;
       const path = '/api/entity/set/';
       const options = {
-        url: 'http://localhost:' + port + path,
+        url: `http://localhost:${port}${path}`,
         method: 'POST',
         headers: headers,
         json: true,
         form: json
       };
-      request(options, function (error, response, body) {
+      request(options, (error, response, body) => {
           console.log(body);
       });
     }
@@ -45,8 +45,8 @@ module.exports = class DatabaseTools {
       inputStream = filePathOrStream;
     }
 
-    let schemaFile = '';        
-    let isSchema = true;        
+    let schemaFile = '';
+    let isSchema = true;
     let validate;
 
     readline.createInterface(inputStream, {})
@@ -58,11 +58,11 @@ module.exports = class DatabaseTools {
         }
 
         processedByte += Buffer.byteLength(line, 'utf8');
-            
+
         if (isSchema) {
         // for schema file
-          schemaFile += line + "\n";
-          if (line == "}") {                      
+          schemaFile += `${line}\n`;
+          if (line === "}") {
             validate = validateSchema(schemaFile);
             isSchema = false;
           }
@@ -79,7 +79,7 @@ module.exports = class DatabaseTools {
           saveEntityToDB(json);
         }
     })
-    .on("close", () => {            
+    .on("close", () => {
         finishRequest(processedEntities);
     });
   }
@@ -87,20 +87,20 @@ module.exports = class DatabaseTools {
   static deleteAllEntities(config) {
 
     function deleteAllEntitiesFromDB() {
-      const headers = {'Content-Type':'application/json'};
+      const headers = {'Content-Type': 'application/json'};
       const port = config.DS_SERVER_PORT;
       const path = '/api/entity/deleteAll/';
       const options = {
-        url: 'http://localhost:' + port + path,
+        url: `http://localhost:${port}${path}`,
         method: 'GET',
         headers: headers,
         json: true
       };
-      request(options, function (error, response, body) {
+      request(options, (error, response, body) => {
           console.log(body);
       });
     }
 
     deleteAllEntitiesFromDB();
   }
-}
+};
