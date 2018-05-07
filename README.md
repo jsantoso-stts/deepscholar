@@ -96,13 +96,16 @@ $ docker-compose exec deepscholar.server npm -s run es:initializeIndexes
 
 Import paper files (JSON) to ES
 ```
-$ cat ~/sample.json | docker-compose exec -T deepscholar.server npm -s run es:importIndexes
+$ cat ~/sample.json | docker exec -i `docker-compose ps -q deepscholar.server` npm run -s es:importIndexes
 Now indexes have been creating.
 Inserted 482 papers.
 Inserted 475 papers.
 Inserted 514 papers.
 ...
 ```
+
+`docker-compose exec` doesn't keep stdin open. So we need to use `docker exec` instead.
+See https://github.com/docker/compose/issues/3352#issuecomment-284547977
     
 Please define limit bytes to import Elasticsearch's Bulk API using `DS_BULK_LIMIT_BYTE_PER_REQUEST` in .env file.
 
