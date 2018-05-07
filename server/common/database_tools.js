@@ -75,7 +75,7 @@ module.exports = class DatabaseTools {
             console.log(validate.errors);
             return;
           }
-
+          console.log(`saving : ${json.id}`);
           saveEntityToDB(json);
         }
     })
