@@ -75,26 +75,15 @@ client/src
 └── registerServiceWorker.js # Something made by templates (not used yet)
 ```
 
-### Initialize Indexes (Only once)
-
-Create indexes using the following command
+### Papers
+* Initialize (Only once)
 ```
 $ npm -s run es:initializeIndexes
 Index(papers) created.
 Index(search_histories) created.
 ```
 
-### Initialize Database (Only once)
-
-Create database using the following command
-```
-$ docker-compose exec deepscholar.server npm -s run es:initializeIndexes
-  All Indexes have been created.
-```
-
-### Import Papers
-
-Import paper files (JSON) to ES
+* Import
 ```
 $ cat ~/sample.json | docker exec -i `docker-compose ps -q deepscholar.server` npm run -s es:importIndexes
 Now indexes have been creating.
@@ -109,23 +98,31 @@ See https://github.com/docker/compose/issues/3352#issuecomment-284547977
     
 Please define limit bytes to import Elasticsearch's Bulk API using `DS_BULK_LIMIT_BYTE_PER_REQUEST` in .env file.
 
-### Import Entities
-```
-cat <entity-schema.json> <entities.json> | docker-compose exec -T deepscholar.server npm -s run　es:importEntities
-```
-
-### Delete indexes
+* Delete
 ```
 $ docker-compose exec deepscholar.server npm -s run es:deleteIndexes
 All Indexes have been deleted.
 ```
 
-### Delete Entities
+### Entities
+* Import
+```
+cat <entity-schema.json> <entities.json> | docker-compose exec -T deepscholar.server npm -s run　es:importEntities
+```
+
+* Delete
 ```
 docker-compose exec -T deepscholar.server npm -s run es:deleteEntities
 ```
 
-### Delete database
+### Database
+* Initialize (Only once)
+```
+$ docker-compose exec deepscholar.server npm -s run es:initializeIndexes
+  All Indexes have been created.
+```
+
+* Delete
 1. Open [mongo-express](http://localhost:8081)
 2. Click `Del` button on `deepscholar` database. 
 
