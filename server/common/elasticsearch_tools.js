@@ -35,7 +35,7 @@ module.exports = class ElasticsearchTools {
     }));
   }
 
-  static async importIndexes(bytePerRequest, filePathOrStream) {
+  static async importIndexes(filePathOrStream) {
     function createRequest() {
       const stream = new ReadableStream("");
 
@@ -75,7 +75,7 @@ module.exports = class ElasticsearchTools {
 
     readline.createInterface(inputStream, {})
       .on("line", line => {
-        if (processedByte > bytePerRequest) {
+        if (processedByte > process.env.DS_BULK_LIMIT_BYTE_PER_REQUEST) {
           if (stream) {
             finishRequest(stream, processedPapers);
             stream = null;

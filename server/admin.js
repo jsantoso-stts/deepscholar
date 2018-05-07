@@ -26,7 +26,7 @@ module.exports = class Admin {
     });
 
     router.post(`/indexes/import`, upload.single('indexes'), (req, res) => {
-      ElasticsearchTools.importIndexes(process.env.DS_BULK_LIMIT_BYTE_PER_REQUEST, req.file.path);
+      ElasticsearchTools.importIndexes(req.file.path);
       res.send(JSON.stringify({}));
     });
 

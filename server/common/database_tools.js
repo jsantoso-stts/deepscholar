@@ -5,7 +5,7 @@ const Ajv = require('ajv');
 
 module.exports = class DatabaseTools {
 
-  static importEntities(config, filePathOrStream) {
+  static importEntities(filePathOrStream) {
 
     function validateSchema(schemaFile) {
       const ajv = new Ajv();
@@ -16,7 +16,7 @@ module.exports = class DatabaseTools {
 
     function saveEntityToDB(json) {
       const headers = {'Content-Type': 'application/json'};
-      const port = config.DS_SERVER_PORT;
+      const port = process.env.DS_SERVER_PORT;
       const path = '/api/entity/set/';
       const options = {
         url: `http://localhost:${port}${path}`,
@@ -34,7 +34,7 @@ module.exports = class DatabaseTools {
       console.log(`Inserted ${count} entities.`);
     }
 
-    const bytePerRequest = config.DS_BULK_LIMIT_BYTE_PER_REQUEST;
+    const bytePerRequest = process.env.DS_BULK_LIMIT_BYTE_PER_REQUEST;
 
     let processedByte = 0;
     let processedEntities = 0;
@@ -84,11 +84,11 @@ module.exports = class DatabaseTools {
     });
   }
 
-  static deleteAllEntities(config) {
+  static deleteAllEntities() {
 
     function deleteAllEntitiesFromDB() {
       const headers = {'Content-Type': 'application/json'};
-      const port = config.DS_SERVER_PORT;
+      const port = process.env.DS_SERVER_PORT;
       const path = '/api/entity/deleteAll/';
       const options = {
         url: `http://localhost:${port}${path}`,
