@@ -76,7 +76,7 @@ client/src
 ```
 
 ### Papers
-* Initialize (Only once)
+* Initialize (only once)
 ```
 $ npm -s run es:initializeIndexes
 Index(papers) created.
@@ -107,7 +107,7 @@ All Indexes have been deleted.
 ### Entities
 * Import
 ```
-cat <entity-schema.json> <entities.json> | docker-compose exec -T deepscholar.server npm -s run　es:importEntities
+cat <entity-schema.json> <entities.json> | docker exec -i `docker-compose ps -q deepscholar.server` npm run -s es:importEntities
 ```
 
 * Delete
@@ -116,7 +116,7 @@ docker-compose exec -T deepscholar.server npm -s run es:deleteEntities
 ```
 
 ### Database
-* Initialize (Only once)
+* Initialize (only once)
 ```
 $ docker-compose exec deepscholar.server npm -s run es:initializeIndexes
   All Indexes have been created.
