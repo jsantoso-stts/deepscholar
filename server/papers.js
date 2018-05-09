@@ -1,5 +1,4 @@
 const express = require("express");
-const Auth = require("./auth");
 const Annotation = require("./models/annotation");
 const Papers = require("./models/papers");
 

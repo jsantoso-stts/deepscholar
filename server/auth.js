@@ -104,7 +104,7 @@ module.exports = class Auth {
 
     const router = new express.Router();
 
-    router.get(`/verify`, passport.authenticate(['jwt'], { session: false }), (req, res) => {
+    router.get(`/verify`, passport.authenticate(['jwt'], {session: false}), (req, res) => {
       const user = req.user;
       user.token = generateAccessToken(user._id);
       res.send(JSON.stringify(user));
