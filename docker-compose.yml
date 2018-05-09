@@ -17,6 +17,7 @@ services:
     working_dir: /root/client
     environment:
       - NODE_ENV=development
+      - REACT_APP_PDFANNO_URL=${PDFANNO_URL}
       - CHOKIDAR_USEPOLLING=true
     depends_on:
       - deepscholar.server

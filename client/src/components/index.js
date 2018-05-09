@@ -160,7 +160,21 @@ export const Paper = withRouter(connect(mapStateToProps)(class Paper extends Com
     const {abstract: highlightedAbstract, articleTitle: highlightedArticleTitle, journalTitle: highlightedJournalTitle} = highlight;
     const paperUrl = `/papers/${id}`;
     const authorComponents = <Authors data={authors} highlight={highlight} paperId={id} asFull={this.props.asFull}/>;
-    const pdfannoUrl = `https://paperai.github.io/pdfanno/latest/?pdf=${pdf}`;
+
+    const {user} = this.props.state;
+    const pdfannoParams = {
+      api_root: `${window.location.origin}/api`,
+      document_id: id
+    };
+    if (user) {
+      pdfannoParams.user_id = user.id;
+      pdfannoParams.user_token = user.token;
+    }
+    const pdfannoQueryParams = Object.entries(pdfannoParams).map(value => {
+      return `${value[0]}=${value[1]}`;
+    })
+      .join("&");
+    const pdfannoUrl = `${process.env.REACT_APP_PDFANNO_URL}?${pdfannoQueryParams}`;
 
     const articleTitle = {__html: highlightedArticleTitle || rawArticleTitle};
     const journalTitle = {__html: `${highlightedJournalTitle || rawJournalTitle}, ${year}`};

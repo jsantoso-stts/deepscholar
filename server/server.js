@@ -4,8 +4,10 @@ const express = require("express");
 const app = express();
 const engines = require('consolidate');
 const searchHistory = require("./models/search_history");
-const Auth = require("./auth.js");
-const Admin = require("./admin.js");
+const Auth = require("./auth");
+const Admin = require("./admin");
+const Papers = require("./papers");
+const passport = require("passport");
 
 app.set('views', `${__dirname}/views`);
 app.engine('html', engines.mustache);
@@ -40,17 +42,15 @@ defineSearchkitRouter("text");
 defineSearchkitRouter("tables");
 defineSearchkitRouter("figs");
 
+app.use("/api/papers", passport.authenticate(['jwt'], {session: false}), Papers.router(app));
 app.use("/api/auth", Auth.router(app));
-app.use("/api/admin", (req, res, next) => {
-  return Auth.isAdminByHeader(req.headers)
-    .then(isAdmin => {
-      if (isAdmin) {
-        return next();
-      }
+app.use("/api/admin", passport.authenticate(['jwt'], {session: false}), (req, res, next) => {
+  if (req.user.isAdmin) {
+    return next();
+  }
 
-      res.status(403)
-        .end();
-    });
+  res.status(401)
+    .end();
 }, Admin.router(app));
 app.use("/api/label", require("./label.js")(app));
 app.use("/api/entity", require("./entity.js")(app));
