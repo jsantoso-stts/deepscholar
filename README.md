@@ -96,8 +96,8 @@ $ docker-compose exec deepscholar.server npm -s run es:initializeIndexes
 
 Import paper files (JSON) to ES
 ```
-$ cat ~/sample.json | docker exec -i `docker-compose ps -q deepscholar.server` npm run -s es:importIndexes
-Now indexes have been creating.
+$ cat ~/sample.json | docker exec -i `docker-compose ps -q deepscholar.server` npm run -s es:importPapers
+Now papers have been creating.
 Inserted 482 papers.
 Inserted 475 papers.
 Inserted 514 papers.
@@ -117,7 +117,7 @@ cat <entity-schema.json> <entities.json> | docker-compose exec -T deepscholar.se
 ### Delete indexes
 ```
 $ docker-compose exec deepscholar.server npm -s run es:deleteIndexes
-All Indexes have been deleted.
+All papers have been deleted.
 ```
 
 ### Delete Entities

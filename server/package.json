@@ -4,7 +4,7 @@
   "scripts": {
     "start": "nodemon server.js",
     "es:initializeIndexes": "node scripts/initializeIndexes.js",
-    "es:importIndexes": "node scripts/importIndexes.js",
+    "es:importPapers": "node scripts/importPapers.js",
     "es:deleteIndexes": "node scripts/deleteIndexes.js",
     "es:importEntities": "node scripts/importEntities.js",
     "es:deleteEntities": "node scripts/deleteEntities.js",

@@ -35,7 +35,7 @@ module.exports = class ElasticsearchTools {
     }));
   }
 
-  static async importIndexes(filePathOrStream) {
+  static async importPapers(filePathOrStream) {
     function createRequest() {
       const stream = new ReadableStream("");
 
