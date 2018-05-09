@@ -192,9 +192,9 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
 
     const target = e.target;
     const file = target.files.item(0);
-    Api.importIndexes(token, file)
+    Api.importPapers(token, file)
       .then(() => {
-        window.Materialize.toast('The file had been uploaded. Now indexes have been creating.', 5000);
+        window.Materialize.toast('The file had been uploaded. Now papers have been creating.', 5000);
         this.props.dispatch(receiveImportIndexes());
       });
   }
@@ -225,7 +225,7 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
                 </div>
               </div>
               <ul id="navMenu" className="dropdown-content">
-                <li><a href="#!" onClick={this.handleClickImportIndexes.bind(this)}>Import Indexes</a></li>
+                <li><a href="#!" onClick={this.handleClickImportIndexes.bind(this)}>Import Papers</a></li>
                 <li className="divider"></li>
                 <li><a href="#!" onClick={this.handleClickResetIndexes.bind(this)}>Reset Indexes</a></li>
               </ul>

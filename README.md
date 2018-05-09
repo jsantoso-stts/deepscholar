@@ -85,8 +85,8 @@ Index(search_histories) created.
 
 * Import
 ```
-$ cat ~/sample.json | docker exec -i `docker-compose ps -q deepscholar.server` npm run -s es:importIndexes
-Now indexes have been creating.
+$ cat ~/sample.json | docker exec -i `docker-compose ps -q deepscholar.server` npm run -s es:importPapers
+Now papers have been creating.
 Inserted 482 papers.
 Inserted 475 papers.
 Inserted 514 papers.

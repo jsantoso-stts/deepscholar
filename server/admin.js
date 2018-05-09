@@ -25,8 +25,8 @@ module.exports = class Admin {
         });
     });
 
-    router.post(`/indexes/import`, upload.single('indexes'), (req, res) => {
-      ElasticsearchTools.importIndexes(req.file.path);
+    router.post(`/papers/import`, upload.single('indexes'), (req, res) => {
+      ElasticsearchTools.importPapers(req.file.path);
       res.send(JSON.stringify({}));
     });
 
