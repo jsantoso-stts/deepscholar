@@ -12,13 +12,14 @@ const jwtOptions = {
 };
 passport.use(new passportJwt.Strategy(jwtOptions, (payload, done) => {
   const sub = JSON.parse(payload.sub);
-  return User.findByObjectId(sub.id).then((user) => {
-    if (user) {
-      return done(null, user, payload);
-    }
+  return User.findByObjectId(sub.id)
+    .then((user) => {
+      if (user) {
+        return done(null, user, payload);
+      }
 
-    return done();
-  });
+      return done();
+    });
 }));
 
 passport.use('github', new GithubStrategy({
@@ -27,9 +28,10 @@ passport.use('github', new GithubStrategy({
     callbackURL: `${process.env.DEEP_SCHOLAR_URL}/api/auth/github/callback`
   },
   (accessToken, refreshToken, profile, done) => {
-    User.findOrCreate(profile).then((user) => {
-      done(null, user);
-    });
+    User.findOrCreate(profile)
+      .then((user) => {
+        done(null, user);
+      });
   }
 ));
 
@@ -102,18 +104,10 @@ module.exports = class Auth {
 
     const router = new express.Router();
 
-    router.get(`/verify`, (req, res) => {
-      return Auth.getVerifiedUserId(req.headers).then(id => {
-        return User.findByObjectId(id).then(user => {
-          const token = generateAccessToken(id);
-          const {profile} = user;
-          const isAdmin = user.isAdmin || false;
-          res.send(JSON.stringify({id, token, isAdmin, profile}));
-        });
-      })
-.catch(() => {
-        res.status(403).end();
-      });
+    router.get(`/verify`, passport.authenticate(['jwt'], { session: false }), (req, res) => {
+      const user = req.user;
+      user.token = generateAccessToken(user._id);
+      res.send(JSON.stringify(user));
     });
 
     providers.forEach(provider => {
