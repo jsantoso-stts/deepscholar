@@ -8,6 +8,27 @@ module.exports = new class Papers {
     });
   }
 
+  get(paperId) {
+    return this.client.get({
+      index: "papers",
+      type: "text",
+      id: paperId,
+      _source: [
+        "pdf",
+        "xml",
+        "pdftxt"
+      ]
+    })
+      .then(paper => {
+        console.log(paper);
+        return paper;
+      })
+      .catch((e) => {
+        console.log(e);
+        return false;
+      });
+  }
+
   exists(paperId) {
     return this.client.exists({
       index: "papers",
