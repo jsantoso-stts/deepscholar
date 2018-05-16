@@ -1,22 +1,21 @@
 import React, {Component} from 'react';
-import ReactDom from 'react-dom';
 
-class collapseCard extends Component{
-  constructor(props){
-    super(props)
+class collapseCard extends Component {
+  constructor(props) {
+    super(props);
     this.state = {
-      hide:true
-    }
+      hide: true
+    };
   }
 
-  onClick(){
+  onClick() {
     this.setState({
-      hide:!this.state.hide
-    })
+      hide: !this.state.hide
+    });
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <div className="card-action">
         <div className="card-subtitle">{this.props.title}</div>
         <i className="material-icons" onClick={this.onClick.bind(this)}>{this.state.hide ? "add_circle_outline" : "remove_circle_outline"}</i>
@@ -29,7 +28,7 @@ class collapseCard extends Component{
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 

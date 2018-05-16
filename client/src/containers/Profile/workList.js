@@ -1,33 +1,32 @@
-import React, {Component} from 'react'
-import ReactDom from 'react-dom'
+import React, {Component} from 'react';
 
-class workList extends Component{
-  constructor(props){
-    super(props)
+class workList extends Component {
+  constructor(props) {
+    super(props);
     this.state = {
-      hide:true
-    }
+      hide: true
+    };
   }
 
-  onClick(){
+  onClick() {
     this.setState({
-      hide:!this.state.hide
-    })
+      hide: !this.state.hide
+    });
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <li key={this.props.data.workExternalIdentifierType.value}>
         <div className="work-list-container">
           <h6 class="workspace-title">{this.props.data.title}</h6>
           <dl>
             <dd>{this.props.data.journaltitle}</dd>
             <dd className="small">{this.props.data.publicationDate.year}&ensp;|&ensp;{this.props.data.workType}</dd>
-            <dd><span className='title'>DOI:</span>&ensp;
-              {this.props.data.workExternalIdentifierHtml.url !== null ? <a href = "{this.props.data.workExternalIdentifierHtml.url}">{this.props.data.workExternalIdentifierHtml.value}</a> :<span>{this.props.data.workExternalIdentifierHtml.value}</span>}
+            <dd><span className="title">DOI:</span>&ensp;
+              {this.props.data.workExternalIdentifierHtml.url !== null ? <a href = "{this.props.data.workExternalIdentifierHtml.url}">{this.props.data.workExternalIdentifierHtml.value}</a> : <span>{this.props.data.workExternalIdentifierHtml.value}</span>}
             </dd>
-            <dd><span className='title'>EID:</span>&ensp;
-            {this.props.data.workExternalIdentifierType.url !== null ? <a href = "{this.props.data.workExternalIdentifierHtml.url}">{this.props.data.workExternalIdentifierType.value}</a> :<span>{this.props.data.workExternalIdentifierType.value}</span>}
+            <dd><span className="title">EID:</span>&ensp;
+            {this.props.data.workExternalIdentifierType.url !== null ? <a href = "{this.props.data.workExternalIdentifierHtml.url}">{this.props.data.workExternalIdentifierType.value}</a> : <span>{this.props.data.workExternalIdentifierType.value}</span>}
             </dd>
           </dl>
           <i className="material-icons" onClick={this.onClick.bind(this)}>{this.state.hide ? "add_circle_outline" : "remove_circle_outline"}</i>
@@ -44,19 +43,19 @@ class workList extends Component{
                   <div className="col l6 m6 s12">
                     <dl>
                       <dt>Contributor</dt>
-                      {this.props.data.worksSrvc.details.Contributors.map((foo)=>{
-                        return(
+                      {this.props.data.worksSrvc.details.Contributors.map((foo) => {
+                        return (
                           <dd>{foo.name}</dd>
-                        )
+                        );
                       })}
                     </dl>
-                  </div>  
+                  </div>
                   <div className="col l6 m6 s12">
                       <dl>
                         <dt>Created</dt>
                         <dd>{this.props.data.worksSrvc.details.CreatedDate}</dd>
                       </dl>
-                  </div>  
+                  </div>
                 </div>
               </div>
             </div>
@@ -67,8 +66,8 @@ class workList extends Component{
           <div className="col l6 m6 s12 text-right">Preferred source</div>
         </div>
       </li>
-    )
+    );
   }
 }
 
-export default workList
+export default workList;

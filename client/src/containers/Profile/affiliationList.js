@@ -1,22 +1,21 @@
-import React, {Component} from 'react'
-import ReactDom from 'react-dom'
+import React, {Component} from 'react';
 
-class affiliationList extends Component{
-  constructor(props){
-    super(props)
+class affiliationList extends Component {
+  constructor(props) {
+    super(props);
     this.state = {
-      hide:true
-    }
+      hide: true
+    };
   }
 
-  onClick(){
+  onClick() {
     this.setState({
-      hide:!this.state.hide
-    })
+      hide: !this.state.hide
+    });
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <div className="work-list-container m-b-30">
         <ul>
           <li className="type">{this.props.data.type}</li>
@@ -27,7 +26,7 @@ class affiliationList extends Component{
               </a>
           </li>
           <li className="position">{this.props.data.roletitle} {this.props.data.departmentName}</li>
-        </ul> 
+        </ul>
         <i className="material-icons" onClick={this.onClick.bind(this)}>{this.state.hide ? "add_circle_outline" : "remove_circle_outline"}</i>
         <div className="toggle">
           <div className={this.state.hide ? "off" : "on"} >
@@ -41,10 +40,10 @@ class affiliationList extends Component{
               <dd><span>ISNI : </span>{this.props.data.identifer.grid.value}</dd>
               <dd><span>ORGREF : </span>{this.props.data.identifer.grid.value}</dd>
               <dd><span>WIKIDATA : </span>{this.props.data.identifer.grid.value}</dd>
-              <dd><span>WIKIPEDIA_URL : </span>{this.props.data.identifer.othergrid.wikipedia_url.map((item)=>{
-                return(
+              <dd><span>WIKIPEDIA_URL : </span>{this.props.data.identifer.othergrid.wikipedia_url.map((item) => {
+                return (
                   <span>{item.url}&nbsp;</span>
-                )
+                );
               })}</dd>
               <dt>Created</dt>
               <dd>{this.props.data.createDate.year}/{this.props.data.createDate.month}/{this.props.data.createDate.day}</dd>
@@ -54,11 +53,11 @@ class affiliationList extends Component{
         </div>
         <div className="work-list-footer row m-b-0">
           <div className="col l6 m6 s12">Source: {this.props.data.source}</div>
-          
-        </div>  
+
+        </div>
       </div>
-    )
+    );
   }
 }
 
-export default affiliationList
+export default affiliationList;

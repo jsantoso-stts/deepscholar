@@ -1,29 +1,27 @@
 import React, {Component} from 'react';
-import ReactDom from 'react-dom';
 
-
-class collapseCardArray extends Component{
-  constructor(props){
-    super(props)
+class collapseCardArray extends Component {
+  constructor(props) {
+    super(props);
     this.state = {
-      hide:true
-    }
+      hide: true
+    };
   }
 
-  onClick(){
+  onClick() {
     this.setState({
-      hide:!this.state.hide
-    })
+      hide: !this.state.hide
+    });
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <div className="card-action">
         <div className="card-subtitle">{this.props.title}</div>
         <i className="material-icons" onClick={this.onClick.bind(this)}>{this.state.hide ? "add_circle_outline" : "remove_circle_outline"}</i>
         <div className="public-content">
-          {this.props.data.map((item)=>{
-            return(
+          {this.props.data.map((item) => {
+            return (
               <div className={this.state.hide ? "" : "top"}>
                 {this.props.href ? <span><a href="{item.data}" target="_brank">{item.data}</a></span> : <span>{item.data}</span>}
                 <div className="toggle">
@@ -32,11 +30,11 @@ class collapseCardArray extends Component{
                 </div>
                 </div>
               </div>
-            )
+            );
           })}
         </div>
       </div>
-    )
+    );
   }
 }
 
