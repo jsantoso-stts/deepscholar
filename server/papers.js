@@ -6,19 +6,16 @@ module.exports = class {
   static router() {
     const router = new express.Router();
 
-    router.get(`/:paperId/annotations`, (req, res) => {
-      return Papers.exists(req.params.paperId)
-        .then(exists => {
-          if (!exists) {
+    router.get(`/:paperId`, (req, res) => {
+      return Papers.get(req.params.paperId)
+        .then(paper => {
+          if (!paper) {
             res.status(404)
               .end();
             return;
           }
 
-          return Annotation.findByPaperId(req.params.paperId)
-            .then(annotations => {
-              res.json(annotations);
-            });
+          res.json(paper._source);
         });
     });
 
