@@ -20,7 +20,6 @@ module.exports = new class Papers {
       ]
     })
       .then(paper => {
-        console.log(paper);
         return paper;
       })
       .catch((e) => {
@@ -36,7 +35,6 @@ module.exports = new class Papers {
       id: paperId
     })
       .then(exists => {
-        console.log(exists);
         return exists;
       })
       .catch((e) => {
