@@ -102,13 +102,13 @@ h4 {
 
 /* collapsed panel */
 
-.off {
+.card-body .off {
   max-height: 0;
   overflow: hidden;
   transition: all .5s ease-out;
 }
 
-.on {
+.card-body .on {
   max-height: 999px;
   height: 100%;
   /* transition: all .8s ease-in;
