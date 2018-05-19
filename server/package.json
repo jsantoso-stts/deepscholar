@@ -3,9 +3,9 @@
   "private": true,
   "scripts": {
     "start": "nodemon server.js",
-    "es:initializeIndexes": "node scripts/initializeIndexes.js",
+    "es:initializePapers": "node scripts/initializePapers.js",
+    "es:initializeSearchHistories": "node scripts/initializeSearchHistories.js",
     "es:importPapers": "node scripts/importPapers.js",
-    "es:deleteIndexes": "node scripts/deleteIndexes.js",
     "es:importEntities": "node scripts/importEntities.js",
     "es:deleteEntities": "node scripts/deleteEntities.js",
     "es:dump:searchHistories": "elasticdump --input=http://deepscholar.elasticsearch:9200/search_histories --output=$ --type=data | node scripts/convert.js"

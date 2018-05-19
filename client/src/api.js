@@ -51,11 +51,8 @@ class Api {
     return Api.fetchApi("/api/auth/verify", {}, token);
   }
 
-  static resetIndexes(token) {
-    return Api.fetchApi("/api/admin/indexes", {method: "DELETE"}, token)
-      .then(() => {
-        Api.fetchApi("/api/admin/indexes/init", {method: "POST"}, token);
-      });
+  static initializePapers(token) {
+    return Api.fetchApi("/api/admin/papers/initialize", {method: "POST"}, token);
   }
 
   static importPapers(token, file) {

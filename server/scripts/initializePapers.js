@@ -1,11 +1,11 @@
 const ElasticsearchTools = require("../common/elasticsearch_tools");
 
-ElasticsearchTools.initializeIndexes()
+ElasticsearchTools.initializePapers()
   .then(() => {
-    console.log(`All Indexes have been created.`);
+    console.log(`Papers' indexes have been initialized.`);
   })
   .catch(reason => {
     console.log(reason);
-    console.error(`Indexes have not been created.`);
+    console.error(`Papers' indexes have not been initialized.`);
     console.log(`StatusCode: ${reason.statusCode}`);
   });

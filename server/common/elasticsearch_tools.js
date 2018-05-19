@@ -11,28 +11,28 @@ module.exports = class ElasticsearchTools {
   static get AUTHORITY() {
     return "deepscholar.elasticsearch:9200";
   }
-  static deleteIndexes() {
-    return rp({
-      method: "DELETE",
-      url: `http://${ElasticsearchTools.AUTHORITY}/*`
-    });
+
+  static initializePapers() {
+    return ElasticsearchTools.initializeIndex("papers");
   }
 
-  static initializeIndexes() {
+  static initializeSearchHistories() {
+    return ElasticsearchTools.initializeIndex("search_histories");
+  }
+
+  static async initializeIndex(type) {
+    await rp({
+      method: "DELETE",
+      url: `http://${ElasticsearchTools.AUTHORITY}/${type}`
+    });
+
     const mappingsDir = path.join(__dirname, "mappings");
-    return Promise.all([
-      "papers",
-      "search_histories"
-    ].map((fileName) => {
-      return readFile(path.join(mappingsDir, `${fileName}.json`), 'utf8')
-        .then(json => {
-          return rp({
-            method: "PUT",
-            url: `http://${ElasticsearchTools.AUTHORITY}/${fileName}`,
-            body: json
-          });
-        });
-    }));
+    const json = await readFile(path.join(mappingsDir, `${type}.json`), 'utf8');
+    await rp({
+      method: "PUT",
+      url: `http://${ElasticsearchTools.AUTHORITY}/${type}`,
+      body: json
+    });
   }
 
   static async importPapers(filePathOrStream) {
