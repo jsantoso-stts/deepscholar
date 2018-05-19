@@ -29,7 +29,6 @@
   },
   "devDependencies": {
     "elasticdump": "^3.3.11",
-    "nodemon": "^1.14.10",
-    "properties": "^1.2.1"
+    "nodemon": "^1.14.10"
   }
 }

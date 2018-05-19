@@ -1,0 +1,242 @@
+/****************
+**
+**  Global style
+**
+****************/
+
+body {
+  background-color: #dbdbdb;
+}
+
+/* Interim change. Adjust the background of the search page 
+2018.03.23 MM
+**************************/
+body.search{
+  background-color: #fff;
+}
+/**************************
+ Delete when search page is complete */
+
+.m-t--36 {
+  margin-top: -36px;
+}
+
+.m-t-30 {
+  margin-top: 30px;
+}
+
+.m-b-0{
+  margin-bottom: 0;
+}
+
+.m-b-30{
+  margin-bottom: 30px;
+}
+
+h4 {
+  font-size: 1.9rem;
+  font-weight: 500;
+}
+
+/****************/
+
+.card {
+  border-color: #d7dfe3;
+  border-radius: 4px;
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+  background-color: #fff;
+}
+
+.card-body {
+  -webkit-box-flex: 1;
+  flex: 1 1 auto;
+  padding: 1.25rem;
+}
+
+.user_bg{
+  position: relative;
+}
+
+.user_bg .initial_flort{
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  width: 80%;
+  height: 6.4rem;
+  color: #fff;
+  font-size:4.2rem;
+  font-weight: 400;
+}
+
+.card-action .material-icons {
+  position: absolute;
+  top: 14px;
+  right: 24px;
+  cursor: pointer;
+}
+
+.card .card-action a:not(.btn):not(.btn-large):not(.btn-large):not(.btn-floating) {
+  color: #1e50a2;
+}
+
+.card-content .config .label .material-icons {
+  position: absolute;
+  top: 14px;
+  right: 24px;
+  cursor: pointer;
+}
+
+.card-subtitle {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.img-circle {
+  border-radius: 100%;
+}
+
+/* collapsed panel */
+
+.card-body .off {
+  max-height: 0;
+  overflow: hidden;
+  transition: all .5s ease-out;
+}
+
+.card-body .on {
+  max-height: 999px;
+  height: 100%;
+  /* transition: all .8s ease-in;
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden; */
+}
+
+div.top:not(:first-child) {
+  border-top: 1px dotted #ccc;
+}
+
+/* work list */
+
+#work-list,#edu-list {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+#work-list h6,#edu-list h6{
+  font-size: 18px;
+  line-height: 1.25;
+  width: 98%;
+}
+
+#work-list li {
+  border-bottom: 3px solid #eee;
+  margin-bottom: 20px;
+}
+
+.work-list-container {
+  position: relative;
+}
+
+.work-list-container .material-icons {
+  position: absolute;
+  top: 0;
+  right: -10px;
+  cursor: pointer;
+}
+
+.work-list-container dl {
+  margin-top: 0;
+  font-weight: normal;
+}
+
+.work-list-container dl dt {
+  font-weight: 600;
+}
+
+.work-list-container dl dd,
+.work-list-container dl dt {
+  margin-left: 0;
+  line-height: 1.45;
+  margin-top: 4px;
+}
+
+.work-list-container dl dd.small {
+  font-size: 90%;
+}
+
+.work-list-container dl dd span.title {
+  font-weight: 600;
+}
+
+.work-list-container .worksSrvc_detail {
+  border-top: 1px dotted #ccc;
+}
+
+.work-list-footer.row {
+  font-weight: normal;
+  font-size: 90%;
+}
+
+.work-list-footer .text-right{
+  text-align: right;
+}
+
+.experience{
+  border-left: 1px solid #a7a7a7;
+  padding-left: 24px;
+  font-weight: normal;
+}
+.experience ul{
+  position: relative;
+}
+.experience li.type{
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.experience li.date{
+  font-size: 90%;
+}
+
+.experience li.affiliation a{
+  cursor: pointer;
+}
+
+.experience li.affiliation a:hover{
+  opacity: 0.6;
+}
+.experience li.affiliation a:before {
+  background: #a7a7a7;
+  position: absolute;
+  width: 9px;
+  height: 33px;
+  border-radius: 4px;
+  top: 23px;
+  left: -29px;
+  content: "";
+}
+
+/* tabs adjust */
+
+.tabs {
+  box-shadow: initial;
+  border-bottom: 1px solid #ccc;
+  margin-top: 8px
+}
+
+.tabs .tab {
+  line-height: 48px;
+  height: 48px;
+  text-transform: initial;
+  font-weight: normal;
+}
+
+.tabs .tab a{
+  font-size: 80%;
+}
