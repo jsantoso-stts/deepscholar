@@ -52,10 +52,14 @@ input[type=file] {
 		width: 100%;
 		max-width: 140px;
 	}
-	.header-navi ul a {
-		/* color: #1e50a2; */
-		color: #fff!important;
-	}
+
+.header-navi ul a {
+	color: #fff;
+}
+.header-navi ul.dropdown-content li a {
+	color: #1e50a2;
+}
+
 	@media only screen and (max-width: 992px) {
 		.header-navi .brand-logo {
 			margin-left: 0;
@@ -71,10 +75,6 @@ input[type=file] {
     transform: translateY(-50%);
     width: 100%;
     max-width: 140px;
-}
-
-.header-navi ul a {
-    color: #1e50a2;
 }
 
 @media only screen and (max-width: 992px) {
