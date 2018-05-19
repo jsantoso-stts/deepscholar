@@ -19,6 +19,22 @@ module.exports = class {
         });
     });
 
+    router.get(`/:paperId/annotations`, (req, res) => {
+      return Papers.exists(req.params.paperId)
+        .then(exists => {
+          if (!exists) {
+            res.status(404)
+              .end();
+            return;
+          }
+
+          return Annotation.findByPaperId(req.params.paperId)
+            .then(annotations => {
+              res.json(annotations);
+            });
+        });
+    });
+
     router.post(`/:paperId/annotations`, (req, res) => {
       return Papers.exists(req.params.paperId)
         .then(exists => {
