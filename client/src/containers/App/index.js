@@ -169,15 +169,15 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
     this.fileElement.click();
   }
 
-  handleClickResetIndexes() {
-    if (!window.confirm("Are you sure to reset indexes? Your browser will be reloaded.")) {
+  handleClickInitializePapers() {
+    if (!window.confirm("Are you sure to initialize papers? Your browser will be reloaded.")) {
       return;
     }
 
     const {user} = this.props.state;
     const token = user ? user.token : null;
 
-    Api.resetIndexes(token)
+    Api.initializePapers(token)
       .then(() => window.location.reload());
   }
 
@@ -228,7 +228,7 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
               <ul id="navMenu" className="dropdown-content">
                 <li><a href="#!" onClick={this.handleClickImportIndexes.bind(this)}>Import Papers</a></li>
                 <li className="divider"></li>
-                <li><a href="#!" onClick={this.handleClickResetIndexes.bind(this)}>Reset Indexes</a></li>
+                <li><a href="#!" onClick={this.handleClickInitializePapers.bind(this)}>Initialize Papers</a></li>
               </ul>
               <ul className="right">
                 {isUploading &&
