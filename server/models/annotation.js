@@ -7,13 +7,10 @@ module.exports = class Annotation {
       .collection("annotations");
   }
 
-  static findByPaperId(id) {
+  static findByQuery(query) {
     return new Promise((resolve, reject) => {
-      const query = {
-        "paperId": id
-      };
       return this.collection()
-        .find(query, {projection: {_id: false, paperId: false}})
+        .find(query, {projection: {_id: false, paperId: false, type: false}})
         .toArray((error, result) => {
           if (error) {
             reject(error);
