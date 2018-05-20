@@ -1,6 +1,7 @@
 const express = require("express");
 const Annotation = require("./models/annotation");
 const Papers = require("./models/papers");
+const passport = require("passport");
 
 module.exports = class PaperAPI {
   static router() {
@@ -19,11 +20,11 @@ module.exports = class PaperAPI {
         });
     });
 
-    router.get(`/:paperId/annotations/:type(pdf|xml)`, (req, res) => {
+    router.get(`/:paperId/annotations/:type(pdf|xml)`, passport.authenticate(['jwt'], {session: false}), (req, res) => {
       return PaperAPI.getAnnotations(req, res);
     });
 
-    router.post(`/:paperId/annotations/:type(pdf|xml)`, (req, res) => {
+    router.post(`/:paperId/annotations/:type(pdf|xml)`, passport.authenticate(['jwt'], {session: false}), (req, res) => {
       return PaperAPI.postAnnotations(req, res);
     });
 
