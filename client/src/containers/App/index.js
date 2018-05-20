@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import _ from 'lodash';
 import {
-  HashRouter, Switch, Route, Link
+  BrowserRouter, Switch, Route, Link
 } from 'react-router-dom';
 import {connect} from 'react-redux';
 import Index from '../Index/index.js';
@@ -278,7 +278,7 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
 class App extends Component {
   render() {
     return (
-      <HashRouter>
+      <BrowserRouter>
         <div>
           <Route component={props =>
             <NavBar {...props}/>
@@ -301,7 +301,7 @@ class App extends Component {
             </div>
           </div>
         </div>
-      </HashRouter>
+      </BrowserRouter>
     );
   }
 }
