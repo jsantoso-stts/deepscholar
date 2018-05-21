@@ -5,7 +5,42 @@ const Ajv = require('ajv');
 
 module.exports = class DatabaseTools {
 
-  static importEntities(filePathOrStream) {
+  static importEntities(json) {
+
+    // function validateSchema(schemaFile) {
+    //   const ajv = new Ajv();
+    //   const schemaTxt = schemaFile.replace(/entity/g, 'string');
+    //   const schema = JSON.parse(schemaTxt);
+    //   return ajv.compile(schema);
+    // }
+
+    function saveEntitiesToDB(entity) {
+      const headers = {'Content-Type': 'application/json'};
+      const port = process.env.DS_SERVER_PORT;
+      const path = '/api/entity/set/';
+      const options = {
+        url: `http://localhost:${port}${path}`,
+        method: 'POST',
+        headers: headers,
+        json: true,
+        form: entity
+      };
+      request(options, (error, response, body) => {
+        if (body && body.match(/error/)) {
+          console.log(body);
+        }          
+      });
+    }
+
+    const entities = json;
+    Object.keys(entities)
+      .forEach(id => {
+        const entity = entities[id];
+        saveEntitiesToDB(entity);
+      });    
+  }
+
+  static importEntitiesOld(filePathOrStream) {
 
     function validateSchema(schemaFile) {
       const ajv = new Ajv();

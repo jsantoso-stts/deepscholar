@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import './style.css';
-import {saveScrollY, toggleAllAuthors, toggleAbstract, updateLabelList, favoriteKey, entityAdd, entityUpdate, entityRemove} from "../module";
+import {saveScrollY, toggleAllAuthors, toggleAbstract, updateLabelList, favoriteKey, editEntity, addEntity, removeEntity, saveEntity} from "../module";
 
 function mapStateToProps(state) {
   return {state};
@@ -353,9 +353,6 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
   constructor(props) {
     super(props);
     this.state = {
-      category: this.props.category,
-      index: this.props.index,
-      value: this.props.value || "",
       valueOld: this.props.value || ""
     };
   }
@@ -378,36 +375,74 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
   }
 
   handleClickEdit() {
+    let value;
+    const category = this.props.category;
+    const index = this.props.index;
+    if (index === undefined) {
+      value = this.props.state.entity._source[category];
+    } else {
+      value = this.props.state.entity._source[category][index];
+    }
+    this.setState({valueOld: value});
     this.switchEditMode(true);
-    this.setState({valueOld: this.state.value});
   }
 
   handleClickRemove() {
-    this.props.dispatch(entityRemove(this.state.category, this.props.index));
+    const category = this.props.category;
+    const index = this.props.index;
+    this.props.dispatch(removeEntity(category, index));
   }
 
   handleClickFinish() {
     this.switchEditMode(false);
-    this.props.dispatch(entityUpdate(this.state.category, this.props.index, this.state.value));
+    const entity = this.props.state.entity;
+    this.props.dispatch(saveEntity(entity));
   }
 
   handleClickCancel() {
+    const entity = Object.assign({}, this.props.state.entity);
+    const category = this.props.category;
+    const index = this.props.index;
+
+    if (index === undefined) {
+      entity._source[category] = this.state.valueOld;
+    } else {
+      entity._source[category][index] = this.state.valueOld;
+    }
+
+    this.props.dispatch(editEntity(entity));
     this.switchEditMode(false);
-    this.setState({value: this.state.valueOld});
-    this.props.dispatch(entityUpdate(this.state.category, this.props.index, this.state.valueOld));
   }
 
   handleChange(event) {
-    this.setState({value: event.target.value});
+    const entity = Object.assign({}, this.props.state.entity);
+    const category = this.props.category;
+    const index = this.props.index;
+
+    if (index === undefined) {
+      entity._source[category] = event.target.value;
+    } else {
+      entity._source[category][index] = event.target.value;
+    }
+
+    this.props.dispatch(editEntity(entity));
   }
 
   render() {
-    const value = this.state.value;
+
+    let value;
+    const category = this.props.category;
+    const index = this.props.index;
+    if (index === undefined) {
+      value = this.props.state.entity._source[category];
+    } else {
+      value = this.props.state.entity._source[category][index];
+    }
 
     return (
       <div ref="thisElem" className="box-row">
 
-        <p>Value: {value}</p>
+        <p>{value}</p>
 
         <div className="editBtns">
           <a className="icon edit" href="javascript:void(0)" onClick={this.handleClickEdit.bind(this)}><i className="material-icons">edit</i></a>
@@ -435,7 +470,7 @@ const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps exten
     this.state = {
       asFull: {}
     };
-    const properties = this.props.properties;
+    const properties = this.props.state.entity._source;
     Object.keys(properties)
           .map((key) => {
             this.state.asFull[key] = false;
@@ -445,11 +480,14 @@ const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps exten
 
   handleClick(e) {
     const category = e.currentTarget.getAttribute('data-category');
-    const properties = this.props.properties;
-    if (properties[category].length >= 4) {
-      this.state.asFull[category] = true;
+    this.props.dispatch(addEntity(category));
+
+    const entity = this.props.state.entity;
+    if (entity._source[category].length >= 4) {
+      const asFull = Object.assign({}, this.state.asFull);
+            asFull[category] = true;
+      this.setState({asFull: asFull});
     }
-    this.props.dispatch(entityAdd(category));
   }
 
   handleClickViewAll(e) {
@@ -461,35 +499,41 @@ const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps exten
 
   render() {
 
-    const properties = this.props.properties;
+    const properties = this.props.state.entity._source;
 
     const props = Object.keys(properties)
                         .map((key) => {
-                          const propsArr = properties[key];
+
+                          if (key === 'id' || key === 'title' || key === 'description' || key === 'update') {
+                            return false;
+                          }
+
+                          const propValue = properties[key];
                           const asFull = this.state.asFull[key];
 
                           let prop = null;
-                          if (propsArr.length > 0) {
-                            prop = propsArr.map((item, i) => {
+                          if (Array.isArray(propValue) && propValue.length > 0) {
+                            prop = propValue.map((item, i) => {
                                       if (i < 4 || asFull) {
                                         return <EntityDetailProp category={key} value={item} index={i} key={i} />;
                                       }
                                       return false;
                                     });
+                          } else if(!Array.isArray(propValue)) {
+                            prop = <EntityDetailProp category={key} value={propValue} key={key} />;
                           }
 
                           let addValue = null;
-                          if (propsArr.length < 5 || asFull) {
+                          if ( (Array.isArray(propValue) && propValue.length < 5) || asFull) {
                             addValue = <a className="icon add" href="javascript:void(0)" onClick={this.handleClick.bind(this)} data-category={key}><i className="material-icons">add</i>add value</a>;
                           }
 
                           let viewAll = null;
-                          if (propsArr.length >= 5) {
+                          if (Array.isArray(propValue) && propValue.length >= 5) {
                             const text = asFull ? 'close' : 'view all';
                             viewAll = <a className="icon add viewAll" href="javascript:void(0)" onClick={this.handleClickViewAll.bind(this)} data-category={key}><span>▼</span> {text}</a>;
                           }
 
-                          // 追加の設定
                           return (
                             <div key={key} className={`box-cover viewAll${asFull}`}>
                               <div className="box">
@@ -510,11 +554,10 @@ const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps exten
 const EntityDetailDesc = connect(mapStateToProps)(class EntityDetailDesc extends Component {
 
   constructor(props) {
-    super(props);
+    super(props);   
     this.state = {
-      desc: this.props.desc || "",
-      descOld: this.props.desc || ""
-    };
+      descOld: this.props.desc
+    };    
   }
 
   componentDidMount() {
@@ -532,33 +575,39 @@ const EntityDetailDesc = connect(mapStateToProps)(class EntityDetailDesc extends
 
   handleClickEdit() {
     this.switchEditMode(true);
-    this.setState({descOld: this.state.desc});
+    const entity = Object.assign({}, this.props.state.entity);
+    this.setState({descOld: entity._source.description});
   }
 
   handleClickFinish() {
     this.switchEditMode(false);
+    const entity = this.props.state.entity;
+    this.props.dispatch(saveEntity(entity));
   }
 
   handleClickCancel() {
-    this.setState({desc: this.state.descOld});
+    const entity = Object.assign({}, this.props.state.entity);
+          entity._source.description = this.state.descOld;
+    this.props.dispatch(editEntity(entity));
     this.switchEditMode(false);
   }
 
   handleChange(event) {
-    this.setState({desc: event.target.value});
+    const entity = Object.assign({}, this.props.state.entity);
+          entity._source.description = event.target.value;
+    this.props.dispatch(editEntity(entity));
   }
 
   render() {
-
-    const desc = this.state.desc;
+    const {description} = this.props.state.entity._source;
 
     return (
       <div ref="description" className="description">
-        <p>{desc}</p>
+        <p>{description}</p>
         <a className="icon edit" href="javascript:void(0)" onClick={this.handleClickEdit.bind(this)}><i className="material-icons">edit</i></a>
 
         <div className="input-field">
-          <textarea id="textareaDesc" className="materialize-textarea" value={desc} onChange={this.handleChange.bind(this)} placeholder="Description..."></textarea>
+          <textarea id="textareaDesc" className="materialize-textarea" value={description} onChange={this.handleChange.bind(this)} placeholder="Description..."></textarea>
         </div>
 
         <div className="btns">
@@ -574,7 +623,7 @@ const EntityDetailDesc = connect(mapStateToProps)(class EntityDetailDesc extends
 export const EntityDetail = withRouter(connect(mapStateToProps)(class EntityDetail extends Component {
 
   formatTime(timestamp) {
-    const targetDate = new Date(timestamp * 1000);
+    const targetDate = new Date(parseInt(timestamp));
     const months = [
                       'January',
                       'February',
@@ -598,16 +647,15 @@ export const EntityDetail = withRouter(connect(mapStateToProps)(class EntityDeta
     return time;
   }
 
-  render() {
-
+  render() {    
     if (this.props.data === null) {
       return null;
     }
 
     const backBtn = this.props.backBtn;
 
-    const {title, desc, properties, update: timestamp} = this.props.data;
-    const update = this.formatTime(timestamp);
+    const {title, update: timestamp} = this.props.data._source;
+    const update = this.formatTime(timestamp);    
 
     return (
 
@@ -616,9 +664,9 @@ export const EntityDetail = withRouter(connect(mapStateToProps)(class EntityDeta
 
         <div className="divider title"></div>
 
-        <EntityDetailDesc desc={desc} />
+        <EntityDetailDesc />
 
-        <EntityDetailProps properties={properties} />
+        <EntityDetailProps />
 
         <div className="edited">Last edited on {update}</div>
 
@@ -633,12 +681,12 @@ export const EntityDetail = withRouter(connect(mapStateToProps)(class EntityDeta
 export const Entity = withRouter(connect(mapStateToProps)(class Entity extends Component {
 
   handleClick() {
-    const id = this.props.data.id;
-    this.props.history.push(`/knowledge/${id}`);
+    const id = this.props.data._source.id;
+    this.props.history.push(`/entities/${id}`);
   }
 
   formatTime(timestamp) {
-    const targetDate = new Date(timestamp * 1000);
+    const targetDate = new Date(parseInt(timestamp));
     const months = [
                       'January',
                       'February',
@@ -663,8 +711,7 @@ export const Entity = withRouter(connect(mapStateToProps)(class Entity extends C
   }
 
   render() {
-
-    const {id, title, desc, update} = this.props.data;
+    const {id, title, description, update} = this.props.data._source;
 
     const updateTime = this.formatTime(update);
 
@@ -682,7 +729,7 @@ export const Entity = withRouter(connect(mapStateToProps)(class Entity extends C
           </h5>
         </header>
 
-        <div className="searchresult">{desc}</div>
+        <div className="searchresult">{description}</div>
         <div className="edited">{updateTime}</div>
       </article>
     );
@@ -693,7 +740,7 @@ export class Entities extends Component {
 
   render() {
     const entities = this.props.data.map((entity) =>
-      <Entity data={entity} key={entity.id} />
+      <Entity data={entity} key={entity._id} />
     );
 
     return (

@@ -2,32 +2,45 @@ const express = require("express");
 const bodyParser = require('body-parser');
 const Entity = require("./models/entity");
 
-// function getLabel(req, res) {
-//   const profileId = req.body.profile_id;
-//   Label.findByProfileId(profileId).then((label) => {
-//     // console.log('GET');
-//     // console.log('profileId : ' + profileId);
-//     // console.log(label);
-//     if (label) {
-//       res.send(label);
-//     } else {
-//       res.send('error');
-//     }
-//   });
-// }
-
 function setEntity(req, res) {
   const entityId = req.body.id;
-  // console.log('SET');
-  // console.log('entityId : ' + profileId);
   Entity.insertOrCreate(entityId, req.body).then((entity) => {
     if (entity) {
-      res.send(`${entityId} : done`);
+      res.send(`DB save done : entityId => ${entityId}`);
     } else {
-      res.send(`${entityId} : error`);
+      res.send(`DB save error : entityId => ${entityId}`);
     }
   });
 }
+
+function updateEntity(req, res) {
+  console.log('updateEntity');
+  const entityId = req.body.id;
+  Entity.insertOrCreate(entityId, req.body).then((entity) => {
+    if (entity) {      
+      Entity.esUpdate(entityId, req.body).then((entity) => {
+        if (entity) {
+          res.send('done');
+        } else {
+          res.send('error');
+        }
+      });
+    } else {
+      res.send('error');
+    }
+  });
+}
+
+// function setAllEntity(req, res) {
+  // const entityId = req.body.id;
+  // Entity.insertOrCreate(entityId, req.body).then((entity) => {
+  //   if (entity) {
+  //     res.send(`${entityId} : done`);
+  //   } else {
+  //     res.send(`${entityId} : error`);
+  //   }
+  // });
+// }
 
 function deleteAllEntities(req, res) {
   Entity.deleteAll().then((entity) => {
@@ -48,13 +61,17 @@ module.exports = (app) => {
     extended: true
   }));
 
-  // router.use('/get/', (req, res) => {
-    // getLabel(req, res);
-  // });
-
   router.use('/set/', (req, res) => {
     setEntity(req, res);
   });
+
+  router.use('/update/', (req, res) => {
+    updateEntity(req, res);
+  });
+
+  // router.use('/setAll/', (req, res) => {
+  //   setAllEntity(req, res);
+  // });
 
   router.use('/deleteAll/', (req, res) => {
     deleteAllEntities(req, res);

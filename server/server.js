@@ -21,9 +21,10 @@ if (process.env.NODE_ENV === "production") {
 }
 
 const defineSearchkitRouter = (typeName) => {
-  app.use(`/api/papers/${typeName}`, SearchkitExpress.createRouter({
+  const indices = typeName === 'entities' ? 'entities' : 'papers';
+  app.use(`/api/${indices}/${typeName}`, SearchkitExpress.createRouter({
     host: "http://deepscholar.elasticsearch:9200",
-    index: `papers/${typeName}`,
+    index: `${indices}/${typeName}`,
     queryProcessor: (query, req) => {
       if (/.+\/text$/.test(req.baseUrl)) {
         Auth.getVerifiedUserId(req.headers)
@@ -32,7 +33,6 @@ const defineSearchkitRouter = (typeName) => {
           })
           .catch(console.log);
       }
-
       return query;
     }
   }));
@@ -41,6 +41,7 @@ const defineSearchkitRouter = (typeName) => {
 defineSearchkitRouter("text");
 defineSearchkitRouter("tables");
 defineSearchkitRouter("figs");
+defineSearchkitRouter("entities");
 
 app.use("/api/papers", passport.authenticate(['jwt'], {session: false}), Papers.router(app));
 app.use("/api/auth", Auth.router(app));

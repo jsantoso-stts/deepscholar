@@ -20,6 +20,7 @@ import {
   receiveFigures,
   requestTables,
   receiveTables,
+  requestEntities,
   receiveEntities,
   deleteScrollY,
   changeYears,
@@ -71,7 +72,7 @@ const Paginator = withRouter(connect(mapStateToProps)(class Paginator extends Co
     const pageLimit = (10000 / this.props.size) - 1;
     if (maxPage > pageLimit) {
       maxPage = pageLimit;
-    } // ElasticSearch has limitation on searching paper after no.10000
+    } // ElasticSearch has limitation on search after no.10000
 
     const currentPage = this.props.page;
     let start,
@@ -856,7 +857,7 @@ const FilterChoose = connect(mapStateToProps)(class FilterChoose extends Compone
           const list = labelList[labelKey][2][targetKey];
           list.forEach((val) => {
             if (val !== "") {
-              const valDotEscaped = val.replace(/\./i, '\\.'); // class name may include dot
+              const valDotEscaped = val.replace(/\./g, '\\.'); // class name may include dot
               style += `.${targetKey}${valDotEscaped} h5 .${labelKey} { margin: 0 4px; }`;
               style += `.${targetKey}${valDotEscaped} h5 .${labelKey}:after { content: "${labelName}"; }`;
             }
@@ -865,7 +866,7 @@ const FilterChoose = connect(mapStateToProps)(class FilterChoose extends Compone
           const list = labelList[favoriteKey][targetKey];
           list.forEach((val) => {
             if (val !== "") {
-              const valDotEscaped = val.replace(/\./i, '\\.'); // class name may include dot
+              const valDotEscaped = val.replace(/\./g, '\\.'); // class name may include dot
               style += `.${targetKey}${valDotEscaped} .favorite i.on { opacity: 1; }`;
               style += `.${targetKey}${valDotEscaped} .favorite i.off { color: #1f4fa2; }`;
             }
@@ -1052,7 +1053,7 @@ class Search extends Component {
         this.searchPapers();
         break;
     }
-  }
+  }  
 
   searchPapers() {
     const targetKey = 'paper';
@@ -1094,32 +1095,7 @@ class Search extends Component {
       }
     });
 
-    let filterdList = [];
-
-    // only Label Filter
-    if (labelFilter.indexOf(favoriteKey) === -1 && labelFilter.length > 0) {
-      labelFilter.forEach((e) => {
-        filterdList = _.union(filterdList, labelList[e][2][targetKey]);
-      });
-
-      // only Favorite
-    } else if (labelFilter.indexOf(favoriteKey) !== -1 && labelFilter.length === 1) {
-      filterdList = labelList[favoriteKey][targetKey];
-
-      // both Label Filter & Favorite
-    } else if (labelFilter.indexOf(favoriteKey) !== -1 && labelFilter.length > 1) {
-      labelFilter.forEach((e) => {
-        if (e !== favoriteKey) {
-          filterdList = _.union(filterdList, labelList[e][2][targetKey]);
-        }
-      });
-      filterdList = _.intersection(filterdList, labelList[favoriteKey][targetKey]);
-    }
-
-    // for empty filter
-    if (labelFilter.length > 0 && filterdList.length === 0) {
-      filterdList.push("");
-    }
+    const filterdList = this.makeFilteredList(labelList, labelFilter, targetKey);
 
     const labelFilterList = filterdList.length > 0 ? {terms: {_id: filterdList}} : null;
 
@@ -1266,105 +1242,101 @@ class Search extends Component {
   }
 
   searchEntities() {
-    // const targetKey = 'entity';
-    // const {query, page, gte, lte, labelList, labelFilter} = this.props.state;
-    // this.props.dispatch(requestPapers(query, page)); // query, page を state に set
+    const targetKey = 'entity';
+    const {query, page, gte, lte, labelList, labelFilter} = this.props.state;
+    this.props.dispatch(requestEntities(query, page));
+    const from = page * this.props.state.entitiesFetchSize;
 
-    // conditions for entity search : this part is going to be written after DB implemented.
-
-    // sample data
-    const sampleJson = {
-      hits: {
-        hits: [
-          {
-            id: "1",
-            title: "Deep Learning",
-            desc: "branch of machine learning",
-            properties: {
-              "Property A": [
-                "Select Value A-1",
-                "Select Value A-2",
-                "Select Value A-3",
-                "Select Value A-4",
-                "Select Value A-5",
-                "Select Value A-6"
-              ],
-              "Property B": ["Select Value B-1"],
-              "Property C": []
-            },
-            update: 1523709809
-          },
-          {
-            id: "2",
-            title: "Learning TensorFlow: A Guide to Building Deep learning Systems",
-            desc: "Nature article by LeCun, Bengio and Hinton",
-            properties: {
-              "Property A": [
-                "Select Value A-1",
-                "Select Value A-2",
-                "Select Value A-3"
-              ],
-              "Property B": ["Select Value B-1"],
-              "Property C": []
-            },
-            update: 1523709809
-          },
-          {
-            id: "3",
-            title: "Human-level control through deep reinforcement learning",
-            desc: "scientific article",
-            properties: {
-              "Property A": [
-                "Select Value A-1",
-                "Select Value A-2",
-                "Select Value A-3"
-              ],
-              "Property B": ["Select Value B-1"],
-              "Property C": []
-            },
-            update: 1523709809
-          },
-          {
-            id: "4",
-            title: "IMS at EmoInt-2017: Emotion Intensity Prediction with Affective Norms, Automatically Extended Resources and Deep Learning",
-            desc: "scientific article (publication date: May 2016)",
-            properties: {
-              "Property A": [
-                "Select Value A-1",
-                "Select Value A-2",
-                "Select Value A-3"
-              ],
-              "Property B": ["Select Value B-1"],
-              "Property C": []
-            },
-            update: 1523709809
-          },
-          {
-            id: "5",
-            title: "Unsupervised Deep Learning Applied to Breast Density Segmentation and Mammographic Risk Scoring",
-            desc: "Deep Learning Supercomputer System",
-            properties: {
-              "Property A": [
-                "Select Value A-1",
-                "Select Value A-2",
-                "Select Value A-3"
-              ],
-              "Property B": ["Select Value B-1"],
-              "Property C": []
-            },
-            update: 1523709809
+    const queryMust = [];
+    if (query) {
+      queryMust.push(
+        {
+          bool: {
+            should: [
+              {
+                multi_match: {
+                  query,
+                  fields: [
+                    "title",
+                    "description",
+                    "sysname"
+                  ]
+                }
+              }
+            ]
           }
-        ],
-        total: 5
-      }
+        }
+      );
+    }
+
+    const postFilterMust = [];
+    // postFilterMust.push({
+    //   range: {
+    //     year: {
+    //       gte,
+    //       lte
+    //     }
+    //   }
+    // });
+
+    const filterdList = this.makeFilteredList(labelList, labelFilter, targetKey);
+
+    const labelFilterList = filterdList.length > 0 ? {terms: {_id: filterdList}} : null;
+
+    const body = {
+      query: {
+        bool: {
+          must: queryMust
+        }
+      },
+      post_filter: {
+        bool: {
+          must: postFilterMust,
+          filter: labelFilterList
+        }
+      },
+      from,
+      size: this.props.state.entitiesFetchSize      
     };
 
-    // Api.searchText({body}, token)
-    //   .then((json) => { // papers は papers = [] に格納される
-    //     this.props.dispatch(receivePapers(json)); // papers, papersTotal, aggregations を state に set
-    //   });
-    this.props.dispatch(receiveEntities(sampleJson));
+    const {user} = this.props.state;
+    const token = user ? user.token : null;
 
+    Api.searchEntities({body}, token)
+      .then((json) => {
+        this.props.dispatch(receiveEntities(json));
+      });
+  }
+
+  makeFilteredList(labelList, labelFilter, targetKey) {
+    let filterdList = [];
+
+    // only Label Filter
+    if (labelFilter.indexOf(favoriteKey) === -1 && labelFilter.length > 0) {
+      labelFilter.forEach((e) => {
+        filterdList = _.union(filterdList, labelList[e][2][targetKey]);
+      });
+
+      // only Favorite
+    } else if (labelFilter.indexOf(favoriteKey) !== -1 && labelFilter.length === 1) {
+      filterdList = labelList[favoriteKey][targetKey];
+
+      // both Label Filter & Favorite
+    } else if (labelFilter.indexOf(favoriteKey) !== -1 && labelFilter.length > 1) {
+      labelFilter.forEach((e) => {
+        if (e !== favoriteKey) {
+          filterdList = _.union(filterdList, labelList[e][2][targetKey]);
+        }
+      });
+      filterdList = _.intersection(filterdList, labelList[favoriteKey][targetKey]);
+    }
+
+    // for empty filter
+    if (labelFilter.length > 0 && filterdList.length === 0) {
+      filterdList.push("");
+    }
+
+    return filterdList;
   }
 
   changeQuery(category, query) {

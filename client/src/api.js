@@ -31,7 +31,8 @@ class Api {
       method: "post",
       body: null
     }, options);
-    const path = `/api/papers/${typeName}/_search`;
+    const indices = typeName === 'entities' ? 'entities' : 'papers';
+    const path = `/api/${indices}/${typeName}/_search`;
     return Api.fetchApi(path, o, token);
   }
 
@@ -45,6 +46,10 @@ class Api {
 
   static searchTables(options) {
     return Api.search("tables", options);
+  }
+
+  static searchEntities(options, token) {
+    return Api.search("entities", options, token);
   }
 
   static verify(token) {

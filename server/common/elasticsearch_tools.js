@@ -6,6 +6,7 @@ const rp = require("request-promise");
 const readline = require('readline');
 const {ReadableStream} = require('memory-streams');
 const Ajv = require('ajv');
+const DatabaseTools = require("./database_tools");
 
 module.exports = class ElasticsearchTools {
   static get AUTHORITY() {
@@ -120,6 +121,82 @@ module.exports = class ElasticsearchTools {
       })
       .on("close", () => {
         finishRequest(stream, processedPapers);
+      });
+  }
+
+  static async importEntities(filePathOrStream) {
+    function createRequest() {
+      const stream = new ReadableStream("");
+
+      stream.pipe(rp({
+        method: "POST",
+        url: `http://${ElasticsearchTools.AUTHORITY}/_bulk`
+      }));
+
+      return stream;
+    }
+
+    function finishRequest(stream, count, jsonForDB) {
+      stream.push(null);
+      DatabaseTools.importEntities(jsonForDB);
+      console.log(`Inserted ${count} entities.`);
+    }
+
+    const indexName = "entities";
+
+    // const schemaFile = await readFile(path.join(__dirname, "schemas", "entities.json"), {encoding: "utf8"})
+    //   .catch(console.log);
+    // const schema = JSON.parse(schemaFile);
+    // const ajv = new Ajv();
+    // const validate = ajv.compile(schema);
+
+    // It is recommended that file size are between 5MB to 15MB per 1 bulk api request.
+    // https://www.elastic.co/guide/en/elasticsearch/guide/current/bulk.html#_how_big_is_too_big
+    // Please adjust suitable limit byte size to DS_BULK_LIMIT_BYTE_PER_REQUEST
+    let processedByte = 0;
+    let processedEntities = 0;
+    let stream = null;
+    let inputStream = null;
+
+    let jsonForDB = {};
+    if (typeof filePathOrStream === "string") {
+      inputStream = fs.createReadStream(filePathOrStream);
+    } else {
+      inputStream = filePathOrStream;
+    }
+
+    readline.createInterface(inputStream, {})
+      .on("line", line => {
+        if (processedByte > process.env.DS_BULK_LIMIT_BYTE_PER_REQUEST) {
+          if (stream) {            
+            finishRequest(stream, processedEntities, jsonForDB);
+            stream = null;
+            jsonForDB = {};
+          }
+          processedByte = 0;
+          processedEntities = 0;
+        }
+        if (stream === null) {
+          stream = createRequest();
+        }
+        processedByte += Buffer.byteLength(line, 'utf8');
+        processedEntities += 1;
+
+        const json = JSON.parse(line);
+
+        const entity = json;
+
+        const datetime = new Date();
+        entity.update = datetime.getTime();
+        
+        const textMeta = {index: {_index: indexName, _type: "entities", _id: entity.id}};
+        stream.append(`${JSON.stringify(textMeta)}\n${JSON.stringify(entity)}\n`);
+
+        jsonForDB[entity.id] = entity;
+
+      })
+      .on("close", () => {
+        finishRequest(stream, processedEntities, jsonForDB);
       });
   }
 };

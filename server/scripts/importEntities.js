@@ -1,3 +1,4 @@
-const DatabaseTools = require("../common/database_tools");
+const ElasticsearchTools = require("../common/elasticsearch_tools");
 
-DatabaseTools.importEntities(process.stdin);
+ElasticsearchTools.importEntities(process.stdin);
+console.log("Now papers have been creating.");

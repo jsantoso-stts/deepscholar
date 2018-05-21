@@ -1,6 +1,35 @@
+const elasticsearch = require("elasticsearch");
 const DB = require("../db");
 
 module.exports = class Entity {
+
+  // ▼ Elasticsearch ▼
+  static esUpdate(entityId, entity) {
+
+    const client = new elasticsearch.Client({
+      host: "deepscholar.elasticsearch:9200",
+      log: "error"
+    });
+
+    return client.update({
+      index: "entities",
+      type: "entities",
+      id: entityId,
+      body: {
+        doc: entity
+      }
+    })
+      .then(entity => {
+        return entity;
+      })
+      .catch((e) => {
+        console.log(e);
+        return false;
+      });
+  }
+  // ▲ Elasticsearch ▲
+
+  // ▼ Database ▼
   static collection() {
     return DB.connection()
       .collection("entities");
@@ -52,4 +81,5 @@ module.exports = class Entity {
   static deleteAll() {
     return this.collection().drop();
   }
+  // ▲ Database ▲
 };

@@ -255,6 +255,7 @@
     .knowledge-term .box .box-row {
         position: relative;
         margin-bottom: 16px;
+        min-height: 21px;
     }
         .knowledge-term .box h6 {
             font-size: 1.25em;

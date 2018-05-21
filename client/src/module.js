@@ -87,6 +87,7 @@ const initialState = {
   tables: [],
   tablesTotal: 0,
   tablesFetchSize: 20,
+  entityId: null,
   entity: null,
   entities: [],
   entitiesTotal: 0,
@@ -182,6 +183,28 @@ const _validateLabelList = (labelList) => {
   return isLabelList;
 };
 
+const _saveEntity = (entity) => {
+  const entitySource = entity._source;
+  const datetime = new Date();
+  entitySource.update = datetime.getTime();
+  // save to DB
+  window.jQuery.ajax({
+    method: 'POST',
+    url: '/api/entity/update',
+    data: entitySource
+  })
+    .done((data) => {
+      if (data === 'done') {
+        console.log('Entity Saved.');
+      } else {
+        console.log('Entity Save Failed.');
+      }
+    })
+    .fail(() => {
+      console.log('Entity Save Ajax Error.');
+    });
+}
+
 // //// ▲ Functions for Get/Set LabelList from/to DB ▲
 
 export function reducers(state = initialState, action) {
@@ -254,9 +277,52 @@ export function reducers(state = initialState, action) {
         tables: action.tables,
         tablesTotal: action.tablesTotal
       });
+    case REQUEST_ENTITY:
+      return Object.assign({}, state, {
+        entityId: action.entityId
+      });
     case RECEIVE_ENTITY:
       return Object.assign({}, state, {
         entity: action.entity
+      });      
+    case EDIT_ENTITY:
+      return Object.assign({}, state, {
+        entity: action.entity
+      });
+    case ADD_ENTITY: {
+      const entity = Object.assign({}, state.entity);
+      const category = action.category;
+      if (Array.isArray(entity._source[category])) {
+        entity._source[category].push('');
+        // _saveEntity(entity);
+      }
+      return Object.assign({}, state, {
+        entity: entity
+      });
+    }
+    case REMOVE_ENTITY: {
+      const entity = Object.assign({}, state.entity);
+      const category = action.category;
+      const index = action.index;
+      if (Array.isArray(entity._source[category])) {
+        entity._source[category].splice(index, 1);
+      } else {
+        entity._source[category] = '';
+      }
+      _saveEntity(entity);
+      return Object.assign({}, state, {
+        entity: entity
+      });
+    }
+    case SAVE_ENTITY:
+      _saveEntity(action.entity);
+      return Object.assign({}, state, {
+        entity: action.entity
+      });
+    case REQUEST_ENTITIES:
+      return Object.assign({}, state, {
+        query: action.query,
+        page: action.page
       });
     case RECEIVE_ENTITIES:
       return Object.assign({}, state, {
@@ -317,31 +383,7 @@ export function reducers(state = initialState, action) {
     case UPDATE_LABEL_FILTER:
       return Object.assign({}, state, {
         labelFilter: action.filterList
-      });
-    case ENTITY_ADD: {
-      const entitiesAdd = Object.assign({}, state.entity);
-            entitiesAdd.properties[action.category].push('');
-            // don't save, because this value has not been filled yet
-      return Object.assign({}, state, {
-        entity: entitiesAdd
-      });
-    }
-    case ENTITY_UPDATE: {
-      const entitiesUpdate = Object.assign({}, state.entity);
-            entitiesUpdate.properties[action.category][action.index] = action.value;
-            // do save
-      return Object.assign({}, state, {
-        entity: entitiesUpdate
-      });
-    }
-    case ENTITY_REMOVE: {
-      const entitiesRemove = Object.assign({}, state.entity);
-            entitiesRemove.properties[action.category].splice(action.index, 1);
-            // do save
-      return Object.assign({}, state, {
-        entity: entitiesRemove
-      });
-    }
+      });    
     default:
       return state;
   }
@@ -474,12 +516,68 @@ export function receiveTables(json) {
   };
 }
 
+const REQUEST_ENTITY = "REQUEST_ENTITY";
+
+export function requestEntity(entityId) {
+  return {
+    type: REQUEST_ENTITY,
+    entityId
+  };
+}
+
 const RECEIVE_ENTITY = "RECEIVE_ENTITY";
 
 export function receiveEntity(json) {
   return {
     type: RECEIVE_ENTITY,
     entity: json.hits.hits[0]
+  };
+}
+
+const EDIT_ENTITY = "EDIT_ENTITY";
+
+export function editEntity(entity) {
+  return {
+    type: EDIT_ENTITY,
+    entity: entity
+  };
+}
+
+const ADD_ENTITY = "ADD_ENTITY";
+
+export function addEntity(category) {
+  return {
+    type: ADD_ENTITY,
+    category: category
+  };
+}
+
+const REMOVE_ENTITY = "REMOVE_ENTITY";
+
+export function removeEntity(category, index) {
+  return {
+    type: REMOVE_ENTITY,
+    category: category,
+    index: index
+  };
+}
+
+const SAVE_ENTITY = "SAVE_ENTITY";
+
+export function saveEntity(entity) {
+  return {
+    type: SAVE_ENTITY,
+    entity: entity
+  };
+}
+
+const REQUEST_ENTITIES = "REQUEST_ENTITIES";
+
+export function requestEntities(query, page) {
+  return {
+    type: REQUEST_ENTITIES,
+    query,
+    page
   };
 }
 
@@ -581,34 +679,3 @@ export function updateLabelFilter(filterList) {
     filterList: filterList
   };
 }
-
-const ENTITY_ADD = "ENTITY_ADD";
-
-export function entityAdd(category) {
-  return {
-    type: ENTITY_ADD,
-    category: category
-  };
-}
-
-const ENTITY_UPDATE = "ENTITY_UPDATE";
-
-export function entityUpdate(category, index, value) {
-  return {
-    type: ENTITY_UPDATE,
-    category: category,
-    index: index,
-    value: value
-  };
-}
-
-const ENTITY_REMOVE = "ENTITY_REMOVE";
-
-export function entityRemove(category, index) {
-  return {
-    type: ENTITY_REMOVE,
-    category: category,
-    index: index
-  };
-}
-
