@@ -379,7 +379,7 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
     const category = this.props.category;
     const index = this.props.index;
     if (index) {
-      value = this.props.state.entity._source[category][index];      
+      value = this.props.state.entity._source[category][index];
     } else {
       value = this.props.state.entity._source[category];
     }
@@ -405,7 +405,7 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
     const index = this.props.index;
 
     if (index) {
-      entity._source[category][index] = this.state.valueOld;      
+      entity._source[category][index] = this.state.valueOld;
     } else {
       entity._source[category] = this.state.valueOld;
     }
@@ -420,7 +420,7 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
     const index = this.props.index;
 
     if (index) {
-      entity._source[category][index] = event.target.value;      
+      entity._source[category][index] = event.target.value;
     } else {
       entity._source[category] = event.target.value;
     }
@@ -434,7 +434,7 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
     const category = this.props.category;
     const index = this.props.index;
     if (index) {
-      value = this.props.state.entity._source[category][index];      
+      value = this.props.state.entity._source[category][index];
     } else {
       value = this.props.state.entity._source[category];
     }

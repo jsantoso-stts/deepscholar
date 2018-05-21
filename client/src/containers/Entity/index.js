@@ -31,8 +31,6 @@ class Entity extends Component {
       }
     };
 
-    const {user} = this.props.state;
-
     Api.searchEntities({body})
       .then((json) => {
         this.props.dispatch(receiveEntity(json));
