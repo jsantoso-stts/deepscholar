@@ -7,17 +7,8 @@ module.exports = class Admin {
   static router() {
     const router = new express.Router();
 
-    router.delete(`/indexes`, (req, res) => {
-      ElasticsearchTools.deleteIndexes()
-        .then(res.send(JSON.stringify({})))
-        .catch(reason => {
-          res.status(reason.statusCode)
-            .end();
-        });
-    });
-
-    router.post(`/indexes/init`, (req, res) => {
-      ElasticsearchTools.initializeIndexes()
+    router.post(`/papers/initialize`, (req, res) => {
+      ElasticsearchTools.initializePapers()
         .then(res.send(JSON.stringify({})))
         .catch(reason => {
           res.status(reason.statusCode)

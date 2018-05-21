@@ -1,9 +1,8 @@
 import queryString from 'query-string';
 
-const matches = window.location.hash.match(/#\/([a-zA-Z]+).*\?(.+)/);
-const queries = matches ? matches[2] : "";
+const queries = window.location.search || "";
 const parsed = queryString.parse(queries);
-const currentCategory = matches ? matches[1] : null;
+const currentCategory = window.location.pathname.substr(1);
 const favoriteKey = "favorite_____________";
 const labelColor = [
   "red",

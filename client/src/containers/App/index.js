@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
 import _ from 'lodash';
 import {
-  HashRouter, Switch, Route, Link
+  BrowserRouter, Switch, Route, Link
 } from 'react-router-dom';
 import {connect} from 'react-redux';
 import Index from '../Index/index.js';
 import Search from '../Search/index.js';
 import Detail from '../Detail/index.js';
 import Entity from '../Entity/index.js';
+import Profile from '../Profile/index.js';
 import {ScrollToTop} from '../../components/index.js';
 import {
   changeQuery,
@@ -168,15 +169,15 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
     this.fileElement.click();
   }
 
-  handleClickResetIndexes() {
-    if (!window.confirm("Are you sure to reset indexes? Your browser will be reloaded.")) {
+  handleClickInitializePapers() {
+    if (!window.confirm("Are you sure to initialize papers? Your browser will be reloaded.")) {
       return;
     }
 
     const {user} = this.props.state;
     const token = user ? user.token : null;
 
-    Api.resetIndexes(token)
+    Api.initializePapers(token)
       .then(() => window.location.reload());
   }
 
@@ -212,7 +213,7 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
           <div className="nav-wrapper">
             <div className="row">
               <div className="col s4 l3">
-                <Link to="/" className="brand-logo"><img src="/images/deepscholar_logo.svg"/></Link>
+                <Link to="/" className="brand-logo"><img src="/images/deepscholar_logo_circle.svg"/></Link>
               </div>
               <div className="col s7 l6">
                 <div className="input-field input-field--search">
@@ -227,7 +228,7 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
               <ul id="navMenu" className="dropdown-content">
                 <li><a href="#!" onClick={this.handleClickImportIndexes.bind(this)}>Import Papers</a></li>
                 <li className="divider"></li>
-                <li><a href="#!" onClick={this.handleClickResetIndexes.bind(this)}>Reset Indexes</a></li>
+                <li><a href="#!" onClick={this.handleClickInitializePapers.bind(this)}>Initialize Papers</a></li>
               </ul>
               <ul className="right">
                 {isUploading &&
@@ -277,7 +278,7 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
 class App extends Component {
   render() {
     return (
-      <HashRouter>
+      <BrowserRouter>
         <div>
           <Route component={props =>
             <NavBar {...props}/>
@@ -290,6 +291,7 @@ class App extends Component {
                 <Route exact path="/" component={props =>
                   <Index {...props}/>
                 }/>
+                <Route exact path="/profile" component={Profile}/>
                 <Route component={props =>
                   <ScrollToTop {...props}>
                     <Search {...props}/>
@@ -299,7 +301,7 @@ class App extends Component {
             </div>
           </div>
         </div>
-      </HashRouter>
+      </BrowserRouter>
     );
   }
 }

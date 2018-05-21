@@ -1,8 +1,9 @@
 const express = require("express");
 const Annotation = require("./models/annotation");
 const Papers = require("./models/papers");
+const passport = require("passport");
 
-module.exports = class {
+module.exports = class PaperAPI {
   static router() {
     const router = new express.Router();
 
@@ -19,24 +20,54 @@ module.exports = class {
         });
     });
 
-    router.post(`/:paperId/annotations`, (req, res) => {
-      return Papers.exists(req.params.paperId)
-        .then(exists => {
-          if (!exists) {
-            res.status(404)
-              .end();
-            return;
-          }
+    router.get(`/:paperId/annotations/:type(pdf|xml)`, passport.authenticate(['jwt'], {session: false}), (req, res) => {
+      return PaperAPI.getAnnotations(req, res);
+    });
 
-          return Annotation.insert(req.params.paperId, req.user._id, req.body)
-            .then((annotation) => {
-              Reflect.deleteProperty(annotation, "_id");
-              res.send(annotation)
-                .end();
-            });
-        });
+    router.post(`/:paperId/annotations/:type(pdf|xml)`, passport.authenticate(['jwt'], {session: false}), (req, res) => {
+      return PaperAPI.postAnnotations(req, res);
     });
 
     return router;
+  }
+
+  static getAnnotations(req, res) {
+    return Papers.exists(req.params.paperId)
+      .then(exists => {
+        if (!exists) {
+          res.status(404)
+            .end();
+          return;
+        }
+
+        const query = {
+          "paperId": req.params.paperId,
+          type: req.params.type
+        };
+        return Annotation.findByQuery(query)
+          .then(annotations => {
+            res.json(annotations);
+          });
+      });
+  }
+
+  static postAnnotations(req, res) {
+    return Papers.exists(req.params.paperId)
+      .then(exists => {
+        if (!exists) {
+          res.status(404)
+            .end();
+          return;
+        }
+
+        const anno = Object.assign(req.body, {type: req.params.type});
+        return Annotation.insert(req.params.paperId, req.user._id, anno)
+          .then((annotation) => {
+            Reflect.deleteProperty(annotation, "_id");
+            Reflect.deleteProperty(annotation, "type");
+            res.send(annotation)
+              .end();
+          });
+      });
   }
 };

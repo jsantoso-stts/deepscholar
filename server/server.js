@@ -43,7 +43,7 @@ defineSearchkitRouter("tables");
 defineSearchkitRouter("figs");
 defineSearchkitRouter("entities");
 
-app.use("/api/papers", passport.authenticate(['jwt'], {session: false}), Papers.router(app));
+app.use("/api/papers", Papers.router(app));
 app.use("/api/auth", Auth.router(app));
 app.use("/api/admin", passport.authenticate(['jwt'], {session: false}), (req, res, next) => {
   if (req.user.isAdmin) {
