@@ -5,6 +5,7 @@ const app = express();
 const engines = require('consolidate');
 const searchHistory = require("./models/search_history");
 const Auth = require("./auth");
+const Setting = require("./models/settings");
 const Admin = require("./admin");
 const Papers = require("./papers");
 const passport = require("passport");
@@ -21,21 +22,36 @@ if (process.env.NODE_ENV === "production") {
 }
 
 const defineSearchkitRouter = (typeName) => {
-  app.use(`/api/papers/${typeName}`, SearchkitExpress.createRouter({
-    host: "http://deepscholar.elasticsearch:9200",
-    index: `papers/${typeName}`,
-    queryProcessor: (query, req) => {
-      if (/.+\/text$/.test(req.baseUrl)) {
-        Auth.getVerifiedUserId(req.headers)
-          .then(userId => {
-            searchHistory.insert(query, userId);
-          })
-          .catch(console.log);
-      }
+  app.use(`/api/papers/${typeName}`, (req, res, next) => {
+      Setting.findOrCreate("es:query:multi_match:fields", [
+        "articleTitle^10",
+        "abstract^5",
+        "authors^1"
+      ])
+        .then(settings => {
+          req.fields = settings.value;
+          return next();
+        });
+    }, SearchkitExpress.createRouter({
+      host: "http://deepscholar.elasticsearch:9200",
+      index: `papers/${typeName}`,
+      queryProcessor: (query, req) => {
+        if (/.+\/text$/.test(req.baseUrl)) {
+          if (query.query.bool) {
+            query.query.bool.must[0].bool.should[0].multi_match.fields = req.fields;
+          }
 
-      return query;
-    }
-  }));
+          Auth.getVerifiedUserId(req.headers)
+            .then(userId => {
+              searchHistory.insert(query, userId);
+            })
+            .catch(console.log);
+        }
+
+        return query;
+      }
+    })
+  );
 };
 
 defineSearchkitRouter("text");
