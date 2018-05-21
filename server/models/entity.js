@@ -19,8 +19,8 @@ module.exports = class Entity {
         doc: entity
       }
     })
-      .then(entity => {
-        return entity;
+      .then(entityES => {
+        return entityES;
       })
       .catch((e) => {
         console.log(e);

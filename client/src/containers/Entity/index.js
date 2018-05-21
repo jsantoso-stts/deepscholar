@@ -22,7 +22,7 @@ class Entity extends Component {
   search(entityId) {
 
     this.props.dispatch(requestEntity(entityId));
-    
+
     const body = {
       query: {
         match: {
@@ -32,7 +32,6 @@ class Entity extends Component {
     };
 
     const {user} = this.props.state;
-    const token = user ? user.token : null;
 
     Api.searchEntities({body})
       .then((json) => {

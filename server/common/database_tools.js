@@ -28,7 +28,7 @@ module.exports = class DatabaseTools {
       request(options, (error, response, body) => {
         if (body && body.match(/error/)) {
           console.log(body);
-        }          
+        }
       });
     }
 
@@ -37,7 +37,7 @@ module.exports = class DatabaseTools {
       .forEach(id => {
         const entity = entities[id];
         saveEntitiesToDB(entity);
-      });    
+      });
   }
 
   static importEntitiesOld(filePathOrStream) {

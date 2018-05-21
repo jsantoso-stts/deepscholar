@@ -105,7 +105,7 @@ const initialState = {
   isUploading: false
 };
 
-// //// ▼ Functions for Get/Set LabelList from/to DB ▼
+// //// ▼ Functions for Get/Set Data from/to DB/ES ▼
 const _getLabelList = (user) => {
   let labelListSaved;
   let isAvailable = false;
@@ -202,9 +202,9 @@ const _saveEntity = (entity) => {
     .fail(() => {
       console.log('Entity Save Ajax Error.');
     });
-}
+};
 
-// //// ▲ Functions for Get/Set LabelList from/to DB ▲
+// //// ▲ Functions for Get/Set Data from/to DB/ES ▲
 
 export function reducers(state = initialState, action) {
   switch (action.type) {
@@ -283,7 +283,7 @@ export function reducers(state = initialState, action) {
     case RECEIVE_ENTITY:
       return Object.assign({}, state, {
         entity: action.entity
-      });      
+      });
     case EDIT_ENTITY:
       return Object.assign({}, state, {
         entity: action.entity
@@ -382,7 +382,7 @@ export function reducers(state = initialState, action) {
     case UPDATE_LABEL_FILTER:
       return Object.assign({}, state, {
         labelFilter: action.filterList
-      });    
+      });
     default:
       return state;
   }

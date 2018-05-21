@@ -378,10 +378,10 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
     let value;
     const category = this.props.category;
     const index = this.props.index;
-    if (index === undefined) {
-      value = this.props.state.entity._source[category];
+    if (index) {
+      value = this.props.state.entity._source[category][index];      
     } else {
-      value = this.props.state.entity._source[category][index];
+      value = this.props.state.entity._source[category];
     }
     this.setState({valueOld: value});
     this.switchEditMode(true);
@@ -404,10 +404,10 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
     const category = this.props.category;
     const index = this.props.index;
 
-    if (index === undefined) {
-      entity._source[category] = this.state.valueOld;
+    if (index) {
+      entity._source[category][index] = this.state.valueOld;      
     } else {
-      entity._source[category][index] = this.state.valueOld;
+      entity._source[category] = this.state.valueOld;
     }
 
     this.props.dispatch(editEntity(entity));
@@ -419,10 +419,10 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
     const category = this.props.category;
     const index = this.props.index;
 
-    if (index === undefined) {
-      entity._source[category] = event.target.value;
+    if (index) {
+      entity._source[category][index] = event.target.value;      
     } else {
-      entity._source[category][index] = event.target.value;
+      entity._source[category] = event.target.value;
     }
 
     this.props.dispatch(editEntity(entity));
@@ -433,10 +433,10 @@ const EntityDetailProp = connect(mapStateToProps)(class EntityDetailProp extends
     let value;
     const category = this.props.category;
     const index = this.props.index;
-    if (index === undefined) {
-      value = this.props.state.entity._source[category];
+    if (index) {
+      value = this.props.state.entity._source[category][index];      
     } else {
-      value = this.props.state.entity._source[category][index];
+      value = this.props.state.entity._source[category];
     }
 
     return (
@@ -519,12 +519,12 @@ const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps exten
                                       }
                                       return false;
                                     });
-                          } else if(!Array.isArray(propValue)) {
+                          } else if (!Array.isArray(propValue)) {
                             prop = <EntityDetailProp category={key} value={propValue} key={key} />;
                           }
 
                           let addValue = null;
-                          if ( (Array.isArray(propValue) && propValue.length < 5) || asFull) {
+                          if ((Array.isArray(propValue) && propValue.length < 5) || asFull) {
                             addValue = <a className="icon add" href="javascript:void(0)" onClick={this.handleClick.bind(this)} data-category={key}><i className="material-icons">add</i>add value</a>;
                           }
 
@@ -554,10 +554,10 @@ const EntityDetailProps = connect(mapStateToProps)(class EntityDetailProps exten
 const EntityDetailDesc = connect(mapStateToProps)(class EntityDetailDesc extends Component {
 
   constructor(props) {
-    super(props);   
+    super(props);
     this.state = {
       descOld: this.props.desc
-    };    
+    };
   }
 
   componentDidMount() {
@@ -623,7 +623,7 @@ const EntityDetailDesc = connect(mapStateToProps)(class EntityDetailDesc extends
 export const EntityDetail = withRouter(connect(mapStateToProps)(class EntityDetail extends Component {
 
   formatTime(timestamp) {
-    const targetDate = new Date(parseInt(timestamp));
+    const targetDate = new Date(Number(timestamp));
     const months = [
                       'January',
                       'February',
@@ -647,7 +647,7 @@ export const EntityDetail = withRouter(connect(mapStateToProps)(class EntityDeta
     return time;
   }
 
-  render() {    
+  render() {
     if (this.props.data === null) {
       return null;
     }
@@ -655,7 +655,7 @@ export const EntityDetail = withRouter(connect(mapStateToProps)(class EntityDeta
     const backBtn = this.props.backBtn;
 
     const {title, update: timestamp} = this.props.data._source;
-    const update = this.formatTime(timestamp);    
+    const update = this.formatTime(timestamp);
 
     return (
 
@@ -686,7 +686,7 @@ export const Entity = withRouter(connect(mapStateToProps)(class Entity extends C
   }
 
   formatTime(timestamp) {
-    const targetDate = new Date(parseInt(timestamp));
+    const targetDate = new Date(Number(timestamp));
     const months = [
                       'January',
                       'February',

@@ -124,7 +124,7 @@ module.exports = class ElasticsearchTools {
       });
   }
 
-  static async importEntities(filePathOrStream) {
+  static importEntities(filePathOrStream) {
     function createRequest() {
       const stream = new ReadableStream("");
 
@@ -168,7 +168,7 @@ module.exports = class ElasticsearchTools {
     readline.createInterface(inputStream, {})
       .on("line", line => {
         if (processedByte > process.env.DS_BULK_LIMIT_BYTE_PER_REQUEST) {
-          if (stream) {            
+          if (stream) {
             finishRequest(stream, processedEntities, jsonForDB);
             stream = null;
             jsonForDB = {};
@@ -188,7 +188,7 @@ module.exports = class ElasticsearchTools {
 
         const datetime = new Date();
         entity.update = datetime.getTime();
-        
+
         const textMeta = {index: {_index: indexName, _type: "entities", _id: entity.id}};
         stream.append(`${JSON.stringify(textMeta)}\n${JSON.stringify(entity)}\n`);
 

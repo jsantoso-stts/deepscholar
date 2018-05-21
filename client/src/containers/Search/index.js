@@ -1053,7 +1053,7 @@ class Search extends Component {
         this.searchPapers();
         break;
     }
-  }  
+  }
 
   searchPapers() {
     const targetKey = 'paper';
@@ -1243,7 +1243,7 @@ class Search extends Component {
 
   searchEntities() {
     const targetKey = 'entity';
-    const {query, page, gte, lte, labelList, labelFilter} = this.props.state;
+    const {query, page, labelList, labelFilter} = this.props.state;
     this.props.dispatch(requestEntities(query, page));
     const from = page * this.props.state.entitiesFetchSize;
 
@@ -1269,16 +1269,6 @@ class Search extends Component {
       );
     }
 
-    const postFilterMust = [];
-    // postFilterMust.push({
-    //   range: {
-    //     year: {
-    //       gte,
-    //       lte
-    //     }
-    //   }
-    // });
-
     const filterdList = this.makeFilteredList(labelList, labelFilter, targetKey);
 
     const labelFilterList = filterdList.length > 0 ? {terms: {_id: filterdList}} : null;
@@ -1291,12 +1281,11 @@ class Search extends Component {
       },
       post_filter: {
         bool: {
-          must: postFilterMust,
           filter: labelFilterList
         }
       },
       from,
-      size: this.props.state.entitiesFetchSize      
+      size: this.props.state.entitiesFetchSize
     };
 
     const {user} = this.props.state;

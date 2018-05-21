@@ -14,12 +14,11 @@ function setEntity(req, res) {
 }
 
 function updateEntity(req, res) {
-  console.log('updateEntity');
   const entityId = req.body.id;
-  Entity.insertOrCreate(entityId, req.body).then((entity) => {
-    if (entity) {      
-      Entity.esUpdate(entityId, req.body).then((entity) => {
-        if (entity) {
+  Entity.insertOrCreate(entityId, req.body).then((entityDB) => {
+    if (entityDB) {
+      Entity.esUpdate(entityId, req.body).then((entityES) => {
+        if (entityES) {
           res.send('done');
         } else {
           res.send('error');
