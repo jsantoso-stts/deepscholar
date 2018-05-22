@@ -1,5 +1,5 @@
 {
-    "title": "deepscholar json-schema for papers",
+    "title": "deepscholar json-schema for paper",
     "type": "object",
     "patternProperties": {
         "^.+$": {

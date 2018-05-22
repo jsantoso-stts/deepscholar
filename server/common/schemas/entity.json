@@ -1,0 +1,28 @@
+{
+    "title": "deepscholar json-schema for entity",
+    "type": "object",
+    "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "image": { "type": "string" }
+    },
+    "patternProperties": {
+        "^.+$": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "type": "object",
+                    "properties": {
+                        "value": { "type": ["number", "string"] },
+                        "reference": { "type": "string" },
+                        "pdfanno": { "type": "string" }
+                    },
+                    "required": ["value"]
+                }
+            }
+        }
+    },
+    "required": ["id", "title", "description"],
+}

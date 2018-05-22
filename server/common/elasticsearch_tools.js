@@ -54,7 +54,7 @@ module.exports = class ElasticsearchTools {
 
     const indexName = "papers";
 
-    const schemaFile = await readFile(path.join(__dirname, "schemas", "papers.json"), {encoding: "utf8"})
+    const schemaFile = await readFile(path.join(__dirname, "schemas", "paper.json"), {encoding: "utf8"})
       .catch(console.log);
     const schema = JSON.parse(schemaFile);
     const ajv = new Ajv();
