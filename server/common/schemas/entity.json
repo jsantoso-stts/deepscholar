@@ -2,7 +2,7 @@
     "title": "deepscholar json-schema for entity",
     "type": "object",
     "patternProperties": {
-        "^.+$": {
+        "^([a-zA-Z_0-9]+)$": {
             "oneOf": [
                 { "type": "string" },
                 {
