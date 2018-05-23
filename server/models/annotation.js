@@ -24,15 +24,11 @@ module.exports = class Annotation {
   static replace(paperId, userId, type, anno) {
     const filter = {type, paperId, userId: new ObjectId(userId)};
     const annotation = Object.assign(anno, filter);
-    return new Promise((resolve, reject) => {
-      return this.collection()
-        .replaceOne(filter, annotation, {upsert: true}, (error, result) => {
-          if (error) {
-            reject(error);
-          }
-
-          resolve({annotation, upserted: Boolean(result.result.upserted)});
-        });
-    });
+    return this.collection()
+      .replaceOne(filter, annotation, {upsert: true})
+      .then(result => {
+        return {annotation, upserted: Boolean(result.result.upserted)};
+      })
+      .catch(console.log);
   }
 };
