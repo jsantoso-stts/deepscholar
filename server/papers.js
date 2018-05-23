@@ -24,8 +24,8 @@ module.exports = class PaperAPI {
       return PaperAPI.getAnnotations(req, res);
     });
 
-    router.post(`/:paperId/annotations/:type(pdf|xml)`, passport.authenticate(['jwt'], {session: false}), (req, res) => {
-      return PaperAPI.postAnnotations(req, res);
+    router.put(`/:paperId/annotations/:type(pdf|xml)`, passport.authenticate(['jwt'], {session: false}), (req, res) => {
+      return PaperAPI.putAnnotations(req, res);
     });
 
     return router;
@@ -51,7 +51,7 @@ module.exports = class PaperAPI {
       });
   }
 
-  static postAnnotations(req, res) {
+  static putAnnotations(req, res) {
     return Papers.exists(req.params.paperId)
       .then(exists => {
         if (!exists) {
@@ -60,12 +60,14 @@ module.exports = class PaperAPI {
           return;
         }
 
-        const anno = Object.assign(req.body, {type: req.params.type});
-        return Annotation.insert(req.params.paperId, req.user._id, anno)
-          .then((annotation) => {
-            Reflect.deleteProperty(annotation, "_id");
-            Reflect.deleteProperty(annotation, "type");
-            res.send(annotation)
+        const anno = req.body;
+        return Annotation.replace(req.params.paperId, req.user._id, req.params.type, anno)
+          .then(result => {
+            const statusCode = result.upserted ? 201 : 200;
+            Reflect.deleteProperty(result.annotation, "_id");
+            Reflect.deleteProperty(result.annotation, "type");
+            res.status(statusCode)
+              .send(result.annotation)
               .end();
           });
       });
