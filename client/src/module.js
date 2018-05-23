@@ -102,7 +102,8 @@ const initialState = {
   enabledAllAuthorsPaperIds: new Set(),
   enabledFullAbstractPaperIds: new Set(),
   scrollYPositions: new Map(),
-  isUploading: false
+  isUploading: false,
+  importType: null
 };
 
 // //// ▼ Functions for Get/Set Data from/to DB/ES ▼
@@ -333,6 +334,10 @@ export function reducers(state = initialState, action) {
       return Object.assign({}, state, {
         isUploading: action.isUploading
       });
+    case SET_IMPORT_INDEXES_TYPE:
+      return Object.assign({}, state, {
+        importType: action.importType
+      });    
     case TOGGLE_ALL_AUTHORS:
       if (state.enabledAllAuthorsPaperIds.has(action.id)) {
         state.enabledAllAuthorsPaperIds.delete(action.id);
@@ -605,6 +610,15 @@ export function receiveImportIndexes() {
   return {
     type: RECEIVE_IMPORT_INDEXES,
     isUploading: false
+  };
+}
+
+const SET_IMPORT_INDEXES_TYPE = "SET_IMPORT_INDEXES_TYPE";
+
+export function setImportIndexesType(importType) {
+  return {
+    type: SET_IMPORT_INDEXES_TYPE,
+    importType: importType
   };
 }
 

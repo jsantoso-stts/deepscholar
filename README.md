@@ -100,14 +100,17 @@ See https://github.com/docker/compose/issues/3352#issuecomment-284547977
 Please define limit bytes to import Elasticsearch's Bulk API using `DS_BULK_LIMIT_BYTE_PER_REQUEST` in .env file.
 
 ### Entities
-* Import
+* Initialize
+This command delete all entities indexes and initialize.
+
 ```
-cat <entity-schema.json> <entities.json> | docker exec -i `docker-compose ps -q deepscholar.server` npm run -s es:importEntities
+$ docker-compose exec deepscholar.server npm -s run es:initializeEntities
+  Entities' indexes have been initialized.
 ```
 
-* Delete
+* Import
 ```
-docker-compose exec -T deepscholar.server npm -s run es:deleteEntities
+cat <entities.json> | docker exec -i `docker-compose ps -q deepscholar.server` npm run -s es:importEntities
 ```
 
 ### Database

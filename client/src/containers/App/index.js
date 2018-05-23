@@ -17,7 +17,7 @@ import {
   signedOut,
   getLabelList,
   updateLabelList,
-  favoriteKey, requestImportIndexes, receiveImportIndexes
+  favoriteKey, requestImportIndexes, receiveImportIndexes, setImportIndexesType
 } from '../../module';
 import './materializeTheme.css';
 import './style.css';
@@ -166,6 +166,7 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
   }
 
   handleClickImportIndexes() {
+    this.props.dispatch(setImportIndexesType("indexes"));
     this.fileElement.click();
   }
 
@@ -181,8 +182,27 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
       .then(() => window.location.reload());
   }
 
+  handleClickImportEntities() {
+    this.props.dispatch(setImportIndexesType("entities"));
+    this.fileElement.click();
+  }
+
+  handleClickInitializeEntities() {
+    if (!window.confirm("Are you sure to initialize entities? Your browser will be reloaded.")) {
+      return;
+    }
+
+    const {user} = this.props.state;
+    const token = user ? user.token : null;
+
+    Api.initializeEntities(token)
+      .then(() => window.location.reload());
+  }
+
   handleChangeFile(e) {
-    if (!window.confirm("Are you sure to import indexes?")) {
+    const {importType} = this.props.state;
+
+    if (!window.confirm(`Are you sure to import ${importType}?`)) {
       return;
     }
 
@@ -193,11 +213,23 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
 
     const target = e.target;
     const file = target.files.item(0);
-    Api.importPapers(token, file)
-      .then(() => {
-        window.Materialize.toast('The file had been uploaded. Now papers have been creating.', 5000);
-        this.props.dispatch(receiveImportIndexes());
-      });
+
+    const importFinished = (type = 'papers') => {
+      window.Materialize.toast(`The file had been uploaded. Now ${type} have been creating.`, 5000);
+      this.props.dispatch(receiveImportIndexes());
+    };
+
+    if (importType === 'entities') {
+      Api.importEntities(token, file)
+        .then(() => {
+          importFinished('entities');
+        });
+    } else {
+      Api.importPapers(token, file)
+        .then(() => {
+          importFinished();
+        });
+    }
   }
 
   render() {
@@ -229,6 +261,10 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
                 <li><a href="#!" onClick={this.handleClickImportIndexes.bind(this)}>Import Papers</a></li>
                 <li className="divider"></li>
                 <li><a href="#!" onClick={this.handleClickInitializePapers.bind(this)}>Initialize Papers</a></li>
+                <li className="divider"></li>
+                <li><a href="#!" onClick={this.handleClickImportEntities.bind(this)}>Import Entities</a></li>
+                <li className="divider"></li>
+                <li><a href="#!" onClick={this.handleClickInitializeEntities.bind(this)}>Initialize Entities</a></li>
               </ul>
               <ul className="right">
                 {isUploading &&

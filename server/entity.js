@@ -30,17 +30,6 @@ function updateEntity(req, res) {
   });
 }
 
-// function setAllEntity(req, res) {
-  // const entityId = req.body.id;
-  // Entity.insertOrCreate(entityId, req.body).then((entity) => {
-  //   if (entity) {
-  //     res.send(`${entityId} : done`);
-  //   } else {
-  //     res.send(`${entityId} : error`);
-  //   }
-  // });
-// }
-
 function deleteAllEntities(req, res) {
   Entity.deleteAll().then((entity) => {
     if (entity) {
@@ -66,11 +55,7 @@ module.exports = (app) => {
 
   router.use('/update/', (req, res) => {
     updateEntity(req, res);
-  });
-
-  // router.use('/setAll/', (req, res) => {
-  //   setAllEntity(req, res);
-  // });
+  });  
 
   router.use('/deleteAll/', (req, res) => {
     deleteAllEntities(req, res);

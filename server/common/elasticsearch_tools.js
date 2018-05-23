@@ -17,6 +17,10 @@ module.exports = class ElasticsearchTools {
     return ElasticsearchTools.initializeIndex("papers");
   }
 
+  static initializeEntities() {
+    return ElasticsearchTools.initializeIndex("entities");
+  }
+
   static initializeSearchHistories() {
     return ElasticsearchTools.initializeIndex("search_histories");
   }
@@ -26,6 +30,10 @@ module.exports = class ElasticsearchTools {
       method: "DELETE",
       url: `http://${ElasticsearchTools.AUTHORITY}/${type}`
     });
+
+    if (type === 'entities') {
+      return false;
+    }
 
     const mappingsDir = path.join(__dirname, "mappings");
     const json = await readFile(path.join(mappingsDir, `${type}.json`), 'utf8');
@@ -143,12 +151,6 @@ module.exports = class ElasticsearchTools {
     }
 
     const indexName = "entities";
-
-    // const schemaFile = await readFile(path.join(__dirname, "schemas", "entities.json"), {encoding: "utf8"})
-    //   .catch(console.log);
-    // const schema = JSON.parse(schemaFile);
-    // const ajv = new Ajv();
-    // const validate = ajv.compile(schema);
 
     // It is recommended that file size are between 5MB to 15MB per 1 bulk api request.
     // https://www.elastic.co/guide/en/elasticsearch/guide/current/bulk.html#_how_big_is_too_big

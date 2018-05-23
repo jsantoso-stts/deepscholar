@@ -71,6 +71,22 @@ class Api {
         console.log(e);
       });
   }
+
+  static initializeEntities(token) {
+    return Api.fetchApi("/api/admin/entities/initialize", {method: "POST"}, token);
+  }
+
+  static importEntities(token, file) {
+    const body = new FormData();
+    body.append("indexes", file);
+
+    const headers = new Headers();
+
+    return Api.fetchApi("/api/admin/entities/import", {method: "POST", body, headers}, token)
+      .catch((e) => {
+        console.log(e);
+      });
+  }
 }
 
 export default Api;

@@ -1254,13 +1254,8 @@ class Search extends Component {
           bool: {
             should: [
               {
-                multi_match: {
-                  query,
-                  fields: [
-                    "title",
-                    "description",
-                    "sysname"
-                  ]
+                "query_string" : {
+                    "query" : query
                 }
               }
             ]
