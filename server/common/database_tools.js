@@ -1,7 +1,4 @@
-const fs = require("fs");
 const request = require('request');
-const readline = require('readline');
-const Ajv = require('ajv');
 
 module.exports = class DatabaseTools {
 

@@ -1254,8 +1254,8 @@ class Search extends Component {
           bool: {
             should: [
               {
-                "query_string" : {
-                    "query" : query
+                "query_string": {
+                    "query": query
                 }
               }
             ]

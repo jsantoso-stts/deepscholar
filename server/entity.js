@@ -55,7 +55,7 @@ module.exports = (app) => {
 
   router.use('/update/', (req, res) => {
     updateEntity(req, res);
-  });  
+  });
 
   router.use('/deleteAll/', (req, res) => {
     deleteAllEntities(req, res);

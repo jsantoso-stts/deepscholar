@@ -337,7 +337,7 @@ export function reducers(state = initialState, action) {
     case SET_IMPORT_INDEXES_TYPE:
       return Object.assign({}, state, {
         importType: action.importType
-      });    
+      });
     case TOGGLE_ALL_AUTHORS:
       if (state.enabledAllAuthorsPaperIds.has(action.id)) {
         state.enabledAllAuthorsPaperIds.delete(action.id);
