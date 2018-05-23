@@ -11,4 +11,3 @@ ElasticsearchTools.initializeEntities()
     console.error(`Entities' indexes have not been initialized.`);
     console.log(`StatusCode: ${reason.statusCode}`);
   });
-  
