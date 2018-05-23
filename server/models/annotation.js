@@ -21,17 +21,14 @@ module.exports = class Annotation {
     });
   }
 
-  static insert(paperId, userId, anno) {
-    const annotation = Object.assign(anno, {paperId, userId: new ObjectId(userId)});
-    return new Promise((resolve, reject) => {
-      return this.collection()
-        .insertOne(annotation, (error) => {
-          if (error) {
-            reject(error);
-          }
-
-          resolve(annotation);
-        });
-    });
+  static replace(paperId, userId, type, anno) {
+    const filter = {type, paperId, userId: new ObjectId(userId)};
+    const annotation = Object.assign(anno, filter);
+    return this.collection()
+      .replaceOne(filter, annotation, {upsert: true})
+      .then(result => {
+        return {annotation, upserted: Boolean(result.result.upserted)};
+      })
+      .catch(console.log);
   }
 };
