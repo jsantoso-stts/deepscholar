@@ -31,7 +31,8 @@ class Detail extends Component {
     Api.searchText({body})
       .then((json) => {
         this.props.dispatch(receivePaper(json));
-      });
+      })
+      .catch(console.log);
   }
 
   render() {
