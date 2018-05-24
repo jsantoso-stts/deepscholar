@@ -1068,14 +1068,7 @@ class Search extends Component {
             should: [
               {
                 multi_match: {
-                  query,
-                  fields: [
-                    "articleTitle",
-                    "journalTitle",
-                    "abstract",
-                    "url",
-                    "authors"
-                  ]
+                  query
                 }
               }
             ]

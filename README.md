@@ -139,6 +139,29 @@ $ docker-compose exec deepscholar.server npm -s run es:dump:searchHistories > se
  
 **To remove this role, just set `isAdmin` to false, or remove the property**
 
+### Change search fields' weight settings
+
+1. Open [settings collection](http://localhost:8081/db/deepscholar/settings) on mongo-express.
+2. Click `Find` with the following query
+    - Key: name
+    - Value: es:query:multi_match:fields
+3. Click the matched row
+4. Change weight numbers for each fields in `value` property. The value should be `{fieldName}^{weight}`. 
+    ```
+    {
+        "_id": ObjectID("XXXXXXXXXXXXXXXXXXXXXXXX"),
+        "name": "es:query:multi_match:fields",
+        "value": [
+            "articleTitle^10",
+            "abstract^5",
+            "authors^1"
+        ]
+    }
+    ```
+5. Click `Save`
+
+**If the record is not found, search using deepscholar once. Then initial record will be created.**
+
 ### Development Tools
 
 |        Name        |                      URL                       |
