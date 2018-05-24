@@ -1160,7 +1160,8 @@ class Search extends Component {
     Api.searchText({body}, token)
       .then((json) => {
         this.props.dispatch(receivePapers(json));
-      });
+      })
+      .catch(console.log);
   }
 
   searchFigures() {
@@ -1207,7 +1208,8 @@ class Search extends Component {
     Api.searchFigs({body})
       .then((json) => {
         this.props.dispatch(receiveFigures(json));
-      });
+      })
+      .catch(console.log);
   }
 
   searchTables() {
@@ -1255,7 +1257,8 @@ class Search extends Component {
     Api.searchTables({body})
       .then((json) => {
         this.props.dispatch(receiveTables(json));
-      });
+      })
+      .catch(console.log);
   }
 
   searchEntities() {

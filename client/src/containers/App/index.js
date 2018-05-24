@@ -178,7 +178,8 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
     const token = user ? user.token : null;
 
     Api.initializePapers(token)
-      .then(() => window.location.reload());
+      .then(() => window.location.reload())
+      .catch(console.log);
   }
 
   handleChangeFile(e) {
@@ -197,7 +198,8 @@ const NavBar = connect(mapStateToProps)(class NavBar extends Component {
       .then(() => {
         window.Materialize.toast('The file had been uploaded. Now papers have been creating.', 5000);
         this.props.dispatch(receiveImportIndexes());
-      });
+      })
+      .catch(console.log);
   }
 
   render() {
